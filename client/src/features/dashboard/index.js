@@ -31,7 +31,7 @@ function Dashboard(){
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:8080/api/v1/products/all');
+            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all');
             const data = await response.json();
             setProducts(data);
             console.log(data);
@@ -46,7 +46,7 @@ function Dashboard(){
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:8080/api/v1/categories/all');
+            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/all');
             const data2 = await response.json();
             setCategories(data2);
             console.log(data2);
@@ -61,7 +61,7 @@ function Dashboard(){
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:8080/api/v1/distributorProfiles/all');
+            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/all');
             const data3 = await response.json();
             setDistributors(data3);
             console.log(data3);
@@ -72,6 +72,9 @@ function Dashboard(){
     
         fetchData();
       }, []);
+
+
+  
 
 
 const statsData = [
