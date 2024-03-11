@@ -31,7 +31,7 @@ function Dashboard(){
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all');
+            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/count');
             const data = await response.json();
             setProducts(data);
             console.log(data);
@@ -46,7 +46,7 @@ function Dashboard(){
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/all');
+            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/count');
             const data2 = await response.json();
             setCategories(data2);
             console.log(data2);
@@ -61,7 +61,7 @@ function Dashboard(){
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/all');
+            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributorProfiles/count');
             const data3 = await response.json();
             setDistributors(data3);
             console.log(data3);
@@ -78,10 +78,10 @@ function Dashboard(){
 
 
 const statsData = [
-    {title : "Total Distributors Count", value : `${distributors.length}`, icon : <UserGroupIcon className='w-8 h-8'/>, description : ""},
+    {title : "Total Distributors Count", value : `${distributors}`, icon : <UserGroupIcon className='w-8 h-8'/>, description : ""},
     // {title : "Total Sales", value : "$34,545", icon : <CreditCardIcon className='w-8 h-8'/>, description : "Current month"},
-    {title : "Total Products Count", value : `${products.length}`, icon : <CircleStackIcon className='w-8 h-8'/>, description : ""},
-    {title : "Total Categories Count", value : `${categories.length}`, icon : <UsersIcon className='w-8 h-8'/>, description : ""},
+    {title : "Total Products Count", value : `${products}`, icon : <CircleStackIcon className='w-8 h-8'/>, description : ""},
+    {title : "Total Categories Count", value : `${categories}`, icon : <UsersIcon className='w-8 h-8'/>, description : ""},
 ]
  
 

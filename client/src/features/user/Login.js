@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import LandingIntro from './LandingIntro'
 import ErrorText from  '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
+// import Cookies from 'js-cookie';
 
 function Login(){
 
@@ -48,6 +49,10 @@ function Login(){
           const { jwtToken } = await response.json();
     
           localStorage.setItem("jwt", jwtToken);
+
+         
+        //   Cookies.set('jwt', jwtToken, { expires: 7, secure: false });
+          
     
           setLoading(false);
           window.location.href = "/app/dashboard";
