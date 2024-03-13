@@ -45,7 +45,7 @@ function LineChart() {
   
     while (currentDate <= latestDate) {
       const year = currentDate.getFullYear();
-      const month = currentDate.getMonth() + 1;
+      const month = currentDate.toLocaleString('en-US', { month: 'long' });
       const key = `${year}-${month.toString().padStart(2, '0')}`;
   
       allMonths.push(key);
@@ -60,7 +60,7 @@ function LineChart() {
     // Accumulate sales for each month
     data.forEach((invoice) => {
       const date = new Date(invoice.createDate);
-      const month = date.getMonth() + 1;
+      const month = date.toLocaleString('en-US', { month: 'long' });
       const year = date.getFullYear();
       const key = `${year}-${month.toString().padStart(2, '0')}`;
   
@@ -74,21 +74,34 @@ function LineChart() {
 
   const getYearlySales = (data) => {
     const yearlySales = {};
-
+  
     data.forEach((invoice) => {
       const date = new Date(invoice.createDate);
       const year = date.getFullYear();
-      const totalAmount = invoice.totalAmount;
-
-      if (yearlySales[year]) {
-        yearlySales[year] += totalAmount;
+      const month = date.getMonth() + 1;
+      let financialYear = '';
+  
+      // Determine the financial year
+      if (month >= 4) {
+        // If the month is April or later, it's part of the current financial year
+        financialYear = `${year}-${(year + 1).toString().slice(-2)}`;
       } else {
-        yearlySales[year] = totalAmount;
+        // If the month is before April, it's part of the previous financial year
+        financialYear = `${year - 1}-${year.toString().slice(-2)}`;
+      }
+  
+      const totalAmount = invoice.totalAmount;
+  
+      if (yearlySales[financialYear]) {
+        yearlySales[financialYear] += totalAmount;
+      } else {
+        yearlySales[financialYear] = totalAmount;
       }
     });
-
+  
     return yearlySales;
   };
+  
 
   useEffect(() => {
     const fetchData = async () => {
