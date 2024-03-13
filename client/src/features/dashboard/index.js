@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux'
 import {showNotification} from '../common/headerSlice'
 import DoughnutChart from './components/DoughnutChart'
 import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 
 
@@ -27,6 +28,8 @@ function Dashboard(){
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [distributors, setDistributors] = useState([]);
+    const [sales, setSales] = useState([]);
+    // const [invoices, setInvoices] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -73,13 +76,40 @@ function Dashboard(){
         fetchData();
       }, []);
 
+      useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/sales/getTotalAmount');
+            const data4 = await response.json();
+            setSales(data4);
+            console.log(data4);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
 
+    //   useEffect(() => {
+    //     // Fetch data from API
+    //     const fetchData = async () => {
+    //       try {
+    //         const response = await axios.get('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all');
+    //         setInvoices(response.data);
+    //       } catch (error) {
+    //         console.error('Error fetching data:', error);
+    //       }
+    //     };
+    
+    //     fetchData();
+    //   }, []);
   
 
 
 const statsData = [
     {title : "Total Distributors Count", value : `${distributors}`, icon : <UserGroupIcon className='w-8 h-8'/>, description : ""},
-    // {title : "Total Sales", value : "$34,545", icon : <CreditCardIcon className='w-8 h-8'/>, description : "Current month"},
+    {title : "Total Sales", value : `${sales}`, icon : <CreditCardIcon className='w-8 h-8'/>, description : ""},
     {title : "Total Products Count", value : `${products}`, icon : <CircleStackIcon className='w-8 h-8'/>, description : ""},
     {title : "Total Categories Count", value : `${categories}`, icon : <UsersIcon className='w-8 h-8'/>, description : ""},
 ]
@@ -93,7 +123,7 @@ const statsData = [
     return(
         <>
         {/** ---------------------- Select Period Content ------------------------- */}
-            <DashboardTopBar updateDashboardPeriod={updateDashboardPeriod}/>
+            {/* <DashboardTopBar updateDashboardPeriod={updateDashboardPeriod}/> */}
         
         {/** ---------------------- Different stats content 1 ------------------------- */}
             <div className="grid lg:grid-cols-4 mt-2 md:grid-cols-2 grid-cols-1 gap-6">
@@ -110,22 +140,22 @@ const statsData = [
 
         {/** ---------------------- Different charts ------------------------- */}
             <div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
-                <LineChart />
-                <BarChart />
+                <LineChart/>
+                {/* <BarChart /> */}
             </div>
             
         {/** ---------------------- Different stats content 2 ------------------------- */}
         
             <div className="grid lg:grid-cols-2 mt-10 grid-cols-1 gap-6">
-                <AmountStats />
-                <PageStats />
+                {/* <AmountStats />
+                <PageStats /> */}
             </div>
 
         {/** ---------------------- User source channels table  ------------------------- */}
         
             <div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
-                <UserChannels />
-                <DoughnutChart />
+                {/* <UserChannels />
+                <DoughnutChart /> */}
             </div>
         </>
     )

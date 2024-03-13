@@ -11,9 +11,8 @@ function InternalPage(){
       }, [])
 
 
-    return(
-        <Transactions />
-    )
+    return // <Transactions />
+    
 }
 
 export default InternalPage

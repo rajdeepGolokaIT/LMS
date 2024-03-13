@@ -11,9 +11,9 @@ function InternalPage(){
         dispatch(setPageTitle({ title : "Integrations"}))
       }, [])
       
-    return(
-        <Integration />
-    )
+    return
+        // <Integration />
+    
 }
 
 export default InternalPage

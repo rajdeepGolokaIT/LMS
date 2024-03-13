@@ -11,9 +11,8 @@ function InternalPage(){
       }, [])
 
 
-    return(
-        <Leads />
-    )
+    return // <Leads />
+    
 }
 
 export default InternalPage
