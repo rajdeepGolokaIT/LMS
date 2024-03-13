@@ -34,31 +34,42 @@ function LineChart() {
   const getMonthlySales = (data) => {
     const monthlySales = {};
   
-    data.forEach((invoice) => {
-      const date = new Date(invoice.createDate);
-      const month = date.toLocaleString('en-US', { month: 'long' });
-      const year = date.getFullYear();
-      const totalAmount = invoice.totalAmount;
+    // Find the earliest and latest dates
+    const dates = data.map((invoice) => new Date(invoice.createDate));
+    const earliestDate = new Date(Math.min.apply(null, dates));
+    const latestDate = new Date(Math.max.apply(null, dates));
+  
+    // Create an array of months between the earliest and latest dates
+    const allMonths = [];
+    let currentDate = new Date(earliestDate);
+  
+    while (currentDate <= latestDate) {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth() + 1;
       const key = `${year}-${month.toString().padStart(2, '0')}`;
   
-      if (monthlySales[key]) {
-        monthlySales[key] += totalAmount;
-      } else {
-        monthlySales[key] = totalAmount;
-      }
+      allMonths.push(key);
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+  
+    // Initialize all months with sales of 0
+    allMonths.forEach((month) => {
+      monthlySales[month] = 0;
     });
   
-    // Sort the keys in ascending order
-    const sortedKeys = Object.keys(monthlySales).sort();
-    const sortedMonthlySales = {};
+    // Accumulate sales for each month
+    data.forEach((invoice) => {
+      const date = new Date(invoice.createDate);
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      const key = `${year}-${month.toString().padStart(2, '0')}`;
   
-    // Reconstruct the monthlySales object with sorted keys
-    sortedKeys.forEach((key) => {
-      sortedMonthlySales[key] = monthlySales[key];
+      monthlySales[key] += invoice.totalAmount;
     });
   
-    return sortedMonthlySales;
+    return monthlySales;
   };
+  
   
 
   const getYearlySales = (data) => {
