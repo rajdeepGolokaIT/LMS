@@ -1,20 +1,20 @@
 import DashboardStats from './components/DashboardStats'
-import AmountStats from './components/AmountStats'
-import PageStats from './components/PageStats'
+// import AmountStats from './components/AmountStats'
+// import PageStats from './components/PageStats'
 
 import UserGroupIcon  from '@heroicons/react/24/outline/UserGroupIcon'
 import UsersIcon  from '@heroicons/react/24/outline/UsersIcon'
 import CircleStackIcon  from '@heroicons/react/24/outline/CircleStackIcon'
 import CreditCardIcon  from '@heroicons/react/24/outline/CreditCardIcon'
-import UserChannels from './components/UserChannels'
+// import UserChannels from './components/UserChannels'
 import LineChart from './components/LineChart'
-import BarChart from './components/BarChart'
+// import BarChart from './components/BarChart'
 import DashboardTopBar from './components/DashboardTopBar'
 import { useDispatch } from 'react-redux'
 import {showNotification} from '../common/headerSlice'
-import DoughnutChart from './components/DoughnutChart'
+// import DoughnutChart from './components/DoughnutChart'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+// import axios from 'axios'
 
 
 
@@ -123,7 +123,7 @@ const statsData = [
     return(
         <>
         {/** ---------------------- Select Period Content ------------------------- */}
-            {/* <DashboardTopBar updateDashboardPeriod={updateDashboardPeriod}/> */}
+            <DashboardTopBar updateDashboardPeriod={updateDashboardPeriod}/>
         
         {/** ---------------------- Different stats content 1 ------------------------- */}
             <div className="grid lg:grid-cols-4 mt-2 md:grid-cols-2 grid-cols-1 gap-6">
@@ -139,7 +139,7 @@ const statsData = [
 
 
         {/** ---------------------- Different charts ------------------------- */}
-            <div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
+            <div className="grid  mt-4 grid-cols-1 gap-6">
                 <LineChart/>
                 {/* <BarChart /> */}
             </div>

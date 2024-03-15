@@ -1,17 +1,17 @@
 import Subtitle from "../Typography/Subtitle"
 
   
-  function TitleCard({title, children, topMargin, TopSideButtons}){
+  function TitleCard({title, children, topMargin, TopSideButtons1, TopSideButtons2, TopSideButtons3}){
       return(
           <div className={"card w-full p-6 bg-base-100 shadow-xl " + (topMargin || "mt-6")}>
 
             {/* Title for Card */}
-              <Subtitle styleClass={TopSideButtons ? "inline-block" : ""}>
+              <Subtitle styleClass={TopSideButtons1 ? "inline-block" : ""}>
                 {title}
 
                 {/* Top side button, show only if present */}
                 {
-                    TopSideButtons && <div className="inline-block float-right">{TopSideButtons}</div>
+                    TopSideButtons1 && <div className=" flex md:flex-row flex-col  grid-cols-1 gap-6 float-right">{TopSideButtons1} {TopSideButtons2} {TopSideButtons3}</div>
                 }
               </Subtitle>
               

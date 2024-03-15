@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TitleCard from '../../../components/Cards/TitleCard';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
+import Datepicker from "react-tailwindcss-datepicker"; 
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -30,12 +31,21 @@ function LineChart() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState('Monthly'); // Default to Monthly
+  const [selectedDateRange, setSelectedDateRange] = useState({ startDate: null, endDate: null });
+  const [dateValue, setDateValue] = useState(null);
 
   const getMonthlySales = (data) => {
     const monthlySales = {};
-  
-    // Find the earliest and latest dates
-    const dates = data.map((invoice) => new Date(invoice.createDate));
+    const filteredData = data.filter(invoice => {
+      const invoiceDate = new Date(invoice.createDate);
+      return (
+        (!selectedDateRange.startDate || invoiceDate >= selectedDateRange.startDate) &&
+        (!selectedDateRange.endDate || invoiceDate <= selectedDateRange.endDate)
+      );
+    });
+
+    // Find the earliest and latest dates from the filtered data
+    const dates = filteredData.map((invoice) => new Date(invoice.createDate));
     const earliestDate = new Date(Math.min.apply(null, dates));
     const latestDate = new Date(Math.max.apply(null, dates));
   
@@ -44,9 +54,9 @@ function LineChart() {
     let currentDate = new Date(earliestDate);
   
     while (currentDate <= latestDate) {
-      const year = currentDate.getFullYear();
-      const month = currentDate.toLocaleString('en-US', { month: 'long' });
-      const key = `${year}-${month.toString().padStart(2, '0')}`;
+      const year = currentDate.getYear();
+      const month = currentDate.toLocaleString('en-US', { month: 'short' });
+      const key = `${month.toString().padStart(2, '0')}-${year.toString().slice(-2)}`;
   
       allMonths.push(key);
       currentDate.setMonth(currentDate.getMonth() + 1);
@@ -58,19 +68,17 @@ function LineChart() {
     });
   
     // Accumulate sales for each month
-    data.forEach((invoice) => {
+    filteredData.forEach((invoice) => {
       const date = new Date(invoice.createDate);
-      const month = date.toLocaleString('en-US', { month: 'long' });
-      const year = date.getFullYear();
-      const key = `${year}-${month.toString().padStart(2, '0')}`;
+      const month = date.toLocaleString('en-US', { month: 'short' });
+      const year = date.getYear();
+      const key = `${month.toString().padStart(2, '0')}-${year.toString().slice(-2)}`;
   
       monthlySales[key] += invoice.totalAmount;
     });
   
     return monthlySales;
   };
-  
-  
 
   const getYearlySales = (data) => {
     const yearlySales = {};
@@ -101,7 +109,6 @@ function LineChart() {
   
     return yearlySales;
   };
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -139,7 +146,7 @@ function LineChart() {
     };
 
     setChartData(chartData);
-  }, [invoices, selectedOption]);
+  }, [invoices, selectedOption, selectedDateRange]);
 
   const options = {
     responsive: true,
@@ -158,12 +165,47 @@ function LineChart() {
     setSelectedOption(event.target.value);
   };
 
+  const handleDateRangeChange = (range) => {
+    const formattedStartDate = range.startDate ? new Date(range.startDate).toLocaleDateString() : null;
+    const formattedEndDate = range.endDate ? new Date(range.endDate).toLocaleDateString() : null;
+  
+    setSelectedDateRange({
+      startDate: range.startDate ? new Date(range.startDate) : null,
+      endDate: range.endDate ? new Date(range.endDate) : null
+    });
+  
+    // Update the Datepicker value without changing the selected date range
+    if (formattedStartDate.toLocaleDateString() && formattedEndDate.toLocaleDateString()) {
+      // If both start and end dates are selected, set the formatted range string
+      setDateValue(`${formattedStartDate.toLocaleDateString()} to ${formattedEndDate.toLocaleDateString()}`);
+    } else if (formattedStartDate.toLocaleDateString() && !formattedEndDate.toLocaleDateString()) {
+      // If only start date is selected, set it as the Datepicker value
+      setDateValue(formattedStartDate.toLocaleDateString());
+
+    } else if (!formattedStartDate.toLocaleDateString() && formattedEndDate.toLocaleDateString()) {
+      // If only end date is selected, set it as the Datepicker value
+      setDateValue(formattedEndDate.toLocaleDateString());
+    } else {
+      // If no dates are selected, clear the Datepicker value
+      setSelectedDateRange({ startDate: null, endDate: null });
+      setDateValue(false);
+    }
+  };
+  
+  const handleReset = () => {
+    // Reset the chart to default state
+    setSelectedOption('Monthly');
+    setSelectedDateRange({ startDate: null, endDate: null });
+    setDateValue(null);
+  };
+  
+
   return (
     <TitleCard
       title="Sales Analysis"
-      TopSideButtons={
+      TopSideButtons1={
         <select
-          className="px-2 border border-gray-300 rounded"
+          className="px-2 border border-gray-300 rounded-md h-12"
           onChange={handleSelectChange}
           value={selectedOption}
         >
@@ -171,6 +213,20 @@ function LineChart() {
           <option value="Yearly">Yearly</option>
         </select>
       }
+      TopSideButtons2={<Datepicker 
+        key={Date.now()}
+        dateValue={dateValue}
+        containerClassName="w-72 " 
+        value={dateValue} // Use the new state variable for Datepicker value
+        theme={"light"}
+        inputClassName="input input-bordered w-72"
+        popoverDirection={"down"}
+        toggleClassName="invisible"
+        onChange={handleDateRangeChange} 
+        showShortcuts={false} 
+        primaryColor={"white"} 
+    /> }
+    TopSideButtons3={<button onClick={handleReset} className="btn btn-ghost btn-xs h-12">Reset</button>}
     >
       {loading ? (
         <p>Loading...</p>
