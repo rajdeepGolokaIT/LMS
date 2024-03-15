@@ -48,19 +48,29 @@ function LineChart() {
     const dates = filteredData.map((invoice) => new Date(invoice.createDate));
     const earliestDate = new Date(Math.min.apply(null, dates));
     const latestDate = new Date(Math.max.apply(null, dates));
+
+    // console.log(earliestDate, latestDate);
   
     // Create an array of months between the earliest and latest dates
     const allMonths = [];
     let currentDate = new Date(earliestDate);
+    let lastDate = new Date(latestDate);
+
+    // console.log(currentDate, lastDate);
+
+    // console.log(lastDate.toString().trim().slice(4, 7));
   
-    while (currentDate <= latestDate) {
+    while (currentDate <= lastDate) {
       const year = currentDate.getYear();
       const month = currentDate.toLocaleString('en-US', { month: 'short' });
       const key = `${month.toString().padStart(2, '0')}-${year.toString().slice(-2)}`;
   
       allMonths.push(key);
       currentDate.setMonth(currentDate.getMonth() + 1);
+      // console.log(currentDate.getMonth() - 1);
+      
     }
+    
   
     // Initialize all months with sales of 0
     allMonths.forEach((month) => {
@@ -70,11 +80,23 @@ function LineChart() {
     // Accumulate sales for each month
     filteredData.forEach((invoice) => {
       const date = new Date(invoice.createDate);
+      // console.log(date)
       const month = date.toLocaleString('en-US', { month: 'short' });
-      const year = date.getYear();
+      const year = date.getFullYear();
       const key = `${month.toString().padStart(2, '0')}-${year.toString().slice(-2)}`;
   
-      monthlySales[key] += invoice.totalAmount;
+      if (isNaN(monthlySales[key])) {
+        monthlySales[key] = 0;
+    }
+
+    // Increment monthlySales[key] by invoice.totalAmount
+    if (!isNaN(invoice.totalAmount)) {
+        monthlySales[key] += invoice.totalAmount;
+    } else {
+        console.log('Invalid total amount for invoice:', invoice);
+    }
+      // console.log(monthlySales[key]);
+      // console.log(invoice.totalAmount);
     });
   
     return monthlySales;
@@ -107,8 +129,18 @@ function LineChart() {
       }
     });
   
-    return yearlySales;
+    // Create an array of entries and reverse it
+    const reversedEntries = Object.entries(yearlySales).reverse();
+  
+    // Create a new object from the reversed entries
+    const reversedYearlySales = reversedEntries.reduce((obj, [key, value]) => {
+      obj[key] = value;
+      return obj;
+    }, {});
+  
+    return reversedYearlySales;
   };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -166,8 +198,8 @@ function LineChart() {
   };
 
   const handleDateRangeChange = (range) => {
-    const formattedStartDate = range.startDate ? new Date(range.startDate).toLocaleDateString() : null;
-    const formattedEndDate = range.endDate ? new Date(range.endDate).toLocaleDateString() : null;
+    const formattedStartDate = range.startDate ? new Date(range.startDate).toString() : null;
+    const formattedEndDate = range.endDate ? new Date(range.endDate).toString() : null;
   
     setSelectedDateRange({
       startDate: range.startDate ? new Date(range.startDate) : null,
@@ -175,12 +207,12 @@ function LineChart() {
     });
   
     // Update the Datepicker value without changing the selected date range
-    if (formattedStartDate.toLocaleDateString() && formattedEndDate.toLocaleDateString()) {
+    if (formattedStartDate.toString() && formattedEndDate.toString()) {
       // If both start and end dates are selected, set the formatted range string
-      setDateValue(`${formattedStartDate.toLocaleDateString()} to ${formattedEndDate.toLocaleDateString()}`);
-    } else if (formattedStartDate.toLocaleDateString() && !formattedEndDate.toLocaleDateString()) {
+      setDateValue(`${formattedStartDate.toString()} to ${formattedEndDate.toString()}`);
+    } else if (formattedStartDate.toString() && !formattedEndDate.toString()) {
       // If only start date is selected, set it as the Datepicker value
-      setDateValue(formattedStartDate.toLocaleDateString());
+      setDateValue(formattedStartDate.toString());
 
     } else if (!formattedStartDate.toLocaleDateString() && formattedEndDate.toLocaleDateString()) {
       // If only end date is selected, set it as the Datepicker value
