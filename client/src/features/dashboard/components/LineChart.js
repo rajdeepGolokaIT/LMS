@@ -26,13 +26,16 @@ ChartJS.register(
   Legend
 );
 
-function LineChart() {
+function LineChart({updateDashboardPeriod}) {
   const [chartData, setChartData] = useState({});
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState('Monthly'); // Default to Monthly
   const [selectedDateRange, setSelectedDateRange] = useState({ startDate: null, endDate: null });
-  const [dateValue, setDateValue] = useState(null);
+  const [dateValue, setDateValue] = useState({ 
+    startDate: new Date().toISOString().split('T')[0], 
+    endDate: new Date().toISOString().split('T')[0] 
+});
 
   const getMonthlySales = (data) => {
     const monthlySales = {};
@@ -56,7 +59,7 @@ function LineChart() {
     let currentDate = new Date(earliestDate);
     let lastDate = new Date(latestDate);
 
-    // console.log(currentDate, lastDate);
+    // console.log(new Date(earliestDate), currentDate, lastDate);
 
     // console.log(lastDate.toString().trim().slice(4, 7));
   
@@ -198,37 +201,97 @@ function LineChart() {
   };
 
   const handleDateRangeChange = (range) => {
-    const formattedStartDate = range.startDate ? new Date(range.startDate).toString() : null;
-    const formattedEndDate = range.endDate ? new Date(range.endDate).toString() : null;
-  
     setSelectedDateRange({
       startDate: range.startDate ? new Date(range.startDate) : null,
       endDate: range.endDate ? new Date(range.endDate) : null
     });
-  
-    // Update the Datepicker value without changing the selected date range
-    if (formattedStartDate.toString() && formattedEndDate.toString()) {
-      // If both start and end dates are selected, set the formatted range string
-      setDateValue(`${formattedStartDate.toString()} to ${formattedEndDate.toString()}`);
-    } else if (formattedStartDate.toString() && !formattedEndDate.toString()) {
-      // If only start date is selected, set it as the Datepicker value
-      setDateValue(formattedStartDate.toString());
 
-    } else if (!formattedStartDate.toLocaleDateString() && formattedEndDate.toLocaleDateString()) {
-      // If only end date is selected, set it as the Datepicker value
-      setDateValue(formattedEndDate.toLocaleDateString());
+    console.log(new Date(range.startDate), new Date(range.endDate), range);
+    
+
+    if (range.startDate && range.endDate) {
+      
+      setDateValue(range);
+      updateDashboardPeriod(range);
+    
     } else {
-      // If no dates are selected, clear the Datepicker value
-      setSelectedDateRange({ startDate: null, endDate: null });
-      setDateValue(false);
+      setDateValue(null);
     }
   };
   
+  
   const handleReset = () => {
+
+    const filteredData = invoices.filter(invoice => {
+    const invoiceDate = new Date(invoice.createDate);
+    return (
+      (!selectedDateRange.startDate || invoiceDate >= selectedDateRange.startDate) &&
+      (!selectedDateRange.endDate || invoiceDate <= selectedDateRange.endDate)
+    );
+  });
+
+  // Find the earliest and latest dates from the filtered data
+  const dates = filteredData.map((invoice) => new Date(invoice.createDate));
+  const earliestDate = new Date(Math.min.apply(null, dates));
+  const latestDate = new Date(Math.max.apply(null, dates));
+
+  const formattedStartDate = new Date(earliestDate).toISOString().split('T')[0];
+  const formattedEndDate = new Date(latestDate).toISOString().split('T')[0];
+
+
+  // function getFinancialYearDates(date) {
+  //   const year = date.getFullYear();
+  //   const fiscalYearStart = new Date(year, 3, 1); // Fiscal year starts from April 1st (month 3 is April)
+  //   const fiscalYearEnd = new Date(year + 1, 2, 31); // Fiscal year ends on March 31st of the next year
+  
+  //   return { fiscalYearStart, fiscalYearEnd };
+  // }
+  // const financialYear = getFinancialYearDates(new Date()); // Get current financial year
+
+  //   // Adjust dates to financial year
+  // const startDate = selectedDateRange.startDate || earliestDate;
+  // const endDate = selectedDateRange.endDate || latestDate;
+  
+  // const financialStartDate = new Date(Math.max(startDate, financialYear.fiscalYearStart));
+  // const financialEndDate = new Date(Math.min(endDate, financialYear.fiscalYearEnd));
+
+  // const formattedFinancialStartDate = financialStartDate.toISOString().split('T')[0];
+  // const formattedFinancialEndDate = financialEndDate.toISOString().split('T')[0];
+
+  // console.log("Financial Year Start Date:", formattedFinancialStartDate);
+  // console.log("Financial Year End Date:", formattedFinancialEndDate);
+
+    // const convertDate = (Date) => {
+    //   // Split the input date string into parts
+    //   const parts = Date.split(' ');
+  
+    //   // Month mapping for conversion
+    //   const months = {
+    //     Jan: '01', Feb: '02', Mar: '03', Apr: '04',
+    //     May: '05', Jun: '06', Jul: '07', Aug: '08',
+    //     Sep: '09', Oct: '10', Nov: '11', Dec: '12'
+    //   };
+  
+    //   // Extract the parts
+    //   const day = parts[2];
+    //   const month = months[parts[1]];
+    //   const year = parts[3];
+  
+    //   // Construct the formatted date
+    //   const formattedDate = `${year}-${month}-${day}`;
+  
+    //   return formattedDate;
+    // };
+
+    
+    // console.log(formattedStartDate, formattedEndDate);
+     
+   
+
     // Reset the chart to default state
     setSelectedOption('Monthly');
     setSelectedDateRange({ startDate: null, endDate: null });
-    setDateValue(null);
+    setDateValue({ startDate: formattedStartDate, endDate: formattedEndDate });
   };
   
 
@@ -247,7 +310,7 @@ function LineChart() {
       }
       TopSideButtons2={<Datepicker 
         key={Date.now()}
-        dateValue={dateValue}
+        // dateValue={dateValue}
         containerClassName="w-72 " 
         value={dateValue} // Use the new state variable for Datepicker value
         theme={"light"}
