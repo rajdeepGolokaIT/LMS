@@ -1,104 +1,157 @@
-import moment from "moment"
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import TitleCard from "../../components/Cards/TitleCard"
-import { openModal } from "../common/modalSlice"
-import { deleteLead, getLeadsContent } from "./leadSlice"
-import { CONFIRMATION_MODAL_CLOSE_TYPES, MODAL_BODY_TYPES } from '../../utils/globalConstantUtil'
-import TrashIcon from '@heroicons/react/24/outline/TrashIcon'
-import { showNotification } from '../common/headerSlice'
+import React, { useState, useEffect } from "react";
+import moment from "moment";
+import TitleCard from "../../components/Cards/TitleCard";
 
-const TopSideButtons = () => {
+function Leads() {
+  const [selectedInterval, setSelectedInterval] = useState("Yearly");
+  const [selectedYear, setSelectedYear] = useState(moment().year()); // Current year as default
+  const [selectedMonth, setSelectedMonth] = useState(moment().format("MMMM")); // Current month as default
+  const [topProducts, setTopProducts] = useState([]);
 
-    const dispatch = useDispatch()
-
-    const openAddNewLeadModal = () => {
-        dispatch(openModal({title : "Add New Lead", bodyType : MODAL_BODY_TYPES.LEAD_ADD_NEW}))
+  const generateFinancialYears = () => {
+    const currentYear = moment().year();
+    const years = [];
+    for (let i = 0; i < 3; i++) {
+      const startYear = currentYear - i;
+      years.push(`${startYear}-${startYear + 1}`);
     }
+    return years;
+  };
 
-    return(
-        <div className="inline-block float-right">
-            <button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewLeadModal()}>Add New</button>
+  const generateMonths = () => {
+    const months = [];
+    const fiscalStartMonth = moment().month("April").startOf("month");
+    const currentYear = moment().year();
+    for (let i = 0; months.length < 36; i++) { // 3 years * 12 months
+      const monthYear = fiscalStartMonth.clone().subtract(i, "months");
+      const monthName = monthYear.format("MMMM");
+      const year = monthYear.year(); // Extract the year for the current month
+      const monthYearString = `${monthName} ${year}`; // Combine month and year
+      months.unshift(monthYearString); // Unshift to prepend the month-year string to the beginning of the array
+    }
+    // console.log(months.reverse());
+    return months;
+  };
+  
+  
+  const financialYears = generateFinancialYears();
+  const months = generateMonths().reverse(); 
+//   console.log(months);
+
+  const fetchTopSellingProducts = async () => {
+    try {
+      let apiUrl;
+      if (selectedInterval === "Yearly") {
+        apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products?interval=annually&year=${selectedYear}`;
+      } else if (selectedInterval === "Monthly") {
+        // const monthIndex = moment.months().indexOf(selectedMonth);
+        // console.log(monthIndex);
+        const yearForMonth = selectedYear  // If selected month is before April, consider previous year   - (monthIndex >= 3 ? 0 : 1);
+        const apiMonth = selectedMonth.split(" ")[0];
+        apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products?interval=monthly&year=${yearForMonth}&month=${apiMonth.toLowerCase()}`;
+        // console.log(yearForMonth);
+        // console.log(selectedYear);
+      }
+    //   console.log(apiUrl);
+      const response = await fetch(apiUrl);
+
+      const data = await response.json();
+      setTopProducts(data);
+    } catch (error) {
+      console.error("Error fetching top selling products:", error);
+      // Handle error
+    }
+  };
+//   console.log(selectedMonth)
+
+  useEffect(() => {
+    fetchTopSellingProducts();
+  }, [selectedInterval, selectedYear, selectedMonth]);
+
+  const handleIntervalChange = (event) => {
+    setSelectedInterval(event.target.value);
+  };
+
+  const handleYearChange = (event) => {
+    setSelectedYear(parseInt(event.target.value));
+  };
+
+  const handleMonthChange = (event) => {
+    const selectedMonthValue = event.target.value;
+    const selectedYear = selectedMonthValue.split(" ")[1];
+    const selectedMonth = selectedMonthValue.split(" ")[0]; // Extract month name
+    setSelectedMonth(`${selectedMonth} ${selectedYear}`); // Set selectedMonth as month-year
+  };
+  
+//   console.log(months)
+
+
+  return (
+    <>
+      <TitleCard
+        title="Top 5 Sold Products"
+        topMargin="mt-2"
+        TopSideButtons1={
+          <>
+            <select
+              className="px-2 border border-gray-300 rounded-md h-12 mr-2"
+              onChange={handleIntervalChange}
+              value={selectedInterval}
+            >
+              <option value="Yearly">Yearly</option>
+              <option value="Monthly">Monthly</option>
+            </select>
+            {selectedInterval === "Yearly" && (
+              <select
+                className="px-2 border border-gray-300 rounded-md h-12"
+                onChange={handleYearChange}
+                value={selectedYear}
+              >
+                {financialYears.map((year) => (
+                  <option key={year} value={parseInt(year.split("-")[0])}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            )}
+            {selectedInterval === "Monthly" && (
+              <select
+                className="px-2 border border-gray-300 rounded-md h-12"
+                onChange={handleMonthChange}
+                value={selectedMonth}
+              >
+                {months.map((month) => (
+                    
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </select>
+            )}
+          </>
+        }
+      >
+        <div className="overflow-x-auto w-full">
+          <table className="table w-full">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Quantity Sold</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topProducts.map((product, index) => (
+                <tr key={index}>
+                  <td>{product[0].productName}</td>
+                  <td>{product[1]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-    )
+      </TitleCard>
+    </>
+  );
 }
 
-function Leads(){
-
-    const {leads } = useSelector(state => state.lead)
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        dispatch(getLeadsContent())
-    }, [])
-
-    
-
-    const getDummyStatus = (index) => {
-        if(index % 5 === 0)return <div className="badge">Not Interested</div>
-        else if(index % 5 === 1)return <div className="badge badge-primary">In Progress</div>
-        else if(index % 5 === 2)return <div className="badge badge-secondary">Sold</div>
-        else if(index % 5 === 3)return <div className="badge badge-accent">Need Followup</div>
-        else return <div className="badge badge-ghost">Open</div>
-    }
-
-    const deleteCurrentLead = (index) => {
-        dispatch(openModal({title : "Confirmation", bodyType : MODAL_BODY_TYPES.CONFIRMATION, 
-        extraObject : { message : `Are you sure you want to delete this lead?`, type : CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE, index}}))
-    }
-
-    return(
-        <>
-            
-            <TitleCard title="Current Leads" topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
-
-                {/* Leads List in table format loaded from slice after api call */}
-            <div className="overflow-x-auto w-full">
-                <table className="table w-full">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email Id</th>
-                        <th>Created At</th>
-                        <th>Status</th>
-                        <th>Assigned To</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            leads.map((l, k) => {
-                                return(
-                                    <tr key={k}>
-                                    <td>
-                                        <div className="flex items-center space-x-3">
-                                            <div className="avatar">
-                                                <div className="mask mask-squircle w-12 h-12">
-                                                    <img src={l.avatar} alt="Avatar" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="font-bold">{l.first_name}</div>
-                                                <div className="text-sm opacity-50">{l.last_name}</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{l.email}</td>
-                                    <td>{moment(new Date()).add(-5*(k+2), 'days').format("DD MMM YY")}</td>
-                                    <td>{getDummyStatus(k)}</td>
-                                    <td>{l.last_name}</td>
-                                    <td><button className="btn btn-square btn-ghost" onClick={() => deleteCurrentLead(k)}><TrashIcon className="w-5"/></button></td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
-            </TitleCard>
-        </>
-    )
-}
-
-
-export default Leads
+export default Leads;

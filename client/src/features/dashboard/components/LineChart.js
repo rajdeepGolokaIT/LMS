@@ -33,7 +33,7 @@ function LineChart({updateDashboardPeriod}) {
   const [selectedOption, setSelectedOption] = useState('Monthly'); // Default to Monthly
   const [selectedDateRange, setSelectedDateRange] = useState({ startDate: null, endDate: null });
   const [dateValue, setDateValue] = useState({ 
-    startDate: new Date().toISOString().split('T')[0], 
+    startDate: new Date().toISOString().split('T')[0],
     endDate: new Date().toISOString().split('T')[0] 
 });
 
@@ -159,6 +159,8 @@ function LineChart({updateDashboardPeriod}) {
 
     fetchData();
   }, []);
+
+  // console.log(invoices);
 
   useEffect(() => {
     const monthlySales = getMonthlySales(invoices);

@@ -7,11 +7,11 @@ function InternalPage(){
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setPageTitle({ title : "Leads"}))
+        dispatch(setPageTitle({ title : "Products"}))
       }, [])
 
 
-    return // <Leads />
+    return  <Leads />
     
 }
 
