@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import TitleCard from "../../components/Cards/TitleCard";
+import DatePicker from "react-tailwindcss-datepicker";
 
 function Leads() {
   const [selectedInterval, setSelectedInterval] = useState("Yearly");
   const [selectedYear, setSelectedYear] = useState(moment().year()); // Current year as default
   const [selectedMonth, setSelectedMonth] = useState(moment().format("MMMM")); // Current month as default
+  const [selectedDateRange, setSelectedDateRange] = useState({ startDate: null, endDate: null }); // For weekly and daily intervals
   const [topProducts, setTopProducts] = useState([]);
 
   const generateFinancialYears = () => {
@@ -29,47 +31,68 @@ function Leads() {
       const monthYearString = `${monthName} ${year}`; // Combine month and year
       months.unshift(monthYearString); // Unshift to prepend the month-year string to the beginning of the array
     }
-    // console.log(months.reverse());
     return months;
   };
   
-  
   const financialYears = generateFinancialYears();
   const months = generateMonths().reverse(); 
-//   console.log(months);
 
   const fetchTopSellingProducts = async () => {
     try {
       let apiUrl;
+      let fromDate, toDate, intervalParam;
+      
       if (selectedInterval === "Yearly") {
         apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products?interval=annually&year=${selectedYear}`;
       } else if (selectedInterval === "Monthly") {
-        // const monthIndex = moment.months().indexOf(selectedMonth);
-        // console.log(monthIndex);
-        const yearForMonth = selectedYear  // If selected month is before April, consider previous year   - (monthIndex >= 3 ? 0 : 1);
         const apiMonth = selectedMonth.split(" ")[0];
-        apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products?interval=monthly&year=${yearForMonth}&month=${apiMonth.toLowerCase()}`;
-        // console.log(yearForMonth);
-        // console.log(selectedYear);
+        apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products?interval=monthly&year=${selectedYear}&month=${apiMonth.toLowerCase()}`;
+      } else if (selectedInterval === "Weekly" || selectedInterval === "Daily") {
+        intervalParam = "customdate"; // Set intervalParam
+        
+        // Set fromDate and toDate based on selectedDateRange or current week/day
+        if (selectedDateRange) {
+          fromDate = selectedDateRange.startDate;
+          toDate = selectedDateRange.endDate;
+        //   console.log(fromDate, toDate);
+        //   console.log(selectedDateRange);
+        } else {
+            if(selectedInterval === "Weekly"){
+                fromDate = moment().startOf("week").format("YYYY-MM-DD");
+                toDate = moment().endOf("week").format("YYYY-MM-DD");
+            } else if(selectedInterval === "Daily"){
+                fromDate = moment().startOf("day").format("YYYY-MM-DD");
+                toDate = moment().endOf("day").format("YYYY-MM-DD");
+            }
+        //   fromDate = moment().startOf("week").format("YYYY-MM-DD");
+        //   toDate = moment().endOf("week").format("YYYY-MM-DD");
+        //   console.log(fromDate, toDate);
+        }
+        
+        apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products?interval=${intervalParam}&fromDate=${fromDate}&toDate=${toDate}`;
       }
-    //   console.log(apiUrl);
+      
+    //   console.log(fromDate, toDate, intervalParam); 
+      
       const response = await fetch(apiUrl);
-
       const data = await response.json();
       setTopProducts(data);
+    //   console.log(data);
     } catch (error) {
       console.error("Error fetching top selling products:", error);
       // Handle error
     }
   };
-//   console.log(selectedMonth)
+  
 
   useEffect(() => {
     fetchTopSellingProducts();
-  }, [selectedInterval, selectedYear, selectedMonth]);
+  }, [selectedInterval, selectedYear, selectedMonth, selectedDateRange]);
 
   const handleIntervalChange = (event) => {
     setSelectedInterval(event.target.value);
+    // Clear date range when switching interval
+    setSelectedDateRange(null);
   };
 
   const handleYearChange = (event) => {
@@ -82,9 +105,18 @@ function Leads() {
     const selectedMonth = selectedMonthValue.split(" ")[0]; // Extract month name
     setSelectedMonth(`${selectedMonth} ${selectedYear}`); // Set selectedMonth as month-year
   };
-  
-//   console.log(months)
 
+  const handleDateRangeChange = (dateRange) => {
+    setSelectedDateRange(dateRange);
+    // console.log(dateRange);
+  };
+
+  const handleReset = () => {
+    setSelectedInterval("Yearly");
+    setSelectedYear(moment().year());
+    setSelectedMonth(moment().format("MMMM"));
+    setSelectedDateRange(null);
+  };
 
   return (
     <>
@@ -100,36 +132,57 @@ function Leads() {
             >
               <option value="Yearly">Yearly</option>
               <option value="Monthly">Monthly</option>
+              <option value="Weekly">Weekly</option>
+              <option value="Daily">Daily</option>
             </select>
-            {selectedInterval === "Yearly" && (
-              <select
-                className="px-2 border border-gray-300 rounded-md h-12"
-                onChange={handleYearChange}
-                value={selectedYear}
-              >
-                {financialYears.map((year) => (
-                  <option key={year} value={parseInt(year.split("-")[0])}>
-                    {year}
-                  </option>
-                ))}
-              </select>
+            {(selectedInterval === "Yearly" || selectedInterval === "Monthly") && (
+              <>
+                {selectedInterval === "Yearly" && (
+                  <select
+                    className="px-2 border border-gray-300 rounded-md h-12"
+                    onChange={handleYearChange}
+                    value={selectedYear}
+                  >
+                    {financialYears.map((year) => (
+                      <option key={year} value={parseInt(year.split("-")[0])}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {selectedInterval === "Monthly" && (
+                  <select
+                    className="px-2 border border-gray-300 rounded-md h-12"
+                    onChange={handleMonthChange}
+                    value={selectedMonth}
+                  >
+                    {months.map((month) => (
+                      <option key={month} value={month}>
+                        {month}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </>
             )}
-            {selectedInterval === "Monthly" && (
-              <select
-                className="px-2 border border-gray-300 rounded-md h-12"
-                onChange={handleMonthChange}
-                value={selectedMonth}
-              >
-                {months.map((month) => (
-                    
-                  <option key={month} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
+            {(selectedInterval === "Weekly" || selectedInterval === "Daily") && (
+              <DatePicker
+                className="border border-gray-300 rounded-md px-2 h-12"
+                range
+                // containerClassName="w-72 "
+                onChange={handleDateRangeChange}
+                value={selectedDateRange}
+                inputClassName="input input-bordered w-72"
+                // toggleClassName="invisible"
+              />
             )}
           </>
         }
+        TopSideButtons3={
+            <button onClick={handleReset} className="btn btn-ghost btn-xs h-12">
+              Reset
+            </button>
+          }
       >
         <div className="overflow-x-auto w-full">
           <table className="table w-full">
