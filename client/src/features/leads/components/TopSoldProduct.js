@@ -9,11 +9,11 @@ const TopSoldProducts = () => {
   const [locations, setLocations] = useState([]);
   const [selectedYear, setSelectedYear] = useState(moment().year());
   const [selectedMonth, setSelectedMonth] = useState(moment().format("MMMM"));
-  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("East");
   const [selectedInterval, setSelectedInterval] = useState("Yearly");
   const [selectedCategory, setSelectedCategory] = useState("zone");
-  const [yearlyOptions, setYearlyOptions] = useState([]);
-  const [monthlyOptions, setMonthlyOptions] = useState([]);
+//   const [yearlyOptions, setYearlyOptions] = useState([]);
+//   const [monthlyOptions, setMonthlyOptions] = useState([]);
   const [selectedDateRange, setSelectedDateRange] = useState({
     startDate: null,
     endDate: null,
@@ -21,9 +21,9 @@ const TopSoldProducts = () => {
 
   useEffect(() => {
     fetchLocations();
-    generateYearlyOptions();
-    generateMonthlyOptions();
-  }, [selectedCategory]);
+    // generateYearlyOptions();
+    // generateMonthlyOptions();
+  }, [selectedCategory, selectedYear, selectedMonth]);
 
   const fetchLocations = async () => {
     try {
@@ -99,31 +99,58 @@ const TopSoldProducts = () => {
     }
   };
 
-  const generateYearlyOptions = () => {
+//   const generateYearlyOptions = () => {
+//     const currentYear = moment().year();
+//     const yearlyOptions = [currentYear, currentYear - 1, currentYear - 2].map(
+//       (year) => ({
+//         label: `${year - 1}-${year}`,
+//         value: year,
+//       })
+//     );
+//     // setYearlyOptions(yearlyOptions);
+//   };
+
+  const generateFinancialYears = () => {
     const currentYear = moment().year();
-    const yearlyOptions = [currentYear, currentYear - 1, currentYear - 2].map(
-      (year) => ({
-        label: `${year - 1}-${year}`,
-        value: year,
-      })
-    );
-    setYearlyOptions(yearlyOptions);
+    const years = [];
+    for (let i = 0; i < 3; i++) {
+      const startYear = currentYear - i;
+      years.push(`${startYear}-${startYear + 1}`);
+    }
+    return years;
   };
 
-  const generateMonthlyOptions = () => {
+  const financialYears = generateFinancialYears();
+
+//   const generateMonthlyOptions = () => {
+//     const currentYear = moment().year();
+//     const months = moment.months();
+//     const monthlyOptions = [];
+//     for (let i = 0; i < 3; i++) {
+//       for (let j = 0; j < months.length; j++) {
+//         monthlyOptions.push({
+//           label: `${months[j]} ${currentYear - i}`,
+//           value: `${months[j]} ${currentYear - i}`,
+//         });
+//       }
+//     }
+//     // setMonthlyOptions(monthlyOptions);
+//   };
+
+  const generateMonths = () => {
+    const months = [];
+    const fiscalStartMonth = moment().month("April").startOf("month");
     const currentYear = moment().year();
-    const months = moment.months();
-    const monthlyOptions = [];
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < months.length; j++) {
-        monthlyOptions.push({
-          label: `${months[j]} ${currentYear - i}`,
-          value: `${months[j]} ${currentYear - i}`,
-        });
-      }
+    for (let i = 0; months.length < 36; i++) { // 3 years * 12 months
+      const monthYear = fiscalStartMonth.clone().subtract(i, "months");
+      const monthName = monthYear.format("MMMM");
+      const year = monthYear.year(); // Extract the year for the current month
+      const monthYearString = `${monthName} ${year}`; // Combine month and year
+      months.unshift(monthYearString); // Unshift to prepend the month-year string to the beginning of the array
     }
-    setMonthlyOptions(monthlyOptions);
+    return months;
   };
+  const months = generateMonths().reverse(); 
 
   useEffect(() => {
     fetchTopSellingProducts();
@@ -141,13 +168,15 @@ const TopSoldProducts = () => {
   };
 
   const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+    setSelectedYear(parseInt(event.target.value));
   };
 
   const handleMonthChange = (event) => {
-    setSelectedMonth(event.target.value);
+    const selectedMonthValue = event.target.value;
+    const selectedYear = selectedMonthValue.split(" ")[1];
+    const selectedMonth = selectedMonthValue.split(" ")[0]; // Extract month name
+    setSelectedMonth(`${selectedMonth} ${selectedYear}`); // Set selectedMonth as month-year
   };
-
   const handleDateRangeChange = (dateRange) => {
     setSelectedDateRange(dateRange);
   };
@@ -176,7 +205,7 @@ const TopSoldProducts = () => {
   const resetFilters = () => {
     setSelectedYear(moment().year());
     setSelectedMonth(moment().format("MMMM"));
-    setSelectedLocation("");
+    setSelectedLocation("East");
     setSelectedInterval("Yearly");
     setSelectedCategory("zone");
     setSelectedDateRange({ startDate: null, endDate: null });
@@ -198,11 +227,11 @@ const TopSoldProducts = () => {
                     onChange={handleYearChange}
                     value={selectedYear}
                   >
-                    {yearlyOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
+                    {financialYears.map((year) => (
+                    <option key={year} value={parseInt(year.split("-")[0])}>
+                      {year}
+                    </option>
+                  ))}
                   </select>
                 )}
                 {selectedInterval === "Monthly" && (
@@ -211,11 +240,11 @@ const TopSoldProducts = () => {
                     onChange={handleMonthChange}
                     value={selectedMonth}
                   >
-                    {monthlyOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
+                     {months.map((month) => (
+                    <option key={month} value={month}>
+                      {month}
+                    </option>
+                  ))}
                   </select>
                 )}
               </>
@@ -223,10 +252,11 @@ const TopSoldProducts = () => {
             {(selectedInterval === "Weekly" ||
               selectedInterval === "Daily") && (
               <DatePicker
-                className="border border-gray-300 rounded-md px-2 h-12 ml-2"
+                className="border border-gray-300 rounded-md px-2 h-12"
                 range
                 onChange={handleDateRangeChange}
                 value={selectedDateRange}
+                inputClassName="input input-bordered w-72"
               />
             )}
             <Autocomplete

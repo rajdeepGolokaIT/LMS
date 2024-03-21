@@ -18,12 +18,12 @@ const Autocomplete = ({ items, value, onChange }) => {
         className="input input-bordered w-full"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Type something.."
+        placeholder="Select or Search..."
         tabIndex={0}
       />
-      <div className="dropdown-content bg-base-200 top-14 max-h-96 overflow-auto flex-col rounded-md">
+      <div className="dropdown-bottom dropdown-hover">
         <ul
-          className="menu menu-compact"
+          className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
           style={{ width: ref.current ? ref.current.clientWidth : "auto" }}
         >
           {items.map((item, index) => (
@@ -34,7 +34,7 @@ const Autocomplete = ({ items, value, onChange }) => {
                 onChange(item);
                 setOpen(false);
               }}
-              className="border-b border-b-base-content/10 w-full"
+            //   className="border-b border-b-base-content/10 w-full"
             >
               <button>{item}</button>
             </li>
