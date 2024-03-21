@@ -151,7 +151,7 @@ function LineChart({updateDashboardPeriod}) {
         const response = await axios.get('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all');
         setInvoices(response.data);
         setLoading(false);
-        console.log('API Response:', response.data);
+        // console.log('API Response:', response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -166,8 +166,8 @@ function LineChart({updateDashboardPeriod}) {
     const monthlySales = getMonthlySales(invoices);
     const yearlySales = getYearlySales(invoices);
 
-    console.log('Monthly Sales:', monthlySales);
-    console.log('Yearly Sales:', yearlySales);
+    // console.log('Monthly Sales:', monthlySales);
+    // console.log('Yearly Sales:', yearlySales);
 
     const chartData = {
       labels: selectedOption === 'Monthly' ? Object.keys(monthlySales) : Object.keys(yearlySales),
@@ -208,7 +208,7 @@ function LineChart({updateDashboardPeriod}) {
       endDate: range.endDate ? new Date(range.endDate) : null
     });
 
-    console.log(new Date(range.startDate), new Date(range.endDate), range);
+    // console.log(new Date(range.startDate), new Date(range.endDate), range);
     
 
     if (range.startDate && range.endDate) {
