@@ -183,6 +183,7 @@ const TopSoldProducts = () => {
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
+    setSelectedLocation("")
   };
 
   const handleLocationChange = (value) => {
@@ -218,6 +219,16 @@ const TopSoldProducts = () => {
         topMargin="mt-2"
         TopSideButtons1={
           <>
+            <select
+              className="px-2 border border-gray-300 rounded-md h-12 ml-2"
+              onChange={handleIntervalChange}
+              value={selectedInterval}
+            >
+              <option value="Yearly">Yearly</option>
+              <option value="Monthly">Monthly</option>
+              <option value="Weekly">Weekly</option>
+              <option value="Daily">Daily</option>
+            </select>
             {(selectedInterval === "Yearly" ||
               selectedInterval === "Monthly") && (
               <>
@@ -251,6 +262,7 @@ const TopSoldProducts = () => {
             )}
             {(selectedInterval === "Weekly" ||
               selectedInterval === "Daily") && (
+
               <DatePicker
                 className="border border-gray-300 rounded-md px-2 h-12"
                 range
@@ -259,11 +271,6 @@ const TopSoldProducts = () => {
                 inputClassName="input input-bordered w-72"
               />
             )}
-            <Autocomplete
-        items={locations}
-        value={selectedLocation}
-        onChange={handleLocationChange}
-      />
             <select
               className="px-2 border border-gray-300 rounded-md h-12 ml-2"
               onChange={handleCategoryChange}
@@ -274,16 +281,11 @@ const TopSoldProducts = () => {
               <option value="Region">Region</option>
               <option value="City">City</option>
             </select>
-            <select
-              className="px-2 border border-gray-300 rounded-md h-12 ml-2"
-              onChange={handleIntervalChange}
-              value={selectedInterval}
-            >
-              <option value="Yearly">Yearly</option>
-              <option value="Monthly">Monthly</option>
-              <option value="Weekly">Weekly</option>
-              <option value="Daily">Daily</option>
-            </select>
+            <Autocomplete
+        items={locations}
+        value={selectedLocation}
+        onChange={handleLocationChange}
+      />
             <button
               className="btn btn-ghost btn-xs h-12"
               onClick={resetFilters}

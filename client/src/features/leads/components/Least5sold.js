@@ -180,7 +180,7 @@ export const Least5sold = () => {
           )}
         </>
       }
-      TopSideButtons3={
+      TopSideButtons2={
           <button onClick={handleReset} className="btn btn-ghost btn-xs h-12">
             Reset
           </button>
