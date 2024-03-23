@@ -29,11 +29,11 @@ const routes = [
   //   component: Welcome, // view rendered
   // },
   {
-    path: '/Products',
+    path: '/Products-Dashboard',
     component: Leads,
   },
   {
-    path: '/settings-team',
+    path: '/Categories-Entry-Operations',
     component: Team,
   },
   {
@@ -41,7 +41,7 @@ const routes = [
     component: Calendar,
   },
   {
-    path: '/Categories',
+    path: '/Categories-Dashboard',
     component: Transactions,
   },
   {
@@ -49,11 +49,11 @@ const routes = [
     component: ProfileSettings,
   },
   {
-    path: '/settings-billing',
+    path: '/Products-Entry-Operations',
     component: Bills,
   },
   {
-    path: '/getting-started',
+    path: '/Categories-by-Distributors-Dashboard',
     component: GettingStarted,
   },
   {
@@ -61,7 +61,7 @@ const routes = [
     component: DocFeatures,
   },
   {
-    path: '/components',
+    path: '/Distributors-Entry-Operations',
     component: DocComponents,
   },
   {
@@ -69,7 +69,7 @@ const routes = [
     component: Integration,
   },
   {
-    path: '/Distributers',
+    path: '/Products-by-Distributers-Dashboard',
     component: Charts,
   },
   {

@@ -31,24 +31,77 @@ const routes = [
     name: 'Dashboard',
   },
   {
-    path: '/app/Products', // url
-    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    path: '', // url
+    icon: <InboxArrowDownIcon className={`${iconClasses} inline` }/>, // icon component
     name: 'Products', // name that appear in Sidebar
+    submenu : [
+          {
+            path: '/app/Products-Dashboard',   //'/app/settings-profile', //url
+            icon:  <Squares2X2Icon className={iconClasses}/>,   //<UserIcon className={submenuIconClasses}/>, // icon component
+            name: 'Products Dashboard', // name that appear in Sidebar
+          },
+          {
+            path: '/app/Products-Entry-Operations',
+            icon: <WalletIcon className={submenuIconClasses}/>,
+            name: 'Products Entry Operations',
+          }
+        ]
   },
   {
-    path: '/app/Categories', // url
-    icon: <CurrencyDollarIcon className={iconClasses}/>, // icon component
+    path: '', // url
+    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
     name: 'Categories', // name that appear in Sidebar
+    submenu : [
+      {
+            path: '/app/Categories-Dashboard',   // //url
+            icon:  <Squares2X2Icon className={iconClasses}/>,   //<UserIcon className={submenuIconClasses}/>, // icon component
+            name: 'Categories Dashboard', // name that appear in Sidebar
+      },
+      {
+        path: '/app/Categories-Entry-Operations',
+        icon: <WalletIcon className={submenuIconClasses}/>,
+        name: 'Categories Entry Operations',
+      },
+    ]
   },
   {
-    path: '/app/Distributers', // url
-    icon: <ChartBarIcon className={iconClasses}/>, // icon component
+    path: '', // url
+    icon: <ChartBarIcon className={`${iconClasses} inline` }/>, // icon component
     name: 'Distributers', // name that appear in Sidebar
+    submenu : [
+      {
+            path: '/app/Products-by-Distributers-Dashboard', //url
+            icon:  <Squares2X2Icon className={iconClasses}/>, //<UserIcon className={submenuIconClasses}/>, // icon component
+            name: 'Products by Distributers Dashboard', // name that appear in Sidebar
+      },
+      {
+        path: '/app/Categories-by-Distributors-Dashboard',
+        icon: <Squares2X2Icon className={iconClasses}/>,
+        name: 'Categories by Distributers Dashboard',
+      },
+      {
+        path: '/app/Distributors-Entry-Operations',
+        icon: <WalletIcon className={submenuIconClasses}/>,
+        name: 'Distributors Entry Operations',
+      },
+    ]
   },
   {
-    path: '/app/Expenses', // url
-    icon: <BoltIcon className={iconClasses}/>, // icon component
+    path: '', // url
+    icon: <BoltIcon className={`${iconClasses} inline` }/>, // icon component
     name: 'Expenses', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/app/Expenses',   //'/app/settings-profile', //url
+        icon:  <Squares2X2Icon className={iconClasses}/>,   //<UserIcon className={submenuIconClasses}/>, // icon component
+        name: 'Expenses Dashboard', // name that appear in Sidebar
+      },
+      {
+        path: '',
+        icon: <WalletIcon className={submenuIconClasses}/>,
+        name: 'Expenses Entry Operations',
+      }
+    ]
   },
   {
     path: '/app/Invoices', // url

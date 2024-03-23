@@ -15,13 +15,13 @@ function DocComponents(){
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setPageTitle({ title : "Documentation"}))
+        dispatch(setPageTitle({ title : "Distributors Entry Operations"}))
       }, [])
 
 
     return(
         <>
-            <div className="bg-base-100  flex overflow-hidden  rounded-lg" style={{height : "82vh"}}>
+            {/* <div className="bg-base-100  flex overflow-hidden  rounded-lg" style={{height : "82vh"}}>
                     <div className="flex-none p-4">
                         <DocComponentsNav activeIndex={1}/>
                     </div>
@@ -30,7 +30,7 @@ function DocComponents(){
                         <DocComponentsContent />
                     </div>
 
-                </div>
+                </div> */}
            
         </>
     )

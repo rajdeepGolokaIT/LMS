@@ -5,6 +5,8 @@ import { setPageTitle, showNotification } from "../common/headerSlice"
 import GettingStartedNav from "./components/GettingStartedNav"
 import ReadMe from "./components/GettingStartedContent"
 import GettingStartedContent from "./components/GettingStartedContent"
+import TopCategoryDistributor from "./components/TopCategoryDistributor"
+import LeastCategoryDistributor from "./components/LeastCategoryDistributor"
 
 
 
@@ -13,13 +15,13 @@ function GettingStarted(){
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setPageTitle({ title : "Documentation"}))
+        dispatch(setPageTitle({ title : "Categories by Distributors Dashboard"}))
       }, [])
 
 
     return(
         <>
-            <div className="bg-base-100  flex overflow-hidden  rounded-lg" style={{height : "82vh"}}>
+            {/* <div className="bg-base-100  flex overflow-hidden  rounded-lg" style={{height : "82vh"}}>
                     <div className="flex-none p-4">
                         <GettingStartedNav activeIndex={1}/>
                     </div>
@@ -28,7 +30,10 @@ function GettingStarted(){
                         <GettingStartedContent />
                     </div>
 
-                </div>
+                </div> */}
+
+                <TopCategoryDistributor/>
+                <LeastCategoryDistributor/>
            
         </>
     )

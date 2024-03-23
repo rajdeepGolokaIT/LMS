@@ -7,13 +7,12 @@ function InternalPage(){
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setPageTitle({ title : "Analytics"}))
+        dispatch(setPageTitle({ title : "Products by Distributors Dashboard"}))
       }, [])
 
 
-    return(
-        <Charts />
-    )
+    return  <Charts />
+    
 }
 
 export default InternalPage
