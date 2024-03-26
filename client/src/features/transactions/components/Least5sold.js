@@ -170,10 +170,10 @@ const Least5sold = () => {
             <DatePicker
               className="border border-gray-300 rounded-md px-2 h-7"
               range
-              // containerClassName="w-72 "
+              // containerClassName="w-72 h-7 "
               onChange={handleDateRangeChange}
               value={selectedDateRange}
-              inputClassName="input input-bordered w-72"
+              inputClassName="input input-bordered w-72 h-7"
               // toggleClassName="invisible"
             />
           )}

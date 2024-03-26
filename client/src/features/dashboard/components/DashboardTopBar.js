@@ -37,10 +37,10 @@ function DashboardTopBar({updateDashboardPeriod}){
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="">
             <Datepicker 
-                containerClassName="w-72 " 
+                containerClassName="w-72 h-7 " 
                 value={dateValue} 
                 theme={"light"}
-                inputClassName="input input-bordered w-72" 
+                inputClassName="input input-bordered w-72 h-7" 
                 popoverDirection={"down"}
                 toggleClassName="invisible"
                 onChange={handleDatePickerValueChange} 
@@ -51,7 +51,7 @@ function DashboardTopBar({updateDashboardPeriod}){
                 options={periodOptions}
                 labelTitle="Period"
                 placeholder="Select date range"
-                containerStyle="w-72"
+                containerStyle="w-72 h-7"
                 labelStyle="hidden"
                 defaultValue="TODAY"
                 updateFormValue={updateSelectBoxValue}

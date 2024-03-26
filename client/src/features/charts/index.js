@@ -28,10 +28,10 @@ function Charts(){
     return(
         <>
         {/* <Datepicker 
-                containerClassName="w-72" 
+                containerClassName="w-72 h-7" 
                 value={dateValue} 
                 theme={"light"}
-                inputClassName="input input-bordered w-72" 
+                inputClassName="input input-bordered w-72 h-7" 
                 popoverDirection={"down"}
                 toggleClassName="invisible"
                 onChange={handleDatePickerValueChange} 

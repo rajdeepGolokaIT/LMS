@@ -267,7 +267,7 @@ const LeastSoldProduct = () => {
                   range
                   onChange={handleDateRangeChange}
                   value={selectedDateRange}
-                  inputClassName="input input-bordered w-72"
+                  inputClassName="input input-bordered w-72 h-7"
                 />
               )}
               <select

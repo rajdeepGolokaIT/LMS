@@ -313,10 +313,10 @@ function LineChart({updateDashboardPeriod}) {
       TopSideButtons2={<Datepicker 
         key={Date.now()}
         // dateValue={dateValue}
-        containerClassName="w-72 " 
+        containerClassName="w-72 h-7 " 
         value={dateValue} // Use the new state variable for Datepicker value
         theme={"light"}
-        inputClassName="input input-bordered w-72"
+        inputClassName="input input-bordered w-72 h-7"
         popoverDirection={"down"}
         toggleClassName="invisible"
         onChange={handleDateRangeChange} 
