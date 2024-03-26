@@ -302,7 +302,7 @@ function LineChart({updateDashboardPeriod}) {
       title="Sales Analysis"
       TopSideButtons1={
         <select
-          className="px-2 border border-gray-300 rounded-md h-12"
+          className="px-2 border border-gray-300 rounded-md h-7"
           onChange={handleSelectChange}
           value={selectedOption}
         >
@@ -323,7 +323,7 @@ function LineChart({updateDashboardPeriod}) {
         showShortcuts={false} 
         primaryColor={"white"} 
     /> }
-    TopSideButtons3={<button onClick={handleReset} className="btn btn-ghost btn-xs h-12">Reset</button>}
+    TopSideButtons3={<button onClick={handleReset} className="btn btn-ghost btn-xs h-7">Reset</button>}
     >
       {loading ? (
         <p>Loading...</p>

@@ -4,7 +4,7 @@ import TitleCard from "../../../components/Cards/TitleCard";
 import Autocomplete from "../../leads/components/Autocomplete"; // Import Autocomplete component
 import DatePicker from "react-tailwindcss-datepicker";
 
-const LeastCategoryDistributor = () => {
+const Top5Distributor = () => {
 
     const [topProducts, setTopProducts] = useState([]);
     const [locations, setLocations] = useState([]);
@@ -32,19 +32,19 @@ const LeastCategoryDistributor = () => {
           "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
         );
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         const category = selectedCategory.toLowerCase();
-        console.log(category);
+        // console.log(category);
     
         // Extract all locations based on the selected category
         const allLocations = data.map(item => item.distributor.distributorProfile[category]);
-        console.log(allLocations);
+        // console.log(allLocations);
     
         // Filter out unique locations
         const uniqueLocations = [...new Set(allLocations)];
     
         setLocations(uniqueLocations);
-        console.log(uniqueLocations);
+        // console.log(uniqueLocations);
       } catch (error) {
         console.error("Error fetching locations:", error);
       }
@@ -58,16 +58,16 @@ const LeastCategoryDistributor = () => {
   
         const locationType = selectedCategory.toLowerCase(); // Get selected location type
         const locationValue = encodeURIComponent(selectedLocation);
-        console.log(locationType, locationValue);
+        // console.log(locationType, locationValue);
   
         if (selectedInterval === "Yearly") {
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/least-distributors-by-categories?${locationType}=${locationValue}&year=${selectedYear}&interval=annually`;
+          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors?interval=annually&${locationType}=${locationValue}&year=${selectedYear}&type=top`;
           console.log(apiUrl);
-          //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&interval=annually
+          //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors?interval=annually&year=2024&type=top
         } else if (selectedInterval === "Monthly") {
           const monthParam = selectedMonth.toLowerCase().split(" ")[0];
-          console.log(monthParam);
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/least-distributors-by-categories?${locationType}=${locationValue}&year=${selectedYear}&month=${monthParam}&interval=monthly`;
+        //   console.log(monthParam);
+          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors?interval=monthly&${locationType}=${locationValue}&year=${selectedYear}&month=${monthParam}&type=top`;
           console.log(apiUrl);
           //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&month=${monthParam}&interval=monthly
         } else if (
@@ -89,10 +89,9 @@ const LeastCategoryDistributor = () => {
               toDate = moment().endOf("day").format("YYYY-MM-DD");
             }
           }
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/least-distributors-by-categories?${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&interval=${intervalParam}`;
+          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors?interval=${intervalParam}&${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&type=top`;
           console.log(apiUrl);
           //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&interval=${intervalParam}
-          // https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors-by-region?city=Mumbai&year=2024&month=april&interval=monthly
         }
   
         const response = await fetch(apiUrl);
@@ -220,7 +219,7 @@ const LeastCategoryDistributor = () => {
   return (
     <>
     <TitleCard
-       title="Least Sold Category by Distributor"
+       title="Top 5 Distributors"
        topMargin="mt-2"
        TopSideButtons1={
          <>
@@ -303,21 +302,19 @@ const LeastCategoryDistributor = () => {
          <table className="table w-full">
            <thead>
              <tr>
-               <th>Product Name</th>
-               <th>Quantity Sold</th>
-               <th>Distributer Agency Name</th>
+               <th>Distributer Name</th>
                <th>Contact Person Name</th>
+               <th>Total Sale Amount</th>
              </tr>
            </thead>
            <tbody>
-           {topProducts.length > 0 && (
-            <tr>
-             <td>{topProducts[0][0]}</td>
-              <td>{topProducts[0][1]}</td>
-              <td>{topProducts[0][2]}</td>
-              <td>{topProducts[0][3]}</td>
-            </tr>
-)}
+           {topProducts.map((product, index) => (
+              <tr key={index} >
+                <td>{product.agencyName}</td>
+                <td>{product.contactPerson}</td>
+                <td>{product.totalPrice}</td>
+              </tr>
+            ))}
            </tbody>
          </table>
        </div>
@@ -326,4 +323,4 @@ const LeastCategoryDistributor = () => {
   )
 }
 
-export default LeastCategoryDistributor
+export default Top5Distributor

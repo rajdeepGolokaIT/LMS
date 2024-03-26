@@ -20,10 +20,10 @@ function Calendar(){
     // Add your own Add Event handler, like opening modal or random event addition
     // Format - {title :"", theme: "", startTime : "", endTime : ""}, typescript version comming soon :)
     const addNewEvent = (date) => {
-        // let randomEvent = INITIAL_EVENTS[Math.floor(Math.random() * 10)]
-        // let newEventObj = {title : randomEvent.title, theme : randomEvent.theme, startTime : moment(date).startOf('day'), endTime : moment(date).endOf('day')}
+        let randomEvent = INITIAL_EVENTS[Math.floor(Math.random() * 10)]
+        let newEventObj = {title : randomEvent.title, theme : randomEvent.theme, startTime : moment(date).startOf('day'), endTime : moment(date).endOf('day')}
         setEvents([...events])
-        // dispatch(showNotification({message : "New Event Added!", status : 1}))
+        dispatch(showNotification({message : "New Event Added!", status : 1}))
     }
 
     // Open all events of current day in sidebar 

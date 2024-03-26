@@ -15,7 +15,7 @@ const Autocomplete = ({ items, value, onChange }) => {
     >
       <input
         type="text"
-        className="input input-bordered w-full"
+        className="input input-bordered w-full h-7"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Select or Search..."

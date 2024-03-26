@@ -1,5 +1,7 @@
 import TitleCard from "../../../components/Cards/TitleCard"
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../../common/headerSlice';
 import axios from 'axios';
 
 function Billing(){
@@ -9,6 +11,8 @@ function Billing(){
     const [categoryId, setCategoryId] = useState('');
     const [isActive, setIsActive] = useState(true); // Assuming default is active
     const [categories, setCategories] = useState([]);
+
+    const dispatch = useDispatch();
   
     useEffect(() => {
         // Fetch categories when component mounts
@@ -42,12 +46,14 @@ function Billing(){
         );
         console.log('Product added:', response.data);
         // Optionally, you can reset the form fields after successful submission
+        dispatch(showNotification({ message: 'Product added successfully 😁', status: 1 }));
         setProductName('');
         setPrice('');
         setCategoryId('');
         setIsActive(true);
       } catch (error) {
         console.error('Error adding product:', error);
+        dispatch(showNotification({message : "Error adding product! 😵", status : 0}));
         // Handle error, show error message to the user, etc.
       }
     };

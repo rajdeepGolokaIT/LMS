@@ -220,7 +220,7 @@ const TopSoldProducts = () => {
         TopSideButtons1={
           <>
             <select
-              className="px-2 border border-gray-300 rounded-md h-12 ml-2"
+              className="px-2 border border-gray-300 rounded-md h-7 ml-2"
               onChange={handleIntervalChange}
               value={selectedInterval}
             >
@@ -234,7 +234,7 @@ const TopSoldProducts = () => {
               <>
                 {selectedInterval === "Yearly" && (
                   <select
-                    className="px-2 border border-gray-300 rounded-md h-12 ml-2"
+                    className="px-2 border border-gray-300 rounded-md h-7 ml-2"
                     onChange={handleYearChange}
                     value={selectedYear}
                   >
@@ -247,7 +247,7 @@ const TopSoldProducts = () => {
                 )}
                 {selectedInterval === "Monthly" && (
                   <select
-                    className="px-2 border border-gray-300 rounded-md h-12 ml-2"
+                    className="px-2 border border-gray-300 rounded-md h-7 ml-2"
                     onChange={handleMonthChange}
                     value={selectedMonth}
                   >
@@ -264,7 +264,7 @@ const TopSoldProducts = () => {
               selectedInterval === "Daily") && (
 
               <DatePicker
-                className="border border-gray-300 rounded-md px-2 h-12"
+                className="border border-gray-300 rounded-md px-2 h-7"
                 range
                 onChange={handleDateRangeChange}
                 value={selectedDateRange}
@@ -272,7 +272,7 @@ const TopSoldProducts = () => {
               />
             )}
             <select
-              className="px-2 border border-gray-300 rounded-md h-12 ml-2"
+              className="px-2 border border-gray-300 rounded-md h-7 ml-2"
               onChange={handleCategoryChange}
               value={selectedCategory}
             >
@@ -287,7 +287,7 @@ const TopSoldProducts = () => {
         onChange={handleLocationChange}
       />
             <button
-              className="btn btn-ghost btn-xs h-12"
+              className="btn btn-ghost btn-xs h-7"
               onClick={resetFilters}
             >
               Reset
@@ -301,6 +301,8 @@ const TopSoldProducts = () => {
               <tr>
                 <th>Product Name</th>
                 <th>Quantity Sold</th>
+                <th>Distributer Agency Name</th>
+                <th>Contact Person Name</th>
               </tr>
             </thead>
             <tbody>
@@ -308,6 +310,9 @@ const TopSoldProducts = () => {
                 <tr key={index}>
                   <td>{product[0].productName}</td>
                   <td>{product[1]}</td>
+                  <td>{product[2]}</td>
+                  <td>{product[3]}</td>
+
                 </tr>
               ))}
             </tbody>

@@ -225,7 +225,7 @@ const TopProductsDistributors = () => {
        TopSideButtons1={
          <>
            <select
-             className="px-2 border border-gray-300 rounded-md h-12 ml-2"
+             className="px-2 border border-gray-300 rounded-md h-7 ml-2"
              onChange={handleIntervalChange}
              value={selectedInterval}
            >
@@ -239,7 +239,7 @@ const TopProductsDistributors = () => {
              <>
                {selectedInterval === "Yearly" && (
                  <select
-                   className="px-2 border border-gray-300 rounded-md h-12 ml-2"
+                   className="px-2 border border-gray-300 rounded-md h-7 ml-2"
                    onChange={handleYearChange}
                    value={selectedYear}
                  >
@@ -252,7 +252,7 @@ const TopProductsDistributors = () => {
                )}
                {selectedInterval === "Monthly" && (
                  <select
-                   className="px-2 border border-gray-300 rounded-md h-12 ml-2"
+                   className="px-2 border border-gray-300 rounded-md h-7 ml-2"
                    onChange={handleMonthChange}
                    value={selectedMonth}
                  >
@@ -268,7 +268,7 @@ const TopProductsDistributors = () => {
            {(selectedInterval === "Weekly" ||
              selectedInterval === "Daily") && (
              <DatePicker
-               className="border border-gray-300 rounded-md px-2 h-12"
+               className="border border-gray-300 rounded-md px-2 h-7"
                range
                onChange={handleDateRangeChange}
                value={selectedDateRange}
@@ -276,7 +276,7 @@ const TopProductsDistributors = () => {
              />
            )}
            <select
-             className="px-2 border border-gray-300 rounded-md h-12 ml-2"
+             className="px-2 border border-gray-300 rounded-md h-7 ml-2"
              onChange={handleCategoryChange}
              value={selectedCategory}
            >
@@ -291,7 +291,7 @@ const TopProductsDistributors = () => {
        onChange={handleLocationChange}
      />
            <button
-             className="btn btn-ghost btn-xs h-12"
+             className="btn btn-ghost btn-xs h-7"
              onClick={resetFilters}
            >
              Reset

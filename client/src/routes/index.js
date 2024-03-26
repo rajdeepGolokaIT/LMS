@@ -17,6 +17,7 @@ const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
 const GettingStarted = lazy(() => import('../pages/GettingStarted'))
 const DocFeatures = lazy(() => import('../pages/DocFeatures'))
 const DocComponents = lazy(() => import('../pages/DocComponents'))
+const DistributersDashboard = lazy(() => import('../pages/protected/DistributorsDashboard'))
 
 
 const routes = [
@@ -55,6 +56,10 @@ const routes = [
   {
     path: '/Categories-by-Distributors-Dashboard',
     component: GettingStarted,
+  },
+  {
+    path: '/Distributers-Dashboard',
+    component: DistributersDashboard,
   },
   {
     path: '/Notes',

@@ -70,10 +70,15 @@ const routes = [
     name: 'Distributers', // name that appear in Sidebar
     submenu : [
       {
-            path: '/app/Products-by-Distributers-Dashboard', //url
+            path: '/app/Distributers-Dashboard', //url
             icon:  <Squares2X2Icon className={iconClasses}/>, //<UserIcon className={submenuIconClasses}/>, // icon component
-            name: 'Products by Distributers Dashboard', // name that appear in Sidebar
+            name: 'Distributers Dashboard', // name that appear in Sidebar
       },
+      {
+        path: '/app/Products-by-Distributers-Dashboard', //url
+        icon:  <Squares2X2Icon className={iconClasses}/>, //<UserIcon className={submenuIconClasses}/>, // icon component
+        name: 'Products by Distributers Dashboard', // name that appear in Sidebar
+  },
       {
         path: '/app/Categories-by-Distributors-Dashboard',
         icon: <Squares2X2Icon className={iconClasses}/>,

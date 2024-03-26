@@ -7,6 +7,8 @@ import ReadMe from "./components/GettingStartedContent"
 import DocComponentsContent from "./components/DocComponentsContent"
 import FeaturesNav from "./components/FeaturesNav"
 import FeaturesContent from "./components/FeaturesContent"
+import DistributorProfileForm from "./components/DistributorProfileForm"
+import AddProductOfDistributorForm from "./components/AddProductOfDistributorForm"
 
 
 
@@ -21,16 +23,8 @@ function DocComponents(){
 
     return(
         <>
-            {/* <div className="bg-base-100  flex overflow-hidden  rounded-lg" style={{height : "82vh"}}>
-                    <div className="flex-none p-4">
-                        <DocComponentsNav activeIndex={1}/>
-                    </div>
-
-                    <div className="grow pt-16  overflow-y-scroll">
-                        <DocComponentsContent />
-                    </div>
-
-                </div> */}
+            <DistributorProfileForm />
+            <AddProductOfDistributorForm />
            
         </>
     )

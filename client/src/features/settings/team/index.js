@@ -8,13 +8,16 @@ import axios from 'axios';
 
 
 
+
 function Team(){
 
+    const dispatch = useDispatch();
     const [categoryName, setCategoryName] = useState('');
-  const [isActive, setIsActive] = useState(true); // Assuming default is active
+    const [isActive, setIsActive] = useState(true); // Assuming default is active
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // 
 
     try {
       const response = await axios.post(
@@ -25,11 +28,13 @@ function Team(){
         }
       );
       console.log('Category added:', response.data);
+      dispatch(showNotification({ message: 'Category added successfully 😁', status: 1 }));
       // Optionally, you can reset the form fields after successful submission
       setCategoryName('');
       setIsActive(true);
     } catch (error) {
       console.error('Error adding category:', error);
+      dispatch(showNotification({message : "Error adding category! 😵", status : 0}));
       // Handle error, show error message to the user, etc.
     }
   };

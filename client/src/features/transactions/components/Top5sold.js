@@ -78,7 +78,7 @@ const Top5sold = () => {
         const response = await fetch(apiUrl);
         const data = await response.json();
         setTopProducts(data);
-      //   console.log(data);
+        console.log(data);
       } catch (error) {
         console.error("Error fetching top selling products:", error);
         // Handle error
@@ -127,7 +127,7 @@ const Top5sold = () => {
       TopSideButtons1={
         <>
           <select
-            className="px-2 border border-gray-300 rounded-md h-12 mr-2"
+            className="px-2 border border-gray-300 rounded-md h-7 mr-2"
             onChange={handleIntervalChange}
             value={selectedInterval}
           >
@@ -140,7 +140,7 @@ const Top5sold = () => {
             <>
               {selectedInterval === "Yearly" && (
                 <select
-                  className="px-2 border border-gray-300 rounded-md h-12"
+                  className="px-2 border border-gray-300 rounded-md h-7"
                   onChange={handleYearChange}
                   value={selectedYear}
                 >
@@ -153,7 +153,7 @@ const Top5sold = () => {
               )}
               {selectedInterval === "Monthly" && (
                 <select
-                  className="px-2 border border-gray-300 rounded-md h-12"
+                  className="px-2 border border-gray-300 rounded-md h-7"
                   onChange={handleMonthChange}
                   value={selectedMonth}
                 >
@@ -168,7 +168,7 @@ const Top5sold = () => {
           )}
           {(selectedInterval === "Weekly" || selectedInterval === "Daily") && (
             <DatePicker
-              className="border border-gray-300 rounded-md px-2 h-12"
+              className="border border-gray-300 rounded-md px-2 h-7"
               range
               // containerClassName="w-72 "
               onChange={handleDateRangeChange}
@@ -180,7 +180,7 @@ const Top5sold = () => {
         </>
       }
       TopSideButtons3={
-          <button onClick={handleReset} className="btn btn-ghost btn-xs h-12">
+          <button onClick={handleReset} className="btn btn-ghost btn-xs h-7">
             Reset
           </button>
         }
