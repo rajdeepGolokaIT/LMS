@@ -44,7 +44,9 @@ function CurrentVsPrevCategory(){
             const labels = dataCurrentYear.map(([product]) => product);
             const currentMonthData = dataCurrentYear.map(([, totalSold]) => totalSold);
             console.log(currentMonthData)
-            const previousYearMonthData = dataPreviousYear.map(([, totalSold]) => totalSold);
+            const previousYearMonthData = dataPreviousYear.length > 0
+    ? dataPreviousYear.map(([, totalSold]) => totalSold)
+    : new Array(labels.length).fill(0);
             console.log(previousYearMonthData)
 
             setChartData({
@@ -77,7 +79,7 @@ function CurrentVsPrevCategory(){
     };
 
     return (
-        <TitleCard title={"Top 5 categories sold in current month of this year vs current month of last year"} topMargin="mt-2">
+        <TitleCard title={"Top 5 Categories sold in current month of this year vs current month of last year"} topMargin="mt-2">
             {chartData && <Bar options={options} data={chartData} />}
         </TitleCard>
     );
