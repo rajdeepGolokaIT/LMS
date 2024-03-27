@@ -76,7 +76,7 @@ function CurrentVsPrevProduct(){
     };
 
     return (
-        <TitleCard title={"Top 5 product sold in current month of this year vs current month of last year"} topMargin="mt-2">
+        <TitleCard title={"Top 5 products sold in current month of this year vs current month of last year"} topMargin="mt-2">
             {chartData && <Bar options={options} data={chartData} />}
         </TitleCard>
     );
