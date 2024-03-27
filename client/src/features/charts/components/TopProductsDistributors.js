@@ -65,9 +65,10 @@ const TopProductsDistributors = () => {
           console.log(apiUrl);
           //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&interval=annually
         } else if (selectedInterval === "Monthly") {
-          const monthParam = selectedMonth.toLowerCase().split(" ")[0];
-          console.log(monthParam);
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors-by-region?${locationType}=${locationValue}&year=${selectedYear}&month=${monthParam}&interval=monthly`;
+            const monthYearArray = (selectedMonth.split(" "));
+            const apiMonth = monthYearArray[0].toLowerCase();
+            const apiYear = monthYearArray[1].toString();
+          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors-by-region?${locationType}=${locationValue}&year=${apiYear}&month=${apiMonth}&interval=monthly`;
           console.log(apiUrl);
           //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&month=${monthParam}&interval=monthly
         } else if (

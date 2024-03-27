@@ -46,8 +46,10 @@ const Least5sold = () => {
         if (selectedInterval === "Yearly") {
           apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-least-products-by-category?interval=annually&year=${selectedYear}`;
         } else if (selectedInterval === "Monthly") {
-          const apiMonth = selectedMonth.split(" ")[0];
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-least-products-by-category?interval=monthly&year=${selectedYear}&month=${apiMonth.toLowerCase()}`;
+            const monthYearArray = (selectedMonth.split(" "));
+            const apiMonth = monthYearArray[0];
+            const apiYear = monthYearArray[1].toString();
+          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-least-products-by-category?interval=monthly&year=${apiYear}&month=${apiMonth.toLowerCase()}`;
         } else if (selectedInterval === "Weekly" || selectedInterval === "Daily") {
           intervalParam = "customdate"; // Set intervalParam
           

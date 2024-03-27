@@ -55,7 +55,7 @@ function DistributorProductForm() {
 
     try {
       const response = await axios.post(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributor/${selectedDistributorProfile}/add-products`,
+        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/${selectedDistributorProfile}/add-products`,
 
         selectedProducts
 

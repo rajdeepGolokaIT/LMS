@@ -39,10 +39,10 @@ function Charts(){
                 primaryColor={"white"} 
             />  */}
         {/** ---------------------- Different charts ------------------------- */}
-            {/* <div className="grid lg:grid-cols-2 mt-0 grid-cols-1 gap-6">
-                <StackBarChart />
-                <BarChart />
-            </div> */}
+            <div className="grid lg:grid-cols-2 mt-0 grid-cols-1 gap-6">
+                {/* <StackBarChart /> */}
+                {/* <BarChart /> */}
+            </div>
 
         
             {/* <div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">

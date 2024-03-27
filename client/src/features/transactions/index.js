@@ -12,6 +12,7 @@ import TopCategory from "./components/TopCategory"
 import LeastCategory from "./components/LeastCategory"
 import Top5sold from "./components/Top5sold"
 import Least5sold from "./components/Least5sold"
+import CurrentVsPrevCategory from "./components/CurrentVsPrevCategory"
 
 // const TopSideButtons = ({removeFilter, applyFilter, applySearch}) => {
 
@@ -71,6 +72,7 @@ function Transactions(){
            </div>
            <TopCategory/>
            <LeastCategory/>
+           <CurrentVsPrevCategory/>
         </>
     )
 }

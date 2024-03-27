@@ -35,55 +35,60 @@ const Top5sold = () => {
       return months;
     };
     
+    // console.log(selectedMonthYear)
+
     const financialYears = generateFinancialYears();
     const months = generateMonths().reverse(); 
   
     const fetchTopSellingProducts = async () => {
-      try {
-        let apiUrl;
-        let fromDate, toDate, intervalParam;
-        
-        if (selectedInterval === "Yearly") {
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=annually&year=${selectedYear}`;
-        } else if (selectedInterval === "Monthly") {
-          const apiMonth = selectedMonth.split(" ")[0];
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=monthly&year=${selectedYear}&month=${apiMonth.toLowerCase()}`;
-        } else if (selectedInterval === "Weekly" || selectedInterval === "Daily") {
-          intervalParam = "customdate"; // Set intervalParam
-          
-          // Set fromDate and toDate based on selectedDateRange or current week/day
-          if (selectedDateRange) {
-            fromDate = selectedDateRange.startDate;
-            toDate = selectedDateRange.endDate;
-          //   console.log(fromDate, toDate);
-          //   console.log(selectedDateRange);
-          } else {
-              if(selectedInterval === "Weekly"){
-                  fromDate = moment().startOf("week").format("YYYY-MM-DD");
-                  toDate = moment().endOf("week").format("YYYY-MM-DD");
-              } else if(selectedInterval === "Daily"){
-                  fromDate = moment().startOf("day").format("YYYY-MM-DD");
-                  toDate = moment().endOf("day").format("YYYY-MM-DD");
-              }
-          //   fromDate = moment().startOf("week").format("YYYY-MM-DD");
-          //   toDate = moment().endOf("week").format("YYYY-MM-DD");
-          //   console.log(fromDate, toDate);
-          }
-          
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=${intervalParam}&fromDate=${fromDate}&toDate=${toDate}`;
+        try {
+            let apiUrl;
+            let fromDate, toDate, intervalParam;
+    
+            if (selectedInterval === "Yearly") {
+                apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=annually&year=${selectedYear}`;
+            } else if (selectedInterval === "Monthly") {
+                const monthYearArray = (selectedMonth.split(" "));
+                const apiMonth = monthYearArray[0];
+                const apiYear = monthYearArray[1].toString();
+                apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=monthly&year=${apiYear}&month=${apiMonth.toLowerCase()}`;
+                console.log(apiUrl); // Log the API URL before making the request
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                setTopProducts(data);
+                console.log(data); // Log the response data
+                return; // Exit the function after fetching data for Monthly interval
+            } else if (selectedInterval === "Weekly" || selectedInterval === "Daily") {
+                intervalParam = "customdate"; // Set intervalParam
+    
+                // Set fromDate and toDate based on selectedDateRange or current week/day
+                if (selectedDateRange) {
+                    fromDate = selectedDateRange.startDate;
+                    toDate = selectedDateRange.endDate;
+                } else {
+                    if (selectedInterval === "Weekly") {
+                        fromDate = moment().startOf("week").format("YYYY-MM-DD");
+                        toDate = moment().endOf("week").format("YYYY-MM-DD");
+                    } else if (selectedInterval === "Daily") {
+                        fromDate = moment().startOf("day").format("YYYY-MM-DD");
+                        toDate = moment().endOf("day").format("YYYY-MM-DD");
+                    }
+                }
+    
+                apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=${intervalParam}&fromDate=${fromDate}&toDate=${toDate}`;
+            }
+    
+            // If selectedInterval is "Yearly", "Weekly", or "Daily", continue to this point
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            setTopProducts(data);
+            console.log(data);
+        } catch (error) {
+            console.error("Error fetching top selling products:", error);
+            // Handle error
         }
-        
-      //   console.log(fromDate, toDate, intervalParam); 
-        
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        setTopProducts(data);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching top selling products:", error);
-        // Handle error
-      }
     };
+    
     
   
     useEffect(() => {
