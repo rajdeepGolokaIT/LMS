@@ -221,7 +221,7 @@ const TopProductsDistributors = () => {
   return (
     <>
     <TitleCard
-       title="Top Sold Product by Distributor"
+       title="Top sold product to distributor"
        topMargin="mt-2"
        TopSideButtons1={
          <>

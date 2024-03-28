@@ -77,12 +77,12 @@ const routes = [
       {
         path: '/app/Products-by-Distributers-Dashboard', //url
         icon:  <Squares2X2Icon className={iconClasses}/>, //<UserIcon className={submenuIconClasses}/>, // icon component
-        name: 'Products by Distributers Dashboard', // name that appear in Sidebar
+        name: 'Products sold to distributers dashboard', // name that appear in Sidebar
   },
       {
         path: '/app/Categories-by-Distributors-Dashboard',
         icon: <Squares2X2Icon className={iconClasses}/>,
-        name: 'Categories by Distributers Dashboard',
+        name: 'Categories sold to distributers dashboard',
       },
       {
         path: '/app/Distributors-Entry-Operations',

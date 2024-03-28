@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TitleCard from '../../../components/Cards/TitleCard';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
+import moment from 'moment';
 import Datepicker from "react-tailwindcss-datepicker"; 
 import {
   Chart as ChartJS,
@@ -36,6 +37,8 @@ function LineChart({updateDashboardPeriod}) {
     startDate: new Date().toISOString().split('T')[0],
     endDate: new Date().toISOString().split('T')[0] 
 });
+
+console.log(dateValue)
 
   const getMonthlySales = (data) => {
     const monthlySales = {};
@@ -222,23 +225,33 @@ function LineChart({updateDashboardPeriod}) {
   };
   
   
+ // Get the financial year start date
+ const financialYearStartDate = moment().startOf('year').month(3); // Assuming financial year starts in April
+
+ // Get the financial year end date
+ const financialYearEndDate = moment().endOf('year').month(2).add(1, 'year'); // Assuming financial year ends in March of next year
+
+ // Format dates as yyyy-mm-dd
+ const formattedFinancialYearStartDate = financialYearStartDate.format('YYYY-MM-DD');
+ const formattedFinancialYearEndDate = financialYearEndDate.format('YYYY-MM-DD');
+
   const handleReset = () => {
 
-    const filteredData = invoices.filter(invoice => {
-    const invoiceDate = new Date(invoice.createDate);
-    return (
-      (!selectedDateRange.startDate || invoiceDate >= selectedDateRange.startDate) &&
-      (!selectedDateRange.endDate || invoiceDate <= selectedDateRange.endDate)
-    );
-  });
+  //   const filteredData = invoices.filter(invoice => {
+  //   const invoiceDate = new Date(invoice.createDate);
+  //   return (
+  //     (!selectedDateRange.startDate || invoiceDate >= selectedDateRange.startDate) &&
+  //     (!selectedDateRange.endDate || invoiceDate <= selectedDateRange.endDate)
+  //   );
+  // });
 
-  // Find the earliest and latest dates from the filtered data
-  const dates = filteredData.map((invoice) => new Date(invoice.createDate));
-  const earliestDate = new Date(Math.min.apply(null, dates));
-  const latestDate = new Date(Math.max.apply(null, dates));
+  // // Find the earliest and latest dates from the filtered data
+  // const dates = filteredData.map((invoice) => new Date(invoice.createDate));
+  // const earliestDate = new Date(Math.min.apply(null, dates));
+  // const latestDate = new Date(Math.max.apply(null, dates));
 
-  const formattedStartDate = new Date(earliestDate).toISOString().split('T')[0];
-  const formattedEndDate = new Date(latestDate).toISOString().split('T')[0];
+  // const formattedStartDate = new Date(earliestDate).toISOString().split('T')[0];
+  // const formattedEndDate = new Date(latestDate).toISOString().split('T')[0];
 
 
   // function getFinancialYearDates(date) {
@@ -287,13 +300,18 @@ function LineChart({updateDashboardPeriod}) {
 
     
     // console.log(formattedStartDate, formattedEndDate);
+
+     // Get the current date
+  // const currentDate = moment();
+
+ 
      
    
 
     // Reset the chart to default state
     setSelectedOption('Monthly');
     setSelectedDateRange({ startDate: null, endDate: null });
-    setDateValue({ startDate: formattedStartDate, endDate: formattedEndDate });
+    setDateValue({ startDate: formattedFinancialYearStartDate, endDate: formattedFinancialYearEndDate });
   };
   
 

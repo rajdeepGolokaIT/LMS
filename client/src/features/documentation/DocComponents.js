@@ -8,7 +8,7 @@ import DocComponentsContent from "./components/DocComponentsContent"
 import FeaturesNav from "./components/FeaturesNav"
 import FeaturesContent from "./components/FeaturesContent"
 import DistributorProfileForm from "./components/DistributorProfileForm"
-import AddProductOfDistributorForm from "./components/AddProductOfDistributorForm"
+// import AddProductOfDistributorForm from "./components/AddProductOfDistributorForm"
 
 
 
@@ -24,7 +24,7 @@ function DocComponents(){
     return(
         <>
             <DistributorProfileForm />
-            <AddProductOfDistributorForm />
+            {/* <AddProductOfDistributorForm /> */}
            
         </>
     )

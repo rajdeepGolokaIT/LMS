@@ -16,6 +16,8 @@ import {showNotification} from '../common/headerSlice'
 import { useState, useEffect } from 'react'
 // import axios from 'axios'
 
+import SalesChart from './components/SalesChart'
+
 
 
 
@@ -140,7 +142,8 @@ const statsData = [
 
         {/** ---------------------- Different charts ------------------------- */}
             <div className="grid  mt-4 grid-cols-1 gap-6">
-                <LineChart/>
+                {/* <LineChart/> */}
+                <SalesChart/>
                 {/* <BarChart /> */}
             </div>
             

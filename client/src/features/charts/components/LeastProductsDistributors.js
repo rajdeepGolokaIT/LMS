@@ -221,7 +221,7 @@ const LeastProductsDistributors = () => {
   return (
     <>
     <TitleCard
-       title="Least Sold Product By Distributor"
+       title="Least sold product to distributor"
        topMargin="mt-2"
        TopSideButtons1={
          <>

@@ -58,7 +58,7 @@ function Team(){
               required
             />
           </div>
-          <div>
+          {/* <div>
             <label htmlFor="isActive" className="cursor-pointer label label-text">Active:</label>
             <input
               type="checkbox"
@@ -67,7 +67,7 @@ function Team(){
               checked={isActive}
               onChange={(e) => setIsActive(e.target.checked)}
             />
-          </div>
+          </div> */}
           <button type="submit" className="btn btn-primary">Add Category</button>
         </form>
       </div>
