@@ -44,7 +44,7 @@ function Team(){
         <>
             
             <TitleCard title="Add A Category" topMargin="mt-2" >  
-            <div className="w-full p-6 m-auto bg-white rounded-lg shadow-lg">
+            <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="categoryName" className="label label-text text-base">Category Name:</label>

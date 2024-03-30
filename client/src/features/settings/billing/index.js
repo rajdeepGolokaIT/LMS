@@ -63,7 +63,7 @@ function Billing(){
     return(
         <>
             <TitleCard title="Add A Product" topMargin="mt-2">
-            <div className="w-full p-6 m-auto bg-white rounded-lg shadow-lg ">
+            <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg ">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label htmlFor="productName" className="label label-text text-base">Product Name:</label>

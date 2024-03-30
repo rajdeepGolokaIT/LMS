@@ -58,7 +58,7 @@ function DistributorProfileForm() {
     return (
         <>
             <TitleCard title="Create Distributor Profile" topMargin="mt-2">
-                <div className="w-full p-6 m-auto bg-white rounded-lg shadow-lg ">
+                <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg ">
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label htmlFor="address" className="label label-text text-base">Address:</label>
