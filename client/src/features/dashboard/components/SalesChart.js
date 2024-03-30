@@ -28,32 +28,87 @@ ChartJS.register(
 
 function LineChart() {
     const [selectedRange, setSelectedRange] = useState('financial-year');
-    const [selectedMonths, setSelectedMonths] = useState([]);
     const [rangeData, setRangeData] = useState({});
+    const [selectedStartMonth, setSelectedStartMonth] = useState('04-01');
+    const [selectedEndMonth, setSelectedEndMonth] = useState('03-31');
+
+
+
+    function getFinancialYear(yearsBefore = 0) {
+        // Get current date
+        const currentDate = moment();
+    
+        // Calculate the start date of the financial year
+        const startFinancialYear = moment().subtract(currentDate.month() < 3 ? 1 : 0, 'year').startOf('year').month(3);
+        
+    
+        // Adjust the start date for the previous financial year
+        const startPreviousFinancialYear = moment(startFinancialYear).subtract(yearsBefore + 1, 'year');
+        
+    
+        // Calculate the end date of the previous financial year
+        const endPreviousFinancialYear = moment(startFinancialYear).subtract(yearsBefore, 'year').subtract(1, 'day');
+    
+        // Format dates as "YYYY-MM-DD"
+        const startPreviousYear = startPreviousFinancialYear.format('YYYY');
+        const startPreviousMonth = startPreviousFinancialYear.format('MM-DD');
+        const endPreviousYear = endPreviousFinancialYear.format('YYYY');
+        const endPreviousMonth = endPreviousFinancialYear.format('MM-DD');
+        
+    
+        return {
+            startYear: startPreviousYear,
+            startMonth: startPreviousMonth,
+            endYear: endPreviousYear,
+            endMonth: endPreviousMonth
+        };
+    }
+
+    // Get current financial year dates
+    const currentFinancialYear = getFinancialYear(-1);
+    const currentEnd = currentFinancialYear.endYear
+    const currentStart = currentFinancialYear.startYear
+
+    const previousFinancialYear = getFinancialYear(0);
+    const previousStart = previousFinancialYear.startYear
+    
+    const yearBeforePreviousFinancialYear = getFinancialYear(1);
+    const yearBeforePreviousStart = yearBeforePreviousFinancialYear.startYear
+    
+    console.log(currentEnd, currentStart, previousStart, yearBeforePreviousStart);
+
+
+
+    const [selectedStartYear, setSelectedStartYear ] = useState(`${currentStart}`);
+    const [selectedEndYear, setSelectedEndYear] = useState(`${currentEnd}`);
+    
+
+    
   
     const handleRangeChange = async (event) => {
-      const selectedRange = event.target.value;
-      setSelectedRange(selectedRange);
-      try {
-        const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/total-sum-by-${selectedRange}`);
-        setRangeData(response.data);
-        // console.log(response.data);
-
-        
-
-      } catch (error) {
-        console.error('Error fetching range data:', error);
-      }
+        const value = event.target.value;
+        setSelectedRange(value);
     };
-  
-    const handleMonthRangeChange = (event) => {
-      setSelectedMonths(Array.from(event.target.selectedOptions, (option) => option.value));
+
+    const fetchData = async (range) => {
+        try {
+            let response;
+            if (range === 'month' || range === 'financial-year') {
+                response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/total-sum-by-${range}`);
+            } else if (range === 'custom') {
+                response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/total-sum-by-month-custom-date?fromDate=${selectedStartYear}-${selectedStartMonth}&toDate=${selectedEndYear}-${selectedEndMonth}`);
+            }
+            setRangeData(response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     };
-  
+
     useEffect(() => {
-      // Fetch data for default selected range
-      handleRangeChange({ target: { value: 'month' } });
-    }, []); // Fetch data only once when component mounts
+        fetchData(selectedRange);
+    }, [selectedRange, selectedStartMonth, selectedEndMonth, selectedStartYear, selectedEndYear]);
+  
+    
   
     const options = {
       responsive: true,
@@ -65,55 +120,6 @@ function LineChart() {
     };
 
 
-    function getFinancialYear(yearsBefore = 0) {
-        // Get current date
-        const currentDate = moment();
-        // console.log(currentDate.format('YYYY-MM-DD'));
-    
-        // Calculate the start date of the financial year
-        const startFinancialYear = moment().subtract(currentDate.month() < 3 ? 1 : 0, 'year').startOf('year').month(3);
-        // console.log(startFinancialYear.format('YYYY-MM-DD'));
-    
-        // Adjust the start date for the previous financial year
-        const startPreviousFinancialYear = moment(startFinancialYear).subtract(yearsBefore + 1, 'year');
-        // console.log(startPreviousFinancialYear.format('YYYY-MM-DD'));
-    
-        // Calculate the end date of the previous financial year
-        const endPreviousFinancialYear = moment(startFinancialYear).subtract(yearsBefore, 'year').subtract(1, 'day');
-    
-        // Format dates as "YYYY-MM-DD"
-        const startDatePreviousYear = startPreviousFinancialYear.format('YYYY-MM-DD');
-        const endDatePreviousYear = endPreviousFinancialYear.format('YYYY-MM-DD');
-    
-        return {
-            startDate: startDatePreviousYear,
-            endDate: endDatePreviousYear
-        };
-    }
-    
-    // Get current financial year
-    const currentFinancialYear = getFinancialYear(-1);
-    // console.log("Current Financial Year Start Date:", currentFinancialYear.startDate);
-    // console.log("Current Financial Year End Date:", currentFinancialYear.endDate);
-
-
-    // Get previous financial year
-    const previousFinancialYear = getFinancialYear(0);
-    // console.log("Previous Financial Year Start Date:", previousFinancialYear.startDate);
-    // console.log("Previous Financial Year End Date:", previousFinancialYear.endDate);
-    
-    // Get year before previous financial year
-    const yearBeforePreviousFinancialYear = getFinancialYear(1);
-    // console.log("Year Before Previous Financial Year Start Date:", yearBeforePreviousFinancialYear.startDate);
-    // console.log("Year Before Previous Financial Year End Date:", yearBeforePreviousFinancialYear.endDate);
-
-
-
-
-
-
-    
-  
     const tags = Object.keys(rangeData).sort((a, b) => {
       if (a < b) {
         return -1;
@@ -125,15 +131,14 @@ function LineChart() {
     });
 
     const labels = tags.map(label => {
-        if (selectedRange === 'month') {
+        if (selectedRange === 'month' || selectedRange === 'custom') {
           return moment(label).format('MMMM-YYYY');
         } else {
           return label;
         }
       });
 
-    // console.log(labels.map(label => moment(label).format('MMMM-YYYY')));
-    // console.log(labels);
+    
 
 
     const data = {
@@ -151,38 +156,84 @@ function LineChart() {
             }
             return 0;
           }),
-          borderColor: selectedRange === 'month' ? 'rgb(53, 162, 235)' : 'rgb(255, 99, 132)',
-          backgroundColor: selectedRange === 'month' ? 'rgba(53, 162, 235, 0.5)' : 'rgba(255, 99, 132, 0.5)',
+          borderColor: selectedRange === 'month' ? 'rgb(53, 162, 235)' : selectedRange === 'custom' ? 'rgb(148,0,211)' : 'rgb(255, 99, 132)',
+          backgroundColor: selectedRange === 'month'  ? 'rgba(53, 162, 235, 0.5)' : selectedRange === 'custom' ? 'rgba(148,0,211, 0.5)' : 'rgba(255, 99, 132, 0.5)',
         },
       ],
     };
 
-    // {selectedRange === 'month' && (
-    //     <select value={selectedMonths} onChange={handleMonthRangeChange} multiple>
-    //       {/* Populate options for selecting range of months */}
-    //       {Object.keys(rangeData).map((month) => (
-    //         <option key={month} value={month}>
-    //           {month}
-    //         </option>
-    //       ))}
-    //     </select>
-    //   )}
+    
 
 
 
   
     return (
-      <TitleCard title={"Sales Data"} 
+      <TitleCard title={"Total Sales Graph"} 
       TopSideButtons1={
         <div>
         <select value={selectedRange} onChange={handleRangeChange}>
           <option value="month">Monthly</option>
           <option value="financial-year">Yearly</option>
+          <option value="custom">Custom</option>
         </select>
+        {selectedRange === 'custom' && (
+            <div>
+            <div className="grid grid-cols-3 gap-4">
+            <labels className="label">Start Range:</labels>
+            <select className='select select-ghost select-sm' value={selectedStartYear} onChange={(e) => setSelectedStartYear(e.target.value)}>
+            {/* Starting Year */}
+            <option value={currentEnd}>{currentEnd}</option>
+            <option value={currentStart}>{currentStart}</option>
+            <option value={previousStart}>{previousStart}</option>
+            <option value={yearBeforePreviousStart}>{yearBeforePreviousStart}</option>
+            </select>
+            <select className='select select-ghost select-sm' value={selectedStartMonth} onChange={(e) => setSelectedStartMonth(e.target.value)}>
+            {/* Starting Month */}
+            <option value="04-01">April</option>
+            <option value="05-01">May</option>
+            <option value="06-01">June</option>
+            <option value="07-01">July</option>
+            <option value="08-01">August</option>
+            <option value="09-01">September</option>
+            <option value="10-01">October</option>
+            <option value="11-01">November</option>
+            <option value="12-01">December</option>
+            <option value="01-01">January</option>
+            <option value="02-01">February</option>
+            <option value="03-01">March</option>
+            </select>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+                <labels className="label">End Range:</labels>
+            <select className='select select-ghost select-sm' value={selectedEndYear} onChange={(e) => setSelectedEndYear(e.target.value)}>
+            {/* Ending Year */}
+            <option value={currentEnd}>{currentEnd}</option>
+            <option value={currentStart}>{currentStart}</option>
+            <option value={previousStart}>{previousStart}</option>
+            <option value={yearBeforePreviousStart}>{yearBeforePreviousStart}</option>
+            </select>
+            <select className='select select-ghost select-sm' value={selectedEndMonth} onChange={(e) => setSelectedEndMonth(e.target.value)}>
+            {/* Ending Month */}
+            <option value="03-31">March</option>
+            <option value="04-30">April</option>
+            <option value="05-31">May</option>
+            <option value="06-30">June</option>
+            <option value="07-31">July</option>
+            <option value="08-31">August</option>
+            <option value="09-30">September</option>
+            <option value="10-31">October</option>
+            <option value="11-30">November</option>
+            <option value="12-31">December</option>
+            <option value="01-31">January</option>
+            <option value="02-29">February</option>
+            </select>
+            </div>
+            </div>
+        )}
       </div>
       }
-      >
-       
+>
         <Line data={data} options={options} />
       </TitleCard>
     );
