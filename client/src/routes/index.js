@@ -18,6 +18,8 @@ const GettingStarted = lazy(() => import('../pages/GettingStarted'))
 const DocFeatures = lazy(() => import('../pages/DocFeatures'))
 const DocComponents = lazy(() => import('../pages/DocComponents'))
 const DistributersDashboard = lazy(() => import('../pages/protected/DistributorsDashboard'))
+const Sales = lazy(() => import('../pages/protected/Sales'))
+const InvoicesForm = lazy(() => import('../pages/protected/InvoicesForm'))
 
 
 const routes = [
@@ -39,7 +41,11 @@ const routes = [
   },
   {
     path: '/Invoices',
-    component: Calendar,
+    component: DocFeatures,
+  },
+  {
+    path: '/Invoices-Form',
+    component: InvoicesForm,
   },
   {
     path: '/Categories-Dashboard',
@@ -62,8 +68,12 @@ const routes = [
     component: DistributersDashboard,
   },
   {
+    path: '/Sales',
+    component: Sales,
+  },
+  {
     path: '/Notes',
-    component: DocFeatures,
+    component: Calendar,
   },
   {
     path: '/Distributors-Entry-Operations',
