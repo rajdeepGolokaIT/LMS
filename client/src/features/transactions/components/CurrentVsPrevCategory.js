@@ -71,6 +71,7 @@ function CurrentVsPrevCategory(){
 
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top',
@@ -80,7 +81,11 @@ function CurrentVsPrevCategory(){
 
     return (
         <TitleCard title={"Top 5 Categories sold in current month of this year vs current month of last year"} topMargin="mt-2">
-            {chartData && <Bar options={options} data={chartData} />}
+            {chartData &&
+            <div className="relative w-[100%] h-[50vh] container">
+            <Bar options={options} data={chartData} />
+            </div>
+            }
         </TitleCard>
     );
 }

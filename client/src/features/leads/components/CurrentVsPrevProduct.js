@@ -70,6 +70,7 @@ function CurrentVsPrevProduct(){
 
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top',
@@ -79,7 +80,11 @@ function CurrentVsPrevProduct(){
 
     return (
         <TitleCard title={"Top 5 products sold in current month of this year vs current month of last year"} topMargin="mt-2">
-            {chartData && <Bar options={options} data={chartData} />}
+            {chartData && 
+            <div className="relative w-[100%] h-[50vh] container">
+            <Bar options={options} data={chartData} />
+            </div>
+            }
         </TitleCard>
     );
 }

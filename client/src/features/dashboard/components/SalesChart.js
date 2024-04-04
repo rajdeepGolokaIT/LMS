@@ -235,7 +235,7 @@ function LineChart() {
       </div>
       }
 >
-       <div className='relative w-[70vw] h-[450px]'>
+       <div className='relative w-[100%] h-[50vh] container'>
         <Line data={data} options={options} />
         </div>
       </TitleCard>

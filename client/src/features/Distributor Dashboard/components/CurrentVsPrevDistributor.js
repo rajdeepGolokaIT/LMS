@@ -83,6 +83,7 @@ function CurrentVsPrevDistributor() {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
@@ -97,7 +98,11 @@ function CurrentVsPrevDistributor() {
       }
       topMargin="mt-2"
     >
-      {chartData && <Bar options={options} data={chartData} />}
+      {chartData && 
+      <div className="relative w-[100%] h-[50vh] container ">
+      <Bar options={options} data={chartData} />
+      </div>
+      }
     </TitleCard>
   );
 }
