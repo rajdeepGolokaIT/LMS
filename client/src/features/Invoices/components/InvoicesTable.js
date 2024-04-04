@@ -331,8 +331,9 @@ console.log(invoiceProducts.map((product) => product[0].productName));
       {selectedInvoice && (
         <>
         <dialog id="update_modal" className="modal">
-          <div className="modal-box">
+          <div className="modal-box w-11/12 max-w-7xl">
             <h3 className="font-bold text-lg">Update Invoice</h3>
+            <div className="grid grid-cols-2 gap-4">
             <div>
               <label
                 htmlFor="invoiceNumber"
@@ -375,7 +376,8 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                 }}
               />
             </div>
-
+            </div>
+            <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="ackNo" className="label label-text text-base">
                 Ack No.:
@@ -418,7 +420,8 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                 }}
               />
             </div>
-
+            </div>
+            <div className="grid grid-cols-2 gap-4">
             <div>
               <label
                 htmlFor="termsOfDelivery"
@@ -464,7 +467,8 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                 }}
               />
             </div>
-
+            </div>
+            <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="hsnsac" className="label label-text text-base">
                 HSN/SAC:
@@ -504,8 +508,8 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                 }}
               />
             </div>
-
-            <div>
+            </div>
+            {/* <div>
                 <label
                   htmlFor="igst"
                   className="label label-text text-base"
@@ -526,9 +530,9 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                     });
                   }}
                 />
-              </div>
+              </div> */}
 
-              <div>
+              {/* <div>
                 <label
                   htmlFor="cgst"
                   className="label label-text text-base"
@@ -549,9 +553,9 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                     });
                   }}
                 />
-              </div>
+              </div> */}
 
-              <div>
+              {/* <div>
                 <label
                   htmlFor="sgst"
                   className="label label-text text-base"
@@ -572,7 +576,8 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                     });
                   }}
                 />
-              </div>
+              </div> */}
+              <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="discount"
@@ -617,6 +622,8 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                   }}
                 />
               </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="deliveryDate"
@@ -661,6 +668,8 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                   }}
                 />
               </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="supplierName"
@@ -705,6 +714,8 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                   }}
                 />
               </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="totalQuantityDoz"
@@ -748,6 +759,7 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                     });
                   }}
                 />
+              </div>
               </div>
               <div>
                 <label

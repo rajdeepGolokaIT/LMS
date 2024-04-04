@@ -112,6 +112,7 @@ function LineChart() {
   
     const options = {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'top',
@@ -234,7 +235,9 @@ function LineChart() {
       </div>
       }
 >
+       <div className='relative w-[70vw] h-[450px]'>
         <Line data={data} options={options} />
+        </div>
       </TitleCard>
     );
   }
