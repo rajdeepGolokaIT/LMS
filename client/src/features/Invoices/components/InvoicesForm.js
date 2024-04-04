@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../../common/headerSlice';
 import axios from 'axios';
+import AddProductsForm from "./InvoiceAddProducts";
+import EwayForm from "./EwayForm";
 
 function InvoicesForm() {
     const [formData, setFormData] = useState({
@@ -30,7 +32,7 @@ function InvoicesForm() {
     });
 
     const [distributors, setDistributors] = useState([]);
-    // const [products, setProducts] = useState([]); // Uncomment this line if you need products
+    const [invoiceId, setInvoiceId] = useState(null);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -79,7 +81,9 @@ function InvoicesForm() {
                 }
             );
             console.log('Invoice added:', response.data);
+            setInvoiceId(response.data.id);
             dispatch(showNotification({ message: 'Invoice added successfully 😁', status: 1 }));
+            
             setFormData({
                 vehicleNo: '',
                 cgst: 0,
@@ -385,6 +389,12 @@ function InvoicesForm() {
                 </form>
             </div>
             </TitleCard>
+            {invoiceId != null && 
+            <>
+            <AddProductsForm invoiceId={invoiceId} />
+            <EwayForm invoiceID={invoiceId}/>
+            </>
+            }
         </>
     )
 }
