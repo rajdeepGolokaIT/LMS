@@ -99,7 +99,7 @@ function CurrentVsPrevDistributor() {
       topMargin="mt-2"
     >
       {chartData && 
-      <div className="relative w-[100%] h-[50vh] container ">
+      <div className="relative w-[100%] h-[50vh] ">
       <Bar options={options} data={chartData} />
       </div>
       }

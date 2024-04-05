@@ -82,7 +82,7 @@ function CurrentVsPrevCategory(){
     return (
         <TitleCard title={"Top 5 Categories sold in current month of this year vs current month of last year"} topMargin="mt-2">
             {chartData &&
-            <div className="relative w-[100%] h-[50vh] container">
+            <div className="relative w-[100%] h-[50vh]">
             <Bar options={options} data={chartData} />
             </div>
             }

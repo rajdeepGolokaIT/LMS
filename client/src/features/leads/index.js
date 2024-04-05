@@ -4,6 +4,7 @@ import { Least5sold } from "./components/Least5sold";
 import TopSoldProduct from "./components/TopSoldProduct";
 import LeastSoldProduct from "./components/LeastSoldProduct";
 import CurrentVsPrevProduct from "./components/CurrentVsPrevProduct";
+import AllProductSalesTable from "./components/AllProductSalesTable";
 
 function Leads() {
 
@@ -17,6 +18,8 @@ function Leads() {
     <TopSoldProduct/>
     <LeastSoldProduct/>
     <CurrentVsPrevProduct/>
+
+    <AllProductSalesTable/>
     </>
   );
 }
