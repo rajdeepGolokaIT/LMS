@@ -5,7 +5,6 @@ import TitleCard from '../../../components/Cards/TitleCard';
 import SortIcon from '@heroicons/react/24/outline/Bars3CenterLeftIcon'
 
 
-
 const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
     const pageNumbers = [...Array(nPages + 1).keys()].slice(1);
 
@@ -76,8 +75,8 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
 
 
 
+const AllCategorySalesTable = () => {
 
-const AllProductSalesTable = () => {
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
@@ -92,9 +91,10 @@ const AllProductSalesTable = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/top-selling?customFromDate=${startDate}&customToDate=${endDate}`
+                    `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/top-selling-categories?fromDate=${startDate}&toDate=${endDate}`
                 );
                 setData(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -131,43 +131,43 @@ const AllProductSalesTable = () => {
     
 
 
-    return (
-        <>
-            <TitleCard
-                title="All Product Sales Table"
-                topMargin="mt-2">
-                <div className="overflow-x-auto w-full">
-                    <table className="table table-lg w-full">
-                        <thead>
-                            <tr className='table-row'>
-                                <th className='table-cell'>Serial No.</th>
-                                <th className=' table-cell cursor-pointer' onClick={() => requestSort('productName')}>Product Name<SortIcon className='h-5 w-5 inline'/></th>
-                                <th className='table-cell  cursor-pointer' onClick={() => requestSort('productPrice')}>Price Per Unit<SortIcon className='h-5 w-5 inline'/></th>
-                                <th className='table-cell  cursor-pointer' onClick={() => requestSort('productQuantity')}>Total Quantity Sold<SortIcon className='h-5 w-5 inline'/></th>
-                                <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalPrice')}>Total Amount<SortIcon className='h-5 w-5 inline'/></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentRecords.map((product, index) => (
-                                <tr key={index}>
-                                    <td>{indexOfFirstRecord + index + 1}</td>
-                                    <td>{product.productName}</td>
-                                    <td>{product.productPrice}</td>
-                                    <td>{product.productQuantity}</td>
-                                    <td>{product.totalPrice}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            <Pagination
-                nPages={Math.ceil(data.length / recordsPerPage)}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-            />
-            </TitleCard>
-        </>
-    );
-};
 
-export default AllProductSalesTable;
+
+  return (
+    <>
+    <TitleCard
+        title="All Product Sales Table"
+        topMargin="mt-2">
+        <div className="overflow-x-auto w-full">
+            <table className="table table-lg w-full">
+                <thead>
+                    <tr className='table-row'>
+                        <th className='table-cell'>Serial No.</th>
+                        <th className=' table-cell cursor-pointer' onClick={() => requestSort('categoryName')}>Category Name<SortIcon className='h-5 w-5 inline'/></th>
+                        <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalQuantitySold')}>Total Quantity Sold<SortIcon className='h-5 w-5 inline'/></th>
+                        <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalPrice')}>Total Sales<SortIcon className='h-5 w-5 inline'/></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {currentRecords.map((category, index) => (
+                        <tr key={index}>
+                            <td>{indexOfFirstRecord + index + 1}</td>
+                            <td>{category.categoryName}</td>
+                            <td>{category.totalQuantitySold}</td>
+                            <td>{category.totalPrice}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    <Pagination
+        nPages={Math.ceil(data.length / recordsPerPage)}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+    />
+    </TitleCard>
+</>
+  )
+}
+
+export default AllCategorySalesTable
