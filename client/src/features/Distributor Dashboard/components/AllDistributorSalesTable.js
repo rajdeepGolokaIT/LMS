@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react'
 import moment from 'moment';
 import axios from 'axios';
 import TitleCard from '../../../components/Cards/TitleCard';
-import SortIcon from '@heroicons/react/24/outline/Bars3CenterLeftIcon'
+// import SortIcon from '@heroicons/react/24/outline/Bars3CenterLeftIcon'
+import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
+import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 
 
 const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
@@ -142,10 +144,10 @@ const AllDistributorSalesTable = () => {
                         <thead>
                             <tr className='table-row'>
                                 <th className='table-cell'>Serial No.</th>
-                                <th className=' table-cell cursor-pointer' onClick={() => requestSort('agencyName')}>Distributor Agency Name<SortIcon className='h-5 w-5 inline'/></th>
-                                <th className='table-cell  cursor-pointer' onClick={() => requestSort('contactPerson')}>Contact Person<SortIcon className='h-5 w-5 inline'/></th>
-                                <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalQuantitySold')}>Total Quantity Sold<SortIcon className='h-5 w-5 inline'/></th>
-                                <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalSales')}>Total Sales<SortIcon className='h-5 w-5 inline'/></th>
+                                <th className=' table-cell cursor-pointer' onClick={() => requestSort('agencyName')}>Distributor Agency Name {sortConfig.key === 'agencyName' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>} </th>
+                                <th className='table-cell  cursor-pointer' onClick={() => requestSort('contactPerson')}>Contact Person {sortConfig.key === 'contactPerson' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
+                                <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalQuantitySold')}>Total Quantity Sold {sortConfig.key === 'totalQuantitySold' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
+                                <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalSales')}>Total Sales {sortConfig.key === 'totalSales' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
                             </tr>
                         </thead>
                         <tbody>

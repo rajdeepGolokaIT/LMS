@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react'
 import moment from 'moment';
 import axios from 'axios';
 import TitleCard from '../../../components/Cards/TitleCard';
-import SortIcon from '@heroicons/react/24/outline/Bars3CenterLeftIcon'
+// import SortIcon from '@heroicons/react/24/outline/Bars3CenterLeftIcon'
+import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
+import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 
 
 const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
@@ -143,9 +145,9 @@ const AllCategorySalesTable = () => {
                 <thead>
                     <tr className='table-row'>
                         <th className='table-cell'>Serial No.</th>
-                        <th className=' table-cell cursor-pointer' onClick={() => requestSort('categoryName')}>Category Name<SortIcon className='h-5 w-5 inline'/></th>
-                        <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalQuantitySold')}>Total Quantity Sold<SortIcon className='h-5 w-5 inline'/></th>
-                        <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalPrice')}>Total Sales<SortIcon className='h-5 w-5 inline'/></th>
+                        <th className=' table-cell cursor-pointer' onClick={() => requestSort('categoryName')}>Category Name {sortConfig.key === 'categoryName' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
+                        <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalQuantitySold')}>Total Quantity Sold {sortConfig.key === 'totalQuantitySold' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
+                        <th className='table-cell  cursor-pointer' onClick={() => requestSort('totalPrice')}>Total Sales {sortConfig.key === 'totalPrice' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
                     </tr>
                 </thead>
                 <tbody>

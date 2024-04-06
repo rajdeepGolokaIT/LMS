@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TitleCard from "../../../components/Cards/TitleCard";
+import InvoiceUpdateProducts from "./InvoiceUpdateProducts";
 
 const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
   const pageNumbers = [...Array(nPages + 1).keys()].slice(1);
@@ -161,6 +162,10 @@ const TableComponent = () => {
       );
       // Close the modal after updating
       document.getElementById("update_modal").close();
+
+      // open the product update modal after updating the invoice
+      document.getElementById("update_modal_2").showModal();
+
       // Reload data after updating
       const response = await axios.get(
         "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
@@ -175,11 +180,12 @@ const TableComponent = () => {
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
   const nPages = Math.ceil(data.length / recordsPerPage);
+  console.log(data)
 
   const invoiceProduct = async () => {
     try {
       const response = await axios.get(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/get-invoice-products-by-id?InvoiceId=${selectedInvoices}`
+        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/get-invoice-products-by-id/${selectedInvoices}`
       );
       setInvoiceProducts(response.data);
       
@@ -192,7 +198,8 @@ const TableComponent = () => {
     invoiceProduct();
   }, [selectedInvoices]);
 
-console.log(invoiceProducts.map((product) => product[0].productName));
+console.log(invoiceProducts);
+console.log(selectedInvoice);
 
   return (
     <>
@@ -805,6 +812,16 @@ console.log(invoiceProducts.map((product) => product[0].productName));
           </div>
         </dialog>
 
+        <dialog id="update_modal_2" className="modal">
+            <div className="modal-box">
+            <TitleCard title="Update Products of the Invoice" topMargin="mt-2">
+    <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
+                <InvoiceUpdateProducts invoiceId={selectedInvoices}/>  
+            </div>
+            </TitleCard>
+            </div> 
+          </dialog>
+
         <dialog id="product_modal" className="modal">
             <div className="modal-box">
                 <TitleCard title="Invoice Product Table">
@@ -832,6 +849,7 @@ console.log(invoiceProducts.map((product) => product[0].productName));
                 </TitleCard>
 
                 <div className="modal-action">
+                  <button type="button" className="btn btn-success" onClick={() => document.getElementById("product_modal").close()}>Update</button>
                     <button
                         className="btn"
                         onClick={() => document.getElementById("product_modal").close()}

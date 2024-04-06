@@ -4,96 +4,184 @@ import { showNotification } from "../../common/headerSlice";
 import axios from "axios";
 import TitleCard from "../../../components/Cards/TitleCard";
 
-function EwayForm({ invoiceID }) {
-  const dispatch = useDispatch();
-  const [formData, setFormData] = useState({
-    invoiceId: `${invoiceID}`,
-    ewayDocNumber: "",
-    eWayBillNo: "",
-    eWayMode: "",
-    eWayApproxDistance: "",
-    eWayValidUpto: "",
-    eWaySupplyType: "",
-    eWayTransactionType: "",
-    eWayTransactionId: "",
-    eWayGSTIN: "",
-    eWayfrom: "",
-    eWayTo: "",
-    eWayDistpatchFrom: "",
-    eWayShipTo: "",
-    ewaytaxAmount: "",
-    ewaytaxRate: "",
-    ewayTransportationID: "",
-    ewayVechileNo: "",
-    ewayVehicleFrom: "",
-  });
+const InvoiceUpdateEway = ({ invoiceID }) => {
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        const params = new URLSearchParams();
+    const [ewayBill, setEwayBill] = useState(null);
+    const dispatch = useDispatch();
+    const [formData, setFormData] = useState({
+      invoiceId: `${invoiceID}`,
+      ewayDocNumber: "",
+      eWayBillNo: "",
+      eWayMode: "",
+      eWayApproxDistance: "",
+      eWayValidUpto: "",
+      eWaySupplyType: "",
+      eWayTransactionType: "",
+      eWayTransactionId: "",
+      eWayGSTIN: "",
+      eWayfrom: "",
+      eWayTo: "",
+      eWayDistpatchFrom: "",
+      eWayShipTo: "",
+      ewaytaxAmount: "",
+      ewaytaxRate: "",
+      ewayTransportationID: "",
+      ewayVechileNo: "",
+      ewayVehicleFrom: "",
+    });
+
+
+    useEffect(() => {
+        const fetchEwayBills = async () => {
+            try {
+                const response = await axios.get("https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/all");
+                const ewayBills = response.data;
+                console.log(ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(invoiceID)));
+                console.log(ewayBills.map((eway) => eway.invoice.id));
+    
+                // Find the Eway Bill associated with the invoiceID
+                const foundEwayBill = ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(invoiceID));
+                setEwayBill(foundEwayBill);
+    
+                // If Eway Bill data is found, set the form data
+                if (foundEwayBill) {
+                    setFormData({
+                        invoiceId: `${invoiceID}`,
+                        ewayDocNumber: foundEwayBill.ewayDocNumber || "",
+                        eWayBillNo: foundEwayBill.eWayBillNo || "",
+                        eWayMode: foundEwayBill.eWayMode || "",
+                        eWayApproxDistance: foundEwayBill.eWayApproxDistance || "",
+                        eWayValidUpto: foundEwayBill.eWayValidUpto || "",
+                        eWaySupplyType: foundEwayBill.eWaySupplyType || "",
+                        eWayTransactionType: foundEwayBill.eWayTransactionType || "",
+                        eWayTransactionId: foundEwayBill.eWayTransactionId || "",
+                        eWayGSTIN: foundEwayBill.eWayGSTIN || "",
+                        eWayfrom: foundEwayBill.eWayfrom || "",
+                        eWayTo: foundEwayBill.eWayTo || "",
+                        eWayDistpatchFrom: foundEwayBill.eWayDistpatchFrom || "",
+                        eWayShipTo: foundEwayBill.eWayShipTo || "",
+                        ewaytaxAmount: foundEwayBill.ewaytaxAmount || "",
+                        ewaytaxRate: foundEwayBill.ewaytaxRate || "",
+                        ewayTransportationID: foundEwayBill.ewayTransportationID || "",
+                        ewayVechileNo: foundEwayBill.ewayVechileNo || "",
+                        ewayVehicleFrom: foundEwayBill.ewayVehicleFrom || "",
+                    });
+                } else {
+                    console.log("Eway Bill not found for invoiceID:", invoiceID);
+                }
+            } catch (error) {
+                console.error("Error fetching Eway Bills:", error);
+            }
+        };
+    
+        fetchEwayBills();
+    }, [invoiceID]);
+    
+
+console.log(formData)
+
+
+
+  
+    // const handleSubmit = async (e) => {
+    //   e.preventDefault();
+    //   try {
+    //       const params = new URLSearchParams();
+    //       for (const key in formData) {
+    //           params.append(key, formData[key]);
+    //       }
+    //     const response = await axios.put(
+    //       "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/update-eway/",
+    //       params.toString(),
+    //       {
+    //           headers: {
+    //               'Content-Type': 'application/x-www-form-urlencoded'
+    //           }
+    //       }
+    //     );
+    //     console.log("Eway added:", response.data);
+    //     dispatch(
+    //       showNotification({
+    //         message: "Eway Bill added to invoice successfully 😁",
+    //         status: 1,
+    //       })
+    //     );
+  
+    //   } catch (error) {
+    //     console.error("Error adding Eway:", error);
+    //     dispatch(
+    //       showNotification({
+    //         message: "Error adding Eway Bill to invoice! 😵",
+    //         status: 0,
+    //       })
+    //     );
+    //   }
+    // };
+
+    const handleSubmit = async (e, formData) => {
+        try {
+          if (ewayBill) {
+            // Update existing Eway Bill
+            const params = new URLSearchParams();
         for (const key in formData) {
             params.append(key, formData[key]);
         }
-      const response = await axios.post(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/add-eway",
-        params.toString(),
-        {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            await axios.put(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/update-eway/${ewayBill.id}`, params.toString(), {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+            console.log("Eway Bill updated successfully");
+            dispatch(
+                showNotification({
+                  message: "Eway Bill updated to invoice successfully 😁",
+                  status: 1,
+                })
+              );
+          } else {
+            // Add new Eway Bill
+            const params = new URLSearchParams();
+        for (const key in formData) {
+            params.append(key, formData[key]);
         }
-      );
-      console.log("Eway added:", response.data);
-      dispatch(
-        showNotification({
-          message: "Eway Bill added to invoice successfully 😁",
-          status: 1,
-        })
-      );
+            await axios.post("https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/add-eway", params.toString(), {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+            console.log("Eway Bill added successfully");
+            dispatch(
+                showNotification({
+                  message: "Eway Bill added to invoice successfully 😁",
+                  status: 1,
+                })
+              );
+          }
+        } catch (error) {
+          console.error("Error updating/adding Eway Bill:", error);
+          dispatch(
+            showNotification({
+              message: "Error updating/adding Eway Bill! 😵",
+              status: 0,
+            })
+          );
+        }
+      };
 
-      setFormData({
-        invoiceId: "",
-        ewayDocNumber: "",
-        eWayBillNo: "",
-        eWayMode: "",
-        eWayApproxDistance: "",
-        eWayValidUpto: "",
-        eWaySupplyType: "",
-        eWayTransactionType: "",
-        eWayTransactionId: "",
-        eWayGSTIN: "",
-        eWayfrom: "",
-        eWayTo: "",
-        eWayDistpatchFrom: "",
-        eWayShipTo: "",
-        ewaytaxAmount: "",
-        ewaytaxRate: "",
-        ewayTransportationID: "",
-        ewayVechileNo: "",
-        ewayVehicleFrom: "",
-      });
-    } catch (error) {
-      console.error("Error adding Eway:", error);
-      // dispatch(
-      //   showNotification({
-      //     message: "Error adding Eway Bill to invoice! 😵",
-      //     status: 0,
-      //   })
-      // );
-    }
-  };
+    
+  
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({ ...formData, [name]: value });
+    };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
   return (
     <>
-      <TitleCard title="Eway Bill" topMargin="mt-2">
+      <TitleCard title="Update/Add Eway Bill" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={(e) => handleSubmit(e, formData)} className="space-y-4">
+          <button onClick={() => document.getElementById("update_modal_3").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
@@ -435,13 +523,13 @@ function EwayForm({ invoiceID }) {
               </div>
             </div>
             <button type="submit" className="btn btn-primary">
-              Submit Eway Form
+              Add/Update Eway Form
             </button>
           </form>
         </div>
       </TitleCard>
     </>
-  );
+  )
 }
 
-export default EwayForm;
+export default InvoiceUpdateEway
