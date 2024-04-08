@@ -20,6 +20,9 @@ const DocComponents = lazy(() => import('../pages/DocComponents'))
 const DistributersDashboard = lazy(() => import('../pages/protected/DistributorsDashboard'))
 const Sales = lazy(() => import('../pages/protected/Sales'))
 const InvoicesForm = lazy(() => import('../pages/protected/InvoicesForm'))
+const SalesPersons = lazy(() => import('../pages/protected/SalesPersons'))
+const AddSalesPerson = lazy(() => import('../features/Sales-Persons/components/AddSalesPerson'))
+
 
 
 const routes = [
@@ -94,6 +97,14 @@ const routes = [
   {
     path: '/blank',
     component: Blank,
+  },
+  {
+    path: '/Sales-Persons',
+    component: SalesPersons,
+  },
+  {
+    path: '/Sales-Persons-Form',
+    component: AddSalesPerson,
   },
 ]
 

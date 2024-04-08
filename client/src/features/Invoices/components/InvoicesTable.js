@@ -61,6 +61,7 @@ const TableComponent = () => {
   const [selectedInvoices, setSelectedInvoices] = useState([]);
   const [distributors, setDistributors] = useState([]);
   const [invoiceProducts, setInvoiceProducts] = useState([]);
+  const [ewayTableData, setEwayTableData] = useState([]);
 
 
   useEffect(() => {
@@ -127,6 +128,10 @@ const TableComponent = () => {
   const handleProduct = (invoice) => {
     setSelectedInvoice(invoice);
     document.getElementById("product_modal").showModal();
+  };
+  const handleEway = (invoice) => {
+    setSelectedInvoice(invoice);
+    document.getElementById("eway_modal").showModal();
   };
 
   const handleCheckboxChange = (e, id) => {
@@ -200,6 +205,62 @@ const TableComponent = () => {
 
 console.log(invoiceProducts);
 console.log(selectedInvoice);
+console.log(selectedInvoices);
+
+useEffect(() => {
+  const fetchEwayBills = async () => {
+      try {
+          const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/invoice/${selectedInvoices}`);
+          // const ewayBills = response.data;
+          // console.log(ewayBills);
+          // // console.log(ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(invoiceID)));
+          // // console.log(ewayBills.map((eway) => eway.invoice.id));
+
+          // // Find the Eway Bill associated with the invoiceID
+          // const foundEwayBill = ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(selectedInvoices));
+          // console.log(foundEwayBill);
+
+          // // If Eway Bill data is found, set the form data
+          // if (foundEwayBill > 0) {
+          //     setEwayTableData({
+          //         invoiceId: `${selectedInvoices}`,
+          //         ewayDocNumber: foundEwayBill.ewayDocNumber,
+          //         eWayBillNo: foundEwayBill.eWayBillNo,
+          //         eWayMode: foundEwayBill.eWayMode,
+          //         eWayApproxDistance: foundEwayBill.eWayApproxDistance,
+          //         eWayValidUpto: foundEwayBill.eWayValidUpto,
+          //         eWaySupplyType: foundEwayBill.eWaySupplyType,
+          //         eWayTransactionType: foundEwayBill.eWayTransactionType,
+          //         eWayTransactionId: foundEwayBill.eWayTransactionId,
+          //         eWayGSTIN: foundEwayBill.eWayGSTIN,
+          //         eWayfrom: foundEwayBill.eWayfrom,
+          //         eWayTo: foundEwayBill.eWayTo,
+          //         eWayDistpatchFrom: foundEwayBill.eWayDistpatchFrom,
+          //         eWayShipTo: foundEwayBill.eWayShipTo,
+          //         ewaytaxAmount: foundEwayBill.ewaytaxAmount,
+          //         ewaytaxRate: foundEwayBill.ewaytaxRate,
+          //         ewayTransportationID: foundEwayBill.ewayTransportationID,
+          //         ewayVechileNo: foundEwayBill.ewayVechileNo,
+          //         ewayVehicleFrom: foundEwayBill.ewayVehicleFrom,
+          //     });
+          // } else {
+          //     console.log("Eway Bill not found for invoiceID:", selectedInvoices);
+          // }
+
+          if(response.data != []) {
+              setEwayTableData(response.data);
+          } else {
+              console.log("Eway Bill not found for invoiceID:", selectedInvoices);
+          }
+      } catch (error) {
+          console.error("Error fetching Eway Bills:", error);
+      }
+  };
+
+  fetchEwayBills();
+}, [selectedInvoices]);
+
+console.log(ewayTableData);
 
   return (
     <>
@@ -217,9 +278,14 @@ console.log(selectedInvoice);
           </button>
         }
         TopSideButtons3={
+          <>
           <button className="btn btn-success" onClick={handleProduct}>
             View Products
           </button>
+          <button className="btn btn-success" onClick={handleEway}>
+            View Eway Bill
+          </button>
+          </>
         }
       >
         <div className="overflow-x-auto w-full">
@@ -859,6 +925,80 @@ console.log(selectedInvoice);
                 </div>
             </div>
         </dialog>
+        <dialog id="eway_modal" className="modal">
+        <div className="modal-box w-11/12 max-w-7xl">
+          <TitleCard title="Invoice Eway Bill" topMargin="mt-2">
+          <div className="overflow-x-auto w-full">
+            { ewayTableData.length !== 0 ?  (
+              
+            
+                    <table className="table w-full">
+                        <thead>
+                            <tr>
+                              <th>Eway DOC No.</th>
+                              <th>Eway Bill No.</th>
+                              <th>Eway Mode</th>
+                              <th>Eway Approx Distance</th>
+                              <th>Eway Valid Upto</th>
+                              <th>Eway Supply Type</th>
+                              <th>Eway Transaction Type</th>
+                              <th>Eway Transaction ID</th>
+                              <th>Eway GSTIN</th>
+                              <th>Eway From</th>
+                              <th>Eway To</th>
+                              <th>Eway Dispatched From</th>
+                              <th>Eway Ship To</th>
+                              <th>Eway Tax Amount</th>
+                              <th>Eway Tax Rate</th>
+                              <th>Eway Transportation ID</th>
+                              <th>Eway Vehicle No</th>
+                              <th>Eway Vehicle From</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              {ewayTableData && (
+                                
+                              
+                              <tr>
+                              <td>{ewayTableData.ewayDocNumber}</td>
+                              <td>{ewayTableData.eWayBillNo}</td>
+                              <td>{ewayTableData.eWayMode}</td>
+                              <td>{ewayTableData.eWayApproxDistance}</td>
+                              <td>{ewayTableData.eWayValidUpto}</td>
+                              <td>{ewayTableData.eWaySupplyType}</td>
+                              <td>{ewayTableData.eWayTransactionType}</td>
+                              <td>{ewayTableData.eWayTransactionId}</td>
+                              <td>{ewayTableData.eWayGSTIN}</td>
+                              <td>{ewayTableData.eWayfrom}</td>
+                              <td>{ewayTableData.eWayTo}</td>
+                              <td>{ewayTableData.eWayDistpatchFrom}</td>
+                              <td>{ewayTableData.eWayShipTo}</td>
+                              <td>{ewayTableData.ewaytaxAmount}</td>
+                              <td>{ewayTableData.ewaytaxRate}</td>
+                              <td>{ewayTableData.ewayTransportationID}</td>
+                              <td>{ewayTableData.ewayVechileNo}</td>
+                              <td>{ewayTableData.ewayVehicleFrom}</td>
+                              </tr>
+                              )}
+                              </tbody>
+                              </table>
+            ) :
+            (
+              <h1>No Eway Details Found!</h1>
+            ) }
+                              </div>
+            </TitleCard>
+            <div className="modal-action">
+              <button
+                className="btn"
+                onClick={() => document.getElementById("eway_modal").close()}
+              >
+                Close
+              </button>
+
+            </div>
+          </div>
+          </dialog>
         </>
       )}
     </>

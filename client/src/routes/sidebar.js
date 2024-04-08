@@ -9,7 +9,7 @@ import WalletIcon from '@heroicons/react/24/outline/WalletIcon'
 // import ExclamationTriangleIcon from '@heroicons/react/24/outline/ExclamationTriangleIcon'
 import CalendarDaysIcon from '@heroicons/react/24/outline/PaperClipIcon'
 // import ArrowRightOnRectangleIcon from '@heroicons/react/24/outline/ArrowRightOnRectangleIcon'
-// import UserIcon from '@heroicons/react/24/outline/UserIcon'
+import UserIcon from '@heroicons/react/24/outline/UserIcon'
 // import Cog6ToothIcon from '@heroicons/react/24/outline/Cog6ToothIcon'
 import BoltIcon from '@heroicons/react/24/outline/CurrencyRupeeIcon'
 import ChartBarIcon from '@heroicons/react/24/outline/ChartBarIcon'
@@ -127,6 +127,23 @@ const routes = [
         path: '/app/Invoices-Form',
         icon: <WalletIcon className={submenuIconClasses}/>,
         name: 'Invoices Entry Operations',
+      }
+    ]
+  },
+  {
+    path: '', // url
+    icon: <UserIcon className={`${iconClasses} inline` }/>, // icon component
+    name: 'Sales Persons', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/app/Sales-Persons',   
+        icon:  <Squares2X2Icon className={iconClasses}/>,   
+        name: 'Sales Persons Dashboard', // 
+      },
+      {
+        path: '/app/Sales-Persons-Form',
+        icon: <WalletIcon className={submenuIconClasses}/>,
+        name: 'Sales Persons Entry Operations',
       }
     ]
   },
