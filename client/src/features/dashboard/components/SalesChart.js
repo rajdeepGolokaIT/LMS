@@ -128,16 +128,17 @@ function LineChart() {
       if (a > b) {
         return 1;
       }
-      return 0;
     });
 
+    const sortedValues = tags.map(tag => rangeData[tag]);
+
     const labels = tags.map(label => {
-        if (selectedRange === 'month' || selectedRange === 'custom') {
-          return moment(label).format('MMMM-YYYY');
-        } else {
-          return label;
-        }
-      });
+      if (selectedRange === 'month' || selectedRange === 'custom') {
+        return moment(label).format('MMMM-YYYY');
+      } else {
+        return label;
+      }
+    });
 
     
 
@@ -148,15 +149,7 @@ function LineChart() {
         {
           fill: true,
           label: 'Sales',
-          data: Object.values(rangeData).sort((a, b) => {
-            if (a < b) {
-              return -1;
-            }
-            if (a > b) {
-              return 1;
-            }
-            return 0;
-          }),
+          data: sortedValues,
           borderColor: selectedRange === 'month' ? 'rgb(53, 162, 235)' : selectedRange === 'custom' ? 'rgb(148,0,211)' : 'rgb(255, 99, 132)',
           backgroundColor: selectedRange === 'month'  ? 'rgba(53, 162, 235, 0.5)' : selectedRange === 'custom' ? 'rgba(148,0,211, 0.5)' : 'rgba(255, 99, 132, 0.5)',
         },
