@@ -31,6 +31,7 @@ function EwayForm({ invoiceID }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      
         const params = new URLSearchParams();
         for (const key in formData) {
             params.append(key, formData[key]);
@@ -89,11 +90,15 @@ function EwayForm({ invoiceID }) {
     setFormData({ ...formData, [name]: value });
   };
 
+  
+
   return (
     <>
+    
       <TitleCard title="Eway Bill" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
           <form onSubmit={handleSubmit} className="space-y-4">
+             
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label

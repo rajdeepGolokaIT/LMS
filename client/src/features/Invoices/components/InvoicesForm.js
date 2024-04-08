@@ -29,17 +29,30 @@ function InvoicesForm() {
         amount: 0,
         dispatchedThrough: '',
         termsOfDelivery: '',
+        salespersonId: 0,
     });
 
     const [distributors, setDistributors] = useState([]);
+    const [salesPersons, setSalesPersons] = useState([]);
     const [invoiceId, setInvoiceId] = useState(null);
+    const [allowEditing, setAllowEditing] = useState(false); // State to manage whether editing is allowed
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // Fetch distributors and products when component mounts
+        
         fetchDistributors();
-        // fetchProducts(); // Uncomment this line if you need products
+        fetchSalesPersons();
     }, []);
+
+    const fetchSalesPersons = async () => {
+        try {
+            const response = await axios.get('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all');
+            setSalesPersons(response.data);
+        } catch (error) {
+            console.error('Error fetching distributors:', error);
+            // Handle error, show error message to the user, etc.
+        }
+    };
 
     const fetchDistributors = async () => {
         try {
@@ -50,17 +63,6 @@ function InvoicesForm() {
             // Handle error, show error message to the user, etc.
         }
     };
-
-    // Uncomment this function if you need products
-    // const fetchProducts = async () => {
-    //     try {
-    //         const response = await axios.get('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all');
-    //         setProducts(response.data);
-    //     } catch (error) {
-    //         console.error('Error fetching products:', error);
-    //         // Handle error, show error message to the user, etc.
-    //     }
-    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -105,12 +107,18 @@ function InvoicesForm() {
                 amount: 0,
                 dispatchedThrough: '',
                 termsOfDelivery: '',
+                salespersonId: 0,
             });
         } catch (error) {
             console.error('Error adding invoice:', error);
             dispatch(showNotification({ message: 'Error adding invoice! 😵', status: 0 }));
         }
     };
+
+
+    const handleCheckboxChange = () => {
+        setAllowEditing(!allowEditing);
+      };
 
     return(
         <>
@@ -143,7 +151,7 @@ function InvoicesForm() {
                         />
                     </div>
                     </div>
-                <div className="grid grid-cols-2 gap-4">
+                {/* <div className="grid grid-cols-2 gap-4">
                     <div>
                         <label htmlFor="sgst" className="label label-text text-base">SGST:</label>
                         <input
@@ -168,11 +176,11 @@ function InvoicesForm() {
                             required
                             />
                         </div>
-                </div>
+                </div> */}
                     
                        
                     <div className="grid grid-cols-2 gap-4">
-                    <div>
+                    {/* <div>
                         <label htmlFor="cgst" className="label label-text text-base">CGST:</label>
                         <input
                             type="number"
@@ -183,16 +191,43 @@ function InvoicesForm() {
                             onChange={(e) => setFormData({...formData, cgst: parseInt(e.target.value)})}
                             required
                         />
-                    </div>
-                    <div>
-                        <label htmlFor="totalAmount" className="label label-text text-base">Total Amount:</label>
+                    </div> */}
+                    {/* <div>
+                        <label htmlFor="totalAmount" className="label label-text text-base">Total Amount Without Tax:</label>
                         <input
                             type="number"
-                            placeholder="Total Amount"
+                            placeholder="Total Amount Without Tax"
                             className="w-full input input-bordered input-primary"
                             id="totalAmount"
                             value={formData.totalAmount}
                             onChange={(e) => setFormData({...formData, totalAmount: parseInt(e.target.value)})}
+                            required
+                        />
+                    </div> */}
+                    <div>
+                    <label htmlFor="salespersonId" className="label label-text text-base">Select Salesperson Name:</label>
+                    <select
+                        className="w-full select select-bordered select-primary"
+                        id="salespersonId"
+                        value={formData.salespersonId}
+                        onChange={(e) => setFormData({...formData, salespersonId: parseInt(e.target.value)})}
+                        required
+                    >
+                        <option value="">Select Salesperson Name</option>
+                        {salesPersons.map((salesperson) => (
+                            <option key={salesperson.id} value={salesperson.id}>{salesperson.name}</option>
+                        ))}
+                    </select>
+                    </div>
+                    <div>
+                        <label htmlFor="termsOfDelivery" className="label label-text text-base">Terms Of Delivery:</label>
+                        <input
+                            type="text"
+                            placeholder="Terms Of Delivery"
+                            className="w-full input input-bordered input-primary"
+                            id="termsOfDelivery"
+                            value={formData.termsOfDelivery}
+                            onChange={(e) => setFormData({...formData, termsOfDelivery: e.target.value})}
                             required
                         />
                     </div>
@@ -249,7 +284,7 @@ function InvoicesForm() {
                         />
                     </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    {/* <div className="grid grid-cols-2 gap-4">
                     <div>
                         <label htmlFor="totalQuantity_Nos" className="label label-text text-base">Total Quantity Nos:</label>
                         <input
@@ -274,7 +309,7 @@ function InvoicesForm() {
                             required
                         />
                     </div>
-                    </div>
+                    </div> */}
                    
                     <div className="grid grid-cols-2 gap-4">
                     
@@ -360,19 +395,8 @@ function InvoicesForm() {
                     </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label htmlFor="termsOfDelivery" className="label label-text text-base">Terms Of Delivery:</label>
-                        <input
-                            type="text"
-                            placeholder="Terms Of Delivery"
-                            className="w-full input input-bordered input-primary"
-                            id="termsOfDelivery"
-                            value={formData.termsOfDelivery}
-                            onChange={(e) => setFormData({...formData, termsOfDelivery: e.target.value})}
-                            required
-                        />
-                    </div>
-                    <div>
+                   
+                    {/* <div>
                         <label htmlFor="amount" className="label label-text text-base">Amount:</label>
                         <input
                             type="number"
@@ -383,7 +407,7 @@ function InvoicesForm() {
                             onChange={(e) => setFormData({...formData, amount: parseInt(e.target.value)})}
                             required
                         />
-                    </div>
+                    </div> */}
                     </div>
                     <button type="submit" className="btn btn-primary">Add Invoice</button>
                 </form>
@@ -392,7 +416,20 @@ function InvoicesForm() {
             {invoiceId != null && 
             <>
             <AddProductsForm invoiceId={invoiceId} />
+            {/* Checkbox to allow editing */}
+    <div className="flex items-center">
+      <label htmlFor="allowEditingCheckbox" className="label label-text text-base">Need Eway Bill:</label>
+              <input
+                type="checkbox"
+                id="allowEditingCheckbox"
+                className="checkbox checkbox-primary"
+                checked={allowEditing}
+                onChange={handleCheckboxChange}
+              />
+            </div>
+            {allowEditing == true ? (
             <EwayForm invoiceID={invoiceId}/>
+            ) : null}
             </>
             }
         </>

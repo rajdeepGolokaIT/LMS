@@ -146,6 +146,7 @@ const TableComponent = () => {
       setSelectedInvoices(
         selectedInvoices.filter((invoiceId) => invoiceId !== id)
       );
+      setEwayTableData([]);
     }
   };
 
@@ -250,6 +251,7 @@ useEffect(() => {
           if(response.data != []) {
               setEwayTableData(response.data);
           } else {
+            setEwayTableData([]);
               console.log("Eway Bill not found for invoiceID:", selectedInvoices);
           }
       } catch (error) {
@@ -915,7 +917,7 @@ console.log(ewayTableData);
                 </TitleCard>
 
                 <div className="modal-action">
-                  <button type="button" className="btn btn-success" onClick={() => document.getElementById("product_modal").close()}>Update</button>
+                  
                     <button
                         className="btn"
                         onClick={() => document.getElementById("product_modal").close()}
