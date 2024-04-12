@@ -7,12 +7,11 @@ const Invoices = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setPageTitle({ title : "Invoices"}))
+        dispatch(setPageTitle({ title : "Invoices Dashboard"}))
       }, [])
   return (
     <>
-
-        <InvoicesTable />
+        <InvoicesTable/>
     </>
   )
 }

@@ -15,7 +15,7 @@ function GettingStarted(){
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setPageTitle({ title : "Categories by Distributors Dashboard"}))
+        dispatch(setPageTitle({ title : "Categories to Distributors Dashboard"}))
       }, [])
 
 
