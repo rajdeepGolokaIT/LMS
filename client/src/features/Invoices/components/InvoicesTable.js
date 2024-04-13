@@ -212,42 +212,7 @@ useEffect(() => {
   const fetchEwayBills = async () => {
       try {
           const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/invoice/${selectedInvoices}`);
-          // const ewayBills = response.data;
-          // console.log(ewayBills);
-          // // console.log(ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(invoiceID)));
-          // // console.log(ewayBills.map((eway) => eway.invoice.id));
-
-          // // Find the Eway Bill associated with the invoiceID
-          // const foundEwayBill = ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(selectedInvoices));
-          // console.log(foundEwayBill);
-
-          // // If Eway Bill data is found, set the form data
-          // if (foundEwayBill > 0) {
-          //     setEwayTableData({
-          //         invoiceId: `${selectedInvoices}`,
-          //         ewayDocNumber: foundEwayBill.ewayDocNumber,
-          //         eWayBillNo: foundEwayBill.eWayBillNo,
-          //         eWayMode: foundEwayBill.eWayMode,
-          //         eWayApproxDistance: foundEwayBill.eWayApproxDistance,
-          //         eWayValidUpto: foundEwayBill.eWayValidUpto,
-          //         eWaySupplyType: foundEwayBill.eWaySupplyType,
-          //         eWayTransactionType: foundEwayBill.eWayTransactionType,
-          //         eWayTransactionId: foundEwayBill.eWayTransactionId,
-          //         eWayGSTIN: foundEwayBill.eWayGSTIN,
-          //         eWayfrom: foundEwayBill.eWayfrom,
-          //         eWayTo: foundEwayBill.eWayTo,
-          //         eWayDistpatchFrom: foundEwayBill.eWayDistpatchFrom,
-          //         eWayShipTo: foundEwayBill.eWayShipTo,
-          //         ewaytaxAmount: foundEwayBill.ewaytaxAmount,
-          //         ewaytaxRate: foundEwayBill.ewaytaxRate,
-          //         ewayTransportationID: foundEwayBill.ewayTransportationID,
-          //         ewayVechileNo: foundEwayBill.ewayVechileNo,
-          //         ewayVehicleFrom: foundEwayBill.ewayVehicleFrom,
-          //     });
-          // } else {
-          //     console.log("Eway Bill not found for invoiceID:", selectedInvoices);
-          // }
-
+          
           if(response.data != []) {
               setEwayTableData(response.data);
           } else {

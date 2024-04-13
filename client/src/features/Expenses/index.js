@@ -1,8 +1,11 @@
 import React from 'react'
+import ExpensesTable from './components/ExpanseTable'
 
 const Expenses = () => {
   return (
-    <div>Expenses</div>
+    <>
+    <ExpensesTable/>
+    </>
   )
 }
 

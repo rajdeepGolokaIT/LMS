@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 // import moment from 'moment';
 import axios from 'axios';
 import { useDispatch } from 'react-redux'
-import TitleCard from '../../../components/Cards/TitleCard';
 import { showNotification } from "../../common/headerSlice";
+import TitleCard from '../../../components/Cards/TitleCard';
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 
@@ -185,22 +185,22 @@ const handleSubmit = async (e, formData) => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
-        console.log("Eway Bill updated successfully");
+        console.log("Sales Person updated successfully");
         const response = await axios.get(
             "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
           );
           setData(response.data);
         dispatch(
             showNotification({
-              message: "Eway Bill updated to invoice successfully 😁",
+              message: "Sales Person updated to invoice successfully 😁",
               status: 1,
             })
           );
         } catch (error) {
-            console.error("Error updating/adding Eway Bill:", error);
+            console.error("Error updating Sales Person:", error);
             dispatch(
               showNotification({
-                message: "Error updating/adding Eway Bill! 😵",
+                message: "Error updating Sales Person! 😵",
                 status: 0,
               })
             );
@@ -237,7 +237,7 @@ const handleSubmit = async (e, formData) => {
         title="All Sales Persons Table"
         topMargin="mt-2"
         TopSideButtons1={
-            <button className="btn btn-success" onClick={handleUpdate} >
+            <button className="btn btn-success" onClick={handleUpdate}>
               Update
             </button>
           }

@@ -7,14 +7,14 @@ import TitleCard from "../../../components/Cards/TitleCard";
 const ExpensesForm = () => {
   const dispatch = useDispatch();
   const [salespersons, setSalespersons] = useState([]);
-  const [formData, setFormData] = useState(
+  const [formData, setFormData] = useState([
     {
       salespersonId: 0,
       salary: 0,
       incentive: 0,
       miscellaneous: 0,
-    },
-  );
+    }
+  ]);
 
   const fetchSalespersons = async () => {
     try {
@@ -36,19 +36,22 @@ const ExpensesForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const params = new URLSearchParams();
-      // for (const key in formData) {
-      //     params.append(key, formData[key]);
-      // }
       const response = await axios.post(
         "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/add",
-        formData,
         {
-          // headers: {
-          //     'Content-Type': 'application/x-www-form-urlencoded'
-          // }
+          salespersonId: formData.salespersonId,
+          salary: formData.salary,
+          incentive: formData.incentive,
+          miscellaneous: formData.miscellaneous,
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            
+          },
         }
       );
+  
       console.log("Expenses added:", response.data);
       setFormData({
         salespersonId: 0,
@@ -72,9 +75,16 @@ const ExpensesForm = () => {
       );
     }
   };
+  
+
+
+  console.log(formData)
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: parseInt(value) });
+    // Convert the value to a number using parseFloat or parseInt
+    const numericValue = parseFloat(value); // or parseInt(value, 10) for integers
+    setFormData({ ...formData, [name]: numericValue });
   };
 
   return (
@@ -103,6 +113,7 @@ const ExpensesForm = () => {
                         type="number"
                         id="salary"
                         name="salary"
+                        placeholder="Enter salary"
                         className="w-full input input-bordered input-primary"
                         value={formData.salary}
                         onChange={handleChange}
@@ -115,6 +126,7 @@ const ExpensesForm = () => {
                         type="number"
                         id="incentive"
                         name="incentive"
+                        placeholder="Enter incentive"
                         className="w-full input input-bordered input-primary"
                         value={formData.incentive}
                         onChange={handleChange}
@@ -127,6 +139,7 @@ const ExpensesForm = () => {
                         type="number"
                         id="miscellaneous"
                         name="miscellaneous"
+                        placeholder="Enter miscellaneous"
                         className="w-full input input-bordered input-primary"
                         value={formData.miscellaneous}
                         onChange={handleChange}
