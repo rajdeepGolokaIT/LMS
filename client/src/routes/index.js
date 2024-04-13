@@ -22,6 +22,7 @@ const Sales = lazy(() => import('../pages/protected/Sales'))
 const InvoicesForm = lazy(() => import('../pages/protected/InvoicesForm'))
 const SalesPersons = lazy(() => import('../pages/protected/SalesPersons'))
 const AddSalesPerson = lazy(() => import('../features/Sales-Persons/components/AddSalesPerson'))
+const ExpensesForm = lazy(() => import('../features/Expenses/components/ExpensesForm'))
 
 
 
@@ -85,6 +86,10 @@ const routes = [
   {
     path: '/Expenses',
     component: Integration,
+  },
+  {
+    path: '/Expenses-Form',
+    component: ExpensesForm,
   },
   {
     path: '/Products-by-Distributers-Dashboard',

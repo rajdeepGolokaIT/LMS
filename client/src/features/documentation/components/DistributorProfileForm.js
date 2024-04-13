@@ -15,6 +15,8 @@ function DistributorProfileForm() {
     const [contactPerson, setContactPerson] = useState('');
     const [contactNumber, setContactNumber] = useState('');
     const [email, setEmail] = useState('');
+    const [gstNo, setGstNo] = useState('');
+    const [panNo, setPanNo] = useState('');
 
     const dispatch = useDispatch();
 
@@ -33,7 +35,9 @@ function DistributorProfileForm() {
                     agencyName,
                     contactPerson,
                     contactNumber,
-                    email
+                    email,
+                    gstNo,
+                    panNo
                 }
             );
             console.log('Distributor profile created:', response.data);
@@ -48,6 +52,8 @@ function DistributorProfileForm() {
             setContactPerson('');
             setContactNumber('');
             setEmail('');
+            setGstNo('');
+            setPanNo('');
         } catch (error) {
             console.error('Error creating distributor profile:', error);
             // Handle error, show error message to the user, etc.
@@ -169,6 +175,30 @@ function DistributorProfileForm() {
                                 required
                             />
                         </div>
+                        <div>
+                            <label htmlFor="gstNo" className="label label-text text-base">GST Number:</label>
+                            <input
+                                type="text"
+                                placeholder="GST Number"
+                                className="w-full input input-bordered input-primary"
+                                id="gstNo"
+                                value={gstNo}
+                                onChange={(e) => setGstNo(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="panNo" className="label label-text text-base">PAN Number:</label>
+                            <input
+                                type="text"
+                                placeholder="PAN Number"
+                                className="w-full input input-bordered input-primary"
+                                id="panNo"
+                                value={panNo}
+                                onChange={(e) => setPanNo(e.target.value)}
+                                required
+                            />
+                            </div>
                         </div>
                         {/* Add other fields here as needed */}
                         {/* Repeat similar code for other fields */}

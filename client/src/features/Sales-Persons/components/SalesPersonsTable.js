@@ -211,6 +211,26 @@ const handleSubmit = async (e, formData) => {
             document.getElementById("update_modal").showModal();
         }
 
+
+        const handleDelete = async () => {
+            try {
+               {
+                await axios.delete(
+                  `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/delete-salesperson?id=${selectedId}`
+                );
+              }
+              setSelectedId([]);
+              // Reload data after deletion
+              const response = await axios.get(
+                "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+              );
+              setData(response.data);
+            } catch (error) {
+              console.error("Error deleting salesperson:", error);
+            }
+          };
+
+
   return (
     <>
     <TitleCard
@@ -219,6 +239,11 @@ const handleSubmit = async (e, formData) => {
         TopSideButtons1={
             <button className="btn btn-success" onClick={handleUpdate} >
               Update
+            </button>
+          }
+        TopSideButtons2={
+            <button className="btn btn-danger" onClick={handleDelete}>
+              Delete
             </button>
           }
         >

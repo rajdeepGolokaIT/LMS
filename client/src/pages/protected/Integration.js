@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../features/common/headerSlice'
-import Integration from '../../features/integration'
+import Expenses from '../../features/Expenses/index'
 
 function InternalPage(){
 
@@ -11,8 +11,7 @@ function InternalPage(){
         dispatch(setPageTitle({ title : "Expenses Dashboard"}))
       }, [])
       
-    return
-        // <Integration />
+    return <Expenses />
     
 }
 

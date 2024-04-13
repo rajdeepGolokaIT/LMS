@@ -60,7 +60,7 @@ const AddSalesPerson = () => {
 
   return (
     <>
-    <TitleCard title="Eway Bill" topMargin="mt-2">
+    <TitleCard title="Add Sales Person" topMargin="mt-2">
     <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
       <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-3 gap-4">
@@ -117,7 +117,7 @@ const AddSalesPerson = () => {
             </div>
             </div>
             <button type="submit" className="btn btn-primary">
-              Submit Eway Form
+              Submit
             </button>
         </form>
         </div>

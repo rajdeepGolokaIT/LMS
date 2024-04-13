@@ -102,7 +102,7 @@ const routes = [
         name: 'Expenses Dashboard', // name that appear in Sidebar
       },
       {
-        path: '',
+        path: '/app/Expenses-Form',
         icon: <WalletIcon className={submenuIconClasses}/>,
         name: 'Expenses Entry Operations',
       }
