@@ -69,13 +69,13 @@ const ExpanseTable = () => {
     const [recordsPerPage] = useState(5);
     const [selectedId, setSelectedId] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-    const [formData, setFormData] = useState([
+    const [formData, setFormData] = useState(
         {
-          salary: 0,
-          incentive: 0,
-          miscellaneous: 0,
+            salary: 0,
+            incentive: 0,
+            miscellaneous: 0,
         }
-      ]);
+    );
 
 
 
@@ -100,10 +100,10 @@ const ExpanseTable = () => {
             setSelectedId(id);
             const foundSalespersons = data.find((expense) => parseInt(expense.id) === parseInt(id));
 
-                // if (foundSalespersons){
-                //     setFormData(foundSalespersons);
+                if (foundSalespersons){
+                    setFormData(foundSalespersons);
 
-                // }
+                }
         } else {
             // setFormData([]);
             setSelectedId(null);
@@ -135,9 +135,9 @@ const ExpanseTable = () => {
     const currentRecords = sortedData.slice(indexOfFirstRecord, indexOfLastRecord);
     const nPages = Math.ceil(data.length / recordsPerPage);
 
-    console.log(currentRecords);
-    console.log(selectedId);
-    console.log(sortConfig.key)
+    // console.log(currentRecords);
+    // console.log(selectedId);
+    // console.log(sortConfig.key)
     console.log(data.slice().sort((a,b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
             return sortConfig.direction === 'ascending' ? -1 : 1;
@@ -170,18 +170,17 @@ const ExpanseTable = () => {
         document.getElementById("update_modal").showModal();
     }
 
-    const handleSubmit = async (e, formData) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            e.preventDefault();
-            const params = new URLSearchParams();
-        for (const key in formData) {
-            params.append(key, formData[key]);
-        }
-            await axios.put(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/update/${selectedId}`, params.toString(), {
+            
+            await axios.put(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/update/${parseInt(selectedId)}`, formData,
+            {
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            }
+            );
             console.log("Expense updated successfully");
             const response = await axios.get(
                 "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/all"
@@ -193,6 +192,8 @@ const ExpanseTable = () => {
                   status: 1,
                 })
               );
+              document.getElementById("update_modal").close()
+
             } catch (error) {
                 console.error("Error updating Expense:", error);
                 dispatch(
@@ -204,12 +205,9 @@ const ExpanseTable = () => {
               }
             };
 
-            const handleChange = (e) => {
-                const { name, value } = e.target;
-                // Convert the value to a number using parseFloat or parseInt
-                const numericValue = parseFloat(value); // or parseInt(value, 10) for integers
-                setFormData({ ...formData, [name]: numericValue });
-              };
+            console.log(formData)
+
+            
 
   return (
     <>
@@ -271,7 +269,7 @@ const ExpanseTable = () => {
         <dialog id='update_modal' className='modal'>
              <div className="modal-box w-11/12 max-w-7xl">
                 <TitleCard title="Update Expense">
-                    <form onSubmit={(e) => handleSubmit(e, formData)} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                     <button onClick={() => document.getElementById("update_modal").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     <div className="grid grid-cols-3 gap-4">
                     <div>
@@ -285,10 +283,10 @@ const ExpanseTable = () => {
                   type="text"
                   placeholder="Salery"
                   className="w-full input input-bordered input-primary"
-                  id="name"
-                  name="name"
+                  id="salary"
+                  name="salary"
                   value={formData.salary}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, salary: parseInt(e.target.value) })}
                   required
                 />
               </div>
@@ -304,10 +302,10 @@ const ExpanseTable = () => {
                   type="text"
                   placeholder="Incentive"
                   className="w-full input input-bordered input-primary"
-                  id="Incentive"
-                  name="Incentive"
+                  id="incentive"
+                  name="incentive"
                   value={formData.incentive}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, incentive: parseInt(e.target.value) })}
                   required
                 />
               </div>
@@ -325,7 +323,7 @@ const ExpanseTable = () => {
                   id="miscellaneous"
                   name="miscellaneous"
                   value={formData.miscellaneous}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, miscellaneous: parseInt(e.target.value) })}
                   required
                 />
               </div>
