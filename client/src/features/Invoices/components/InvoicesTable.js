@@ -102,7 +102,7 @@ const TableComponent = () => {
       // Iterate over selectedInvoices array and delete each invoice
       for (const id of selectedInvoices) {
         await axios.delete(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/delete-invoice?id=${id}`
+          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/delete-invoice/${id}`
         );
       }
       // Clear selectedInvoices array after successful deletion
@@ -140,7 +140,7 @@ const TableComponent = () => {
       // Set selectedInvoice to the invoice object when checkbox is checked
       setSelectedInvoice(data.find((invoice) => invoice.id === id));
       // Add the id to the selectedInvoices array
-      setSelectedInvoices([...selectedInvoices, id]);
+      setSelectedInvoices([id]);
     } else {
       // Remove the id from the selectedInvoices array
       setSelectedInvoices(
@@ -158,7 +158,7 @@ const TableComponent = () => {
         params.append(key, selectedInvoice[key]);
       }
       await axios.put(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/update-invoice/${selectedInvoices}`,
+        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/update-invoice/${selectedInvoices[0]}`,
         params.toString(),
         {
           headers: {
@@ -191,9 +191,10 @@ const TableComponent = () => {
   const invoiceProduct = async () => {
     try {
       const response = await axios.get(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/get-invoice-products-by-id/${selectedInvoices}`
+        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/get-invoice-products-by-id/${selectedInvoices[0]}`
       );
       setInvoiceProducts(response.data);
+      console.log("Selected Invoice Products:" + response.data);
       
     } catch (error) {
       console.error("Error fetching invoice products:", error);
@@ -206,7 +207,7 @@ const TableComponent = () => {
 
 console.log(invoiceProducts);
 console.log(selectedInvoice);
-console.log(selectedInvoices);
+console.log(selectedInvoices[0]);
 
 useEffect(() => {
   const fetchEwayBills = async () => {
@@ -235,129 +236,91 @@ console.log(ewayTableData);
         title="Invoices Table"
         topMargin="mt-2"
         TopSideButtons1={
-          <button className="btn btn-danger" onClick={handleDelete}>
+          <button className={`btn  ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-error "} mr-2`} onClick={handleDelete}>
             Delete
           </button>
         }
         TopSideButtons2={
-          <button className="btn btn-primary mr-2" onClick={handleUpdate}>
+          <button className={`btn ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-primary "} mr-2`} onClick={handleUpdate}>
             Update
           </button>
         }
         TopSideButtons3={
           <>
-          <button className="btn btn-success" onClick={handleProduct}>
+          <button className={`btn ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-success"}`} onClick={handleProduct}>
             View Products
           </button>
-          <button className="btn btn-success" onClick={handleEway}>
+          <button className={`btn ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-success"}`} onClick={handleEway}>
             View Eway Bill
           </button>
           </>
         }
       >
         <div className="overflow-x-auto w-full">
-          <table className="table table-lg w-full">
-            <thead>
-              <tr>
-                <th>Select</th>
-                <th>ID</th>
-                <th>Create Date</th>
-                <th>Update Date</th>
-                <th>Vehicle No</th>
-                <th>CGST</th>
-                <th>SGST</th>
-                <th>IGST</th>
-                <th>Total Amount</th>
-                <th>Purchase Number</th>
-                <th>Delivery Date</th>
-                <th>Supplier Name</th>
-                <th>Discount</th>
-                <th>Total Quantity Nos</th>
-                <th>Total Quantity Doz</th>
-                {/* <th>Products</th> */}
-                <th>Distributor's Address</th>
-                <th>Distributor's Contact No</th>
-                <th>Distributor's Email</th>
-                <th>Distributor's City</th>
-                <th>Distributor's Region</th>
-                <th>Distributor's Zone</th>
-                <th>Eway Bill</th>
-                <th>Destination</th>
-                <th>Invoice Number</th>
-                <th>IRN</th>
-                <th>Ack No.</th>
-                <th>Dispatched Through</th>
-                <th>HSN/SAC</th>
-                <th>Terms of Delivery</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentRecords.map((invoice) => (
-                <tr key={invoice.id}>
-                  <td>
-                    <label>
-                      <input
-                        type="checkbox"
-                        className="checkbox checkbox-primary"
-                        onChange={(e) => handleCheckboxChange(e, invoice.id)}
-                        checked={selectedInvoices.includes(invoice.id)}
-                      />
-                    </label>
-                  </td>
-                  <td>{invoice.id}</td>
-                  <td>{invoice.createDate}</td>
-                  <td>{invoice.updateDate}</td>
-                  <td>{invoice.vechicleNo}</td>
-                  <td>{invoice.cgst}</td>
-                  <td>{invoice.sgst}</td>
-                  <td>{invoice.igst}</td>
-                  <td>{invoice.totalAmount}</td>
-                  <td>{invoice.purchaseNumber}</td>
-                  <td>{invoice.deliveryDate}</td>
-                  <td>{invoice.supplierName}</td>
-                  <td>{invoice.discount}</td>
-                  <td>{invoice.totalQuantity_Nos}</td>
-                  <td>{invoice.totalQuantity_Doz}</td>
-                  <td>{invoice.distributor.distributorProfile.address}</td>
-                  <td>
-                    {invoice.distributor.distributorProfile.contactNumber}
-                  </td>
-                  <td>{invoice.distributor.distributorProfile.email}</td>
-                  <td>{invoice.distributor.distributorProfile.city}</td>
-                  <td>{invoice.distributor.distributorProfile.region}</td>
-                  <td>{invoice.distributor.distributorProfile.zone}</td>
-                  <td>{invoice.eway === null ? "Pending..." : invoice.eway}</td>
-                  <td>
-                    {invoice.destination === null
-                      ? "Pending..."
-                      : invoice.destination}
-                  </td>
-                  <td>
-                    {invoice.invoiceNumber === null
-                      ? "Pending..."
-                      : invoice.invoiceNumber}
-                  </td>
-                  <td>{invoice.irn === null ? "Pending..." : invoice.irn}</td>
-                  <td>
-                    {invoice.ackNo === null ? "Pending..." : invoice.ackNo}
-                  </td>
-                  <td>
-                    {invoice.dispatchedThrough === null
-                      ? "Pending..."
-                      : invoice.dispatchedThrough}
-                  </td>
-                  <td>
-                    {invoice.hsnsac === null ? "Pending..." : invoice.hsnsac}
-                  </td>
-                  <td>
-                    {invoice.termsOfDelivery === null
-                      ? "Pending..."
-                      : invoice.termsOfDelivery}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <table className="table table-lg w-full">
+  <thead>
+    <tr className="table-row">
+      <th className="table-cell">Select</th>
+      <th className="table-cell">ID</th>
+      <th className="table-cell">Invoice No.</th>
+      <th className="table-cell">Invoice Date</th>
+      <th className="table-cell">Distributor Name</th>
+      <th className="table-cell">Distributor GSTIN</th>
+      <th className="table-cell">Total Net Amount</th>
+      <th className="table-cell">IGST</th>
+      <th className="table-cell">CGST</th>
+      <th className="table-cell">SGST</th>
+      <th className="table-cell">Total Amount</th>
+      <th className="table-cell">Sales Person Name</th>
+      <th className="table-cell">City</th>
+      <th className="table-cell">Region/State</th>
+      <th className="table-cell">Zone</th>
+      <th className="table-cell">Ewaybill No.</th>
+      <th className="table-cell">IRN</th>
+      <th className="table-cell">Ack No.</th>
+      <th className="table-cell">Dispatched Through</th>
+      <th className="table-cell">Create Date</th>
+      <th className="table-cell">Update Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {currentRecords.map((invoice) => (
+      <tr key={invoice.id} className="table-row">
+        <td className="table-cell">
+          <label>
+            <input
+              type="checkbox"
+              className="checkbox checkbox-primary"
+              onChange={(e) => handleCheckboxChange(e, invoice.id)}
+              checked={selectedInvoices.includes(invoice.id)}
+            />
+          </label>
+        </td>
+        <td className="table-cell">{invoice.id}</td>
+        <td className="table-cell">{invoice.invoiceNumber}</td>
+        <td className="table-cell">{invoice.createDate.trim().slice(0, 10)}</td>
+        <td className="table-cell">{invoice.distributor.distributorProfile.agencyName}</td>
+        <td className="table-cell">{invoice.distributor.distributorProfile.gstNo}</td>
+        <td className="table-cell">{invoice.totalAmount}</td>
+        <td className="table-cell">{invoice.igst}</td>
+        <td className="table-cell">{invoice.cgst}</td>
+        <td className="table-cell">{invoice.sgst}</td>
+        <td className="table-cell">{invoice.amount}</td>
+        <td className="table-cell">{invoice.salesperson}</td>
+        <td className="table-cell">{invoice.distributor.distributorProfile.city}</td>
+        <td className="table-cell">{invoice.distributor.distributorProfile.region}</td>
+        <td className="table-cell">{invoice.distributor.distributorProfile.zone}</td>
+        <td className="table-cell">{invoice.eway === null ? "Pending..." : invoice.eway}</td>
+        <td className="table-cell">{invoice.irn === null ? "Pending..." : invoice.irn}</td>
+        <td className="table-cell">{invoice.ackNo === null ? "Pending..." : invoice.ackNo}</td>
+        <td className="table-cell">{invoice.dispatchedThrough === null ? "Pending..." : invoice.dispatchedThrough}</td>
+        <td className="table-cell">{invoice.createDate.trim().slice(0, 10)}</td>
+        <td className="table-cell">{invoice.updateDate.trim().slice(0, 10)}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
         </div>
         <Pagination
           nPages={nPages}

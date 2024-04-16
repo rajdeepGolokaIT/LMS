@@ -135,9 +135,7 @@ const ExpanseTable = () => {
     const currentRecords = sortedData.slice(indexOfFirstRecord, indexOfLastRecord);
     const nPages = Math.ceil(data.length / recordsPerPage);
 
-    // console.log(currentRecords);
-    // console.log(selectedId);
-    // console.log(sortConfig.key)
+    
     console.log(data.slice().sort((a,b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
             return sortConfig.direction === 'ascending' ? -1 : 1;

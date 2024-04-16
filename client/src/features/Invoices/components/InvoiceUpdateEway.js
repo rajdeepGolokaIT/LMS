@@ -6,10 +6,12 @@ import TitleCard from "../../../components/Cards/TitleCard";
 
 const InvoiceUpdateEway = ({ invoiceID }) => {
 
+  console.log(invoiceID[0])
+
     const [ewayBill, setEwayBill] = useState(null);
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({
-      invoiceId: `${invoiceID}`,
+      invoiceId: `${invoiceID[0]}`,
       ewayDocNumber: "",
       eWayBillNo: "",
       eWayMode: "",
@@ -36,17 +38,17 @@ const InvoiceUpdateEway = ({ invoiceID }) => {
             try {
                 const response = await axios.get("https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/all");
                 const ewayBills = response.data;
-                console.log(ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(invoiceID)));
+                console.log(ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(invoiceID[0])));
                 console.log(ewayBills.map((eway) => eway.invoice.id));
     
                 // Find the Eway Bill associated with the invoiceID
-                const foundEwayBill = ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(invoiceID));
+                const foundEwayBill = ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(invoiceID[0]));
                 setEwayBill(foundEwayBill);
     
                 // If Eway Bill data is found, set the form data
                 if (foundEwayBill) {
                     setFormData({
-                        invoiceId: `${invoiceID}`,
+                        invoiceId: `${invoiceID[0]}`,
                         ewayDocNumber: foundEwayBill.ewayDocNumber || "",
                         eWayBillNo: foundEwayBill.eWayBillNo || "",
                         eWayMode: foundEwayBill.eWayMode || "",

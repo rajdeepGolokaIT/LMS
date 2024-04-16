@@ -23,7 +23,6 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
           <a
             className="join-item btn btn-ghost"
             onClick={goToPrevPage}
-            // href="#"
           >
             Previous
           </a>
@@ -41,7 +40,6 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
                   className={`join-item btn btn-ghost ${
                     currentPage === pgNumber ? "btn-active" : ""
                   }`}
-                  // href="#"
                 >
                   {pgNumber}
                 </a>
@@ -66,7 +64,6 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
           <a
             className="join-item btn btn-ghost"
             onClick={goToNextPage}
-            // href="#"
           >
             Next
           </a>

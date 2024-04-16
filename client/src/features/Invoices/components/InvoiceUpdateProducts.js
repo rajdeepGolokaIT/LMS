@@ -12,6 +12,8 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
     const [productForms, setProductForms] = useState([]);
     const dispatch = useDispatch();
 
+    console.log(invoiceId);
+
     useEffect(() => {
         fetchProducts();
         fetchInvoiceProducts();
@@ -29,7 +31,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
 
     const fetchInvoiceProducts = async () => {
         try {
-            const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/get-invoice-products-by-id/${invoiceId}`);
+            const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/get-invoice-products-by-id/${invoiceId[0]}`);
             const fetchedProducts = response.data;
     
             // Preprocess fetchedProducts to match the structure of productForms

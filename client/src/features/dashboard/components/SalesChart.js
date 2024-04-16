@@ -114,9 +114,7 @@ function LineChart() {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: {
-          position: 'top',
-        },
+        legend: false,
       },
     };
 
