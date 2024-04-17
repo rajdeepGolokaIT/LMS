@@ -57,11 +57,11 @@ const TableComponent = () => {
   const [recordsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
-  const [isActive, setIsActive] = useState(false); // Checkbox state for active/inactive
   const [selectedInvoices, setSelectedInvoices] = useState([]);
   const [distributors, setDistributors] = useState([]);
   const [invoiceProducts, setInvoiceProducts] = useState([]);
   const [ewayTableData, setEwayTableData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
 
   useEffect(() => {
@@ -182,10 +182,7 @@ const TableComponent = () => {
     }
   };
 
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
-  const nPages = Math.ceil(data.length / recordsPerPage);
+ 
   console.log(data)
 
   const invoiceProduct = async () => {
@@ -230,15 +227,48 @@ useEffect(() => {
 
 console.log(ewayTableData);
 
+const filteredRecords = data.filter(invoice => {
+  return (
+    String(invoice.invoiceNumber).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    // String(invoice.distributor.distributorProfile.agencyName).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    // String(invoice.salesperson).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(invoice.distributor.distributorProfile.city).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    // String(invoice.distributor.distributorProfile.state).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(invoice.distributor.distributorProfile.region).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(invoice.distributor.distributorProfile.zone).toLowerCase().includes(searchTerm.toLowerCase()) 
+    
+
+
+  );
+});
+
+const handleSearchChange = event => {
+  setSearchTerm(event.target.value);
+};
+
+const indexOfLastRecord = currentPage * recordsPerPage;
+const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+const currentRecords = filteredRecords.slice(indexOfFirstRecord, indexOfLastRecord);
+const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
+
   return (
     <>
       <TitleCard
         title="Invoices Table"
         topMargin="mt-2"
         TopSideButtons1={
+          <>
+          <input
+          type="text"
+          className="input input-bordered w-full max-w-xs"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+           />
           <button className={`btn  ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-error "} mr-2`} onClick={handleDelete}>
             Delete
           </button>
+          </>
         }
         TopSideButtons2={
           <button className={`btn ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-primary "} mr-2`} onClick={handleUpdate}>
@@ -256,7 +286,7 @@ console.log(ewayTableData);
           </>
         }
       >
-        <div className="overflow-x-auto w-full">
+        <div className="overflow-x-auto w-full" style={{ overflowY: 'auto', maxHeight: '450px' }}>
         <table className="table table-lg w-full">
   <thead>
     <tr className="table-row">

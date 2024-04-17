@@ -41,7 +41,7 @@ function CurrentVsPrevProduct(){
             console.log(dataPreviousYear);
 
             const labels = dataCurrentYear.map(([product]) => product.productName);
-            const currentMonthData = dataCurrentYear.map(([, totalSold]) => totalSold);
+            const currentMonthData = dataCurrentYear.map(([, totalSold]) =>  totalSold);
             console.log(currentMonthData)
             const previousYearMonthData = dataPreviousYear.length > 0
     ? dataPreviousYear.map(([, totalSold]) => totalSold)

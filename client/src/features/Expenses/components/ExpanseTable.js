@@ -112,15 +112,24 @@ const ExpanseTable = () => {
 
     const sortedData = data.slice().sort((a, b) => {
         if (sortConfig.key !== null) {
-            if (a[sortConfig.key] < b[sortConfig.key]) {
-                return sortConfig.direction === 'ascending' ? -1 : 1;
-            }
-            if (a[sortConfig.key] > b[sortConfig.key]) {
-                return sortConfig.direction === 'ascending' ? 1 : -1;
-            }
+          const keys = sortConfig.key.split(".");
+          let aValue = a;
+          let bValue = b;
+      
+          for (let key of keys) {
+            aValue = aValue[key];
+            bValue = bValue[key];
+          }
+      
+          if (aValue < bValue) {
+            return sortConfig.direction === "ascending" ? -1 : 1;
+          }
+          if (aValue > bValue) {
+            return sortConfig.direction === "ascending" ? 1 : -1;
+          }
         }
         return 0;
-    });
+      });
 
     const requestSort = (key) => {
         let direction = 'ascending';
@@ -226,7 +235,7 @@ const ExpanseTable = () => {
             <tr>
                 <th>Select</th>
                 {/* <th className=' table-cell cursor-pointer' onClick={() => requestSort('name')}>Sales Person Name {sortConfig.key === 'name' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th> */}
-                <th >Salesperson Name </th>
+                <th className="table-cell cursor-pointer" onClick={() => requestSort('salesperson.name')}>Salesperson Name {sortConfig.key === 'salesperson.name' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>} </th>
                 <th className=' table-cell cursor-pointer' onClick={() => requestSort('createDate')}>Date {sortConfig.key === 'createDate' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
                 <th className=' table-cell cursor-pointer' onClick={() => requestSort('salary')}>Salary {sortConfig.key === 'salary' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
                 <th className="table-cell cursor-pointer" onClick={() => requestSort('incentive')}>Incentive {sortConfig.key === 'incentive' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
@@ -249,9 +258,9 @@ const ExpanseTable = () => {
                   </td>
                     <td>{record.salesperson.name}</td>
                     <td>{record.createDate.trim().slice(0, 10)}</td>
-                    <td>{record.salary}</td>
-                    <td>{record.incentive}</td>
-                    <td>{record.miscellaneous}</td>
+                    <td>₹ {record.salary}</td>
+                    <td>₹ {record.incentive}</td>
+                    <td>₹ {record.miscellaneous}</td>
                 </tr>
             ))}
         </tbody>

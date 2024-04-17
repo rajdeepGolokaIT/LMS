@@ -6,26 +6,32 @@ import TitleCard from "../../../components/Cards/TitleCard";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 
+
 const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
   const pageNumbers = [...Array(nPages + 1).keys()].slice(1);
 
   const goToNextPage = () => {
     if (currentPage !== nPages) setCurrentPage(currentPage + 1);
   };
+  
   const goToPrevPage = () => {
     if (currentPage !== 1) setCurrentPage(currentPage - 1);
   };
 
+  const goToPage = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= nPages) setCurrentPage(pageNumber);
+  };
+
   return (
-    <nav>
-      <ul className="join">
-        <li className="">
-          <a
-            className="join-item btn btn-ghost"
+    <nav className="flex justify-start my-4">
+      <ul className="flex ">
+        <li className="page-item">
+          <button
+            className="btn btn-ghost"
             onClick={goToPrevPage}
           >
             Previous
-          </a>
+          </button>
         </li>
         {pageNumbers.map((pgNumber, index) => {
           if (
@@ -34,15 +40,13 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
             (index >= currentPage - 1 && index <= currentPage + 1)
           ) {
             return (
-              <li key={pgNumber} className={`  `}>
-                <a
+              <li key={pgNumber} className={`page-item ${currentPage === pgNumber ? 'active' : ''}`}>
+                <button
+                  className={`btn btn-ghost ${currentPage === pgNumber ? 'btn-active' : ''}`}
                   onClick={() => setCurrentPage(pgNumber)}
-                  className={`join-item btn btn-ghost ${
-                    currentPage === pgNumber ? "btn-active" : ""
-                  }`}
                 >
                   {pgNumber}
-                </a>
+                </button>
               </li>
             );
           } else if (
@@ -50,28 +54,36 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
             (index === nPages - 3 && currentPage < nPages - 4)
           ) {
             return (
-              <li key={pgNumber} className={`  `}>
-                <span className={`join-item btn btn-ghost disabled`}>
-                  &hellip;
-                </span>
+              <li key={pgNumber} className="page-item disabled">
+                <span className="btn btn-ghost">...</span>
               </li>
             );
           } else {
             return null;
           }
         })}
-        <li className="">
-          <a
-            className="join-item btn btn-ghost"
+        <li className="page-item">
+          <button
+            className="btn btn-ghost"
             onClick={goToNextPage}
           >
             Next
-          </a>
+          </button>
+        </li>
+        <li className="page-item">
+          <input
+            type="number"
+            className="input input-bordered w-20 mx-2 text-center"
+            value={currentPage}
+            onChange={(e) => goToPage(parseInt(e.target.value))}
+          />
         </li>
       </ul>
     </nav>
   );
 };
+
+
 
 const AllProductSalesTable = () => {
   const [data, setData] = useState([]);
@@ -81,6 +93,7 @@ const AllProductSalesTable = () => {
     key: null,
     direction: "ascending",
   });
+  const [searchTerm, setSearchTerm] = useState('');
 
   const endDate = moment().format("YYYY-MM-DD");
   const oldYear = (moment().year() - 2).toString();
@@ -101,12 +114,31 @@ const AllProductSalesTable = () => {
     fetchData();
   }, []);
 
-  const sortedData = data.slice().sort((a, b) => {
+  const filteredRecords = data.filter(products => {
+    return (
+      String(products.productName).toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  });
+
+  const handleSearchChange = event => {
+    setSearchTerm(event.target.value);
+  };
+
+  const sortedData = filteredRecords.slice().sort((a, b) => {
     if (sortConfig.key !== null) {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
+      const keys = sortConfig.key.split(".");
+      let aValue = a;
+      let bValue = b;
+  
+      for (let key of keys) {
+        aValue = aValue[key];
+        bValue = bValue[key];
+      }
+  
+      if (aValue < bValue) {
         return sortConfig.direction === "ascending" ? -1 : 1;
       }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
+      if (aValue > bValue) {
         return sortConfig.direction === "ascending" ? 1 : -1;
       }
     }
@@ -130,7 +162,17 @@ const AllProductSalesTable = () => {
 
   return (
     <>
-      <TitleCard title="All Product Sales Table" topMargin="mt-2">
+      <TitleCard title="All Product Sales Table" topMargin="mt-2" 
+      TopSideButtons1={
+        <input
+          type="text"
+          className="input input-bordered w-full max-w-xs"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+           />
+      }
+      >
         <div className="overflow-x-auto w-full">
           <table className="table table-lg w-full">
             <thead>
@@ -190,17 +232,17 @@ const AllProductSalesTable = () => {
               {currentRecords.map((product, index) => (
                 <tr key={index}>
                   <td>{indexOfFirstRecord + index + 1}</td>
-                  <td>{product.productName}</td>
-                  <td>{product.productPrice}</td>
+                  <td>{product.productName.length > 20 ? product.productName.trim().slice(0, 20) + "..." : product.productName}</td>
+                  <td>₹ {product.productPrice}</td>
                   <td>{product.productQuantity}</td>
-                  <td>{product.totalPrice}</td>
+                  <td>₹ {product.totalPrice}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <Pagination
-          nPages={Math.ceil(data.length / recordsPerPage)}
+          nPages={Math.ceil(filteredRecords.length / recordsPerPage)}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />

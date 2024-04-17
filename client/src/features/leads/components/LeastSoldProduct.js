@@ -9,7 +9,7 @@ const LeastSoldProduct = () => {
     const [locations, setLocations] = useState([]);
     const [selectedYear, setSelectedYear] = useState(moment().year());
     const [selectedMonth, setSelectedMonth] = useState(moment().format("MMMM"));
-    const [selectedLocation, setSelectedLocation] = useState("East");
+    const [selectedLocation, setSelectedLocation] = useState("South");
     const [selectedInterval, setSelectedInterval] = useState("Yearly");
     const [selectedCategory, setSelectedCategory] = useState("zone");
   //   const [yearlyOptions, setYearlyOptions] = useState([]);
@@ -207,7 +207,7 @@ const LeastSoldProduct = () => {
     const resetFilters = () => {
       setSelectedYear(moment().year());
       setSelectedMonth(moment().format("MMMM"));
-      setSelectedLocation("East");
+      setSelectedLocation("South");
       setSelectedInterval("Yearly");
       setSelectedCategory("zone");
       setSelectedDateRange({ startDate: null, endDate: null });

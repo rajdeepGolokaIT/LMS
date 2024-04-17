@@ -83,6 +83,7 @@ const AllCategorySalesTable = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+    const [searchTerm, setSearchTerm] = useState('');
     
     const endDate = moment().format('YYYY-MM-DD');
     const oldYear = (moment().year() - 2).toString();
@@ -106,17 +107,36 @@ const AllCategorySalesTable = () => {
 
     
 
-    const sortedData = data.slice().sort((a, b) => {
+    const filteredRecords = data.filter(categories => {
+        return (
+          String(categories.categoryName).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      });
+
+      const handleSearchChange = event => {
+        setSearchTerm(event.target.value);
+      };
+
+      const sortedData = filteredRecords.slice().sort((a, b) => {
         if (sortConfig.key !== null) {
-            if (a[sortConfig.key] < b[sortConfig.key]) {
-                return sortConfig.direction === 'ascending' ? -1 : 1;
-            }
-            if (a[sortConfig.key] > b[sortConfig.key]) {
-                return sortConfig.direction === 'ascending' ? 1 : -1;
-            }
+          const keys = sortConfig.key.split(".");
+          let aValue = a;
+          let bValue = b;
+      
+          for (let key of keys) {
+            aValue = aValue[key];
+            bValue = bValue[key];
+          }
+      
+          if (aValue < bValue) {
+            return sortConfig.direction === "ascending" ? -1 : 1;
+          }
+          if (aValue > bValue) {
+            return sortConfig.direction === "ascending" ? 1 : -1;
+          }
         }
         return 0;
-    });
+      });
 
     const requestSort = (key) => {
         let direction = 'ascending';
@@ -138,8 +158,18 @@ const AllCategorySalesTable = () => {
   return (
     <>
     <TitleCard
-        title="All Product Sales Table"
-        topMargin="mt-2">
+        title="All Categories Sales Table"
+        topMargin="mt-2"
+        TopSideButtons1={
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+               />
+        }
+        >
         <div className="overflow-x-auto w-full">
             <table className="table table-lg w-full">
                 <thead>
@@ -156,14 +186,14 @@ const AllCategorySalesTable = () => {
                             <td>{indexOfFirstRecord + index + 1}</td>
                             <td>{category.categoryName}</td>
                             <td>{category.totalQuantitySold}</td>
-                            <td>{category.totalPrice}</td>
+                            <td>₹ {category.totalPrice}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
         </div>
     <Pagination
-        nPages={Math.ceil(data.length / recordsPerPage)}
+        nPages={Math.ceil(filteredRecords.length / recordsPerPage)}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
     />
