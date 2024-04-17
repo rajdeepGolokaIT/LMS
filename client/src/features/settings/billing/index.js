@@ -11,6 +11,7 @@ function Billing(){
     const [categoryId, setCategoryId] = useState('');
     const [isActive, setIsActive] = useState(true); // Assuming default is active
     const [categories, setCategories] = useState([]);
+    const [hsnsac, setHsnsac] = useState('');
 
     const dispatch = useDispatch();
   
@@ -41,7 +42,8 @@ function Billing(){
             category: {
                 id: parseInt(categoryId),
             }, // Ensure categoryId is an integer
-            isActive
+            isActive,
+            hsnsac: parseInt(hsnsac),
           }
         );
         console.log('Product added:', response.data);
@@ -51,6 +53,7 @@ function Billing(){
         setPrice('');
         setCategoryId('');
         setIsActive(true);
+        setHsnsac('');
       } catch (error) {
         console.error('Error adding product:', error);
         dispatch(showNotification({message : "Error adding product! 😵", status : 0}));
@@ -82,7 +85,7 @@ function Billing(){
                         <input
                             type="number"
                             placeholder="Price"
-                            className="w-full input input-bordered input-primary"
+                            className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             id="price"
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
@@ -103,6 +106,18 @@ function Billing(){
                                 <option key={category.id} value={category.id}>{category.categoryName}</option>
                             ))}
                         </select>
+                    </div>
+                    <div>
+                        <label htmlFor="hsnsac">HSN/SAC:</label>
+                        <input
+                            type="text"
+                            placeholder="HSN/SAC"
+                            className="w-full input input-bordered input-primary"
+                            id="hsnsac"
+                            value={hsnsac}
+                            onChange={(e) => setHsnsac(e.target.value)}
+                            required
+                        />
                     </div>
                     {/* <div>
                         <label htmlFor="isActive" className="cursor-pointer label label-text">Active:</label>

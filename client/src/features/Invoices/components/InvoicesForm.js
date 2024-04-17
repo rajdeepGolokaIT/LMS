@@ -25,7 +25,7 @@ function InvoicesForm() {
     destination: "",
     invoiceNumber: 0,
     irn: 0,
-    hsnsac: 0,
+    // hsnsac: 0,
     ackNo: 0,
     amount: 0,
     dispatchedThrough: "",
@@ -119,7 +119,7 @@ function InvoicesForm() {
         destination: "",
         invoiceNumber: 0,
         irn: 0,
-        hsnsac: 0,
+        // hsnsac: 0,
         ackNo: 0,
         amount: 0,
         dispatchedThrough: "",
@@ -157,7 +157,7 @@ function InvoicesForm() {
                 <input
                   type="number"
                   placeholder="Invoice Number"
-                  className="w-full input input-bordered input-primary"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="invoiceNumber"
                   value={formData.invoiceNumber}
                   onChange={(e) =>
@@ -176,7 +176,7 @@ function InvoicesForm() {
                 <input
                   type="number"
                   placeholder="IRN"
-                  className="w-full input input-bordered input-primary"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="irn"
                   value={formData.irn}
                   onChange={(e) =>
@@ -376,7 +376,7 @@ function InvoicesForm() {
                 <input
                   type="number"
                   placeholder="Discount Value"
-                  className="w-full input input-bordered input-primary"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="discount"
                   value={discountValue}
                   onChange={(e) => {
@@ -486,7 +486,7 @@ function InvoicesForm() {
                 <input
                   type="number"
                   placeholder="Ack No"
-                  className="w-full input input-bordered input-primary"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="ackNo"
                   value={formData.ackNo}
                   onChange={(e) =>
@@ -540,14 +540,14 @@ function InvoicesForm() {
                   required
                 />
               </div>
-              <div>
+              {/* <div>
                 <label htmlFor="hsnsac" className="label label-text text-base">
                   HSN/SAC:
                 </label>
                 <input
                   type="number"
                   placeholder="HSN/SAC"
-                  className="w-full input input-bordered input-primary"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="hsnsac"
                   value={formData.hsnsac}
                   onChange={(e) =>
@@ -558,7 +558,7 @@ function InvoicesForm() {
                   }
                   required
                 />
-              </div>
+              </div> */}
             </div>
             <div className="grid grid-cols-2 gap-4"></div>
             <button type="submit" className="btn btn-primary">

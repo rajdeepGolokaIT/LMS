@@ -19,7 +19,8 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
     };
   
     const goToPage = (pageNumber) => {
-      if (pageNumber >= 1 && pageNumber <= nPages) setCurrentPage(pageNumber);
+    //   if (pageNumber >= 1 && pageNumber <= nPages)
+      setCurrentPage(pageNumber);
     };
   
     return (
@@ -73,7 +74,7 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
           <li className="page-item">
             <input
               type="number"
-              className="input input-bordered w-20 mx-2 text-center"
+              className="input input-bordered w-20 mx-2 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               value={currentPage}
               onChange={(e) => goToPage(parseInt(e.target.value))}
             />
@@ -195,7 +196,7 @@ const AllCategorySalesTable = () => {
                             <td>{indexOfFirstRecord + index + 1}</td>
                             <td>{category.categoryName}</td>
                             <td>{category.totalQuantitySold}</td>
-                            <td>₹ {category.totalPrice}</td>
+                            <td>{category.totalPrice} INR</td>
                         </tr>
                     ))}
                 </tbody>

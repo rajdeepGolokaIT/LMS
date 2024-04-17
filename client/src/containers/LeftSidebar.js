@@ -3,11 +3,14 @@ import { NavLink,  Routes, Link , useLocation} from 'react-router-dom'
 import SidebarSubmenu from './SidebarSubmenu';
 import XMarkIcon  from '@heroicons/react/24/outline/XMarkIcon'
 import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 
 function LeftSidebar(){
     const location = useLocation();
 
     const dispatch = useDispatch()
+
+    const [expandedSubmenu, setExpandedSubmenu] = useState(null);
 
 
     const close = (e) => {
@@ -31,7 +34,7 @@ function LeftSidebar(){
                             <li className="" key={k}>
                                 {
                                     route.submenu ? 
-                                        <SidebarSubmenu {...route}/> : 
+                                        <SidebarSubmenu {...route} expandedSubmenu={expandedSubmenu} setExpandedSubmenu={setExpandedSubmenu}/> : 
                                     (<NavLink
                                         end
                                         to={route.path}

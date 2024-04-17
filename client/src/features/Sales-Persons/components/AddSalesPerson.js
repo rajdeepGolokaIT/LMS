@@ -106,12 +106,13 @@ const AddSalesPerson = () => {
                   Email:
                 </label>
                 <input
-                  type="text"
+                  type="email"
                   id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   className="input input-bordered w-full"
+                  
                 />
                 </div>
             </div>

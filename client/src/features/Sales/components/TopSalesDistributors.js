@@ -314,13 +314,13 @@ const TopSalesDistributors = () => {
               <tr key={index} >
                 <td>{product.agencyName}</td>
                 <td>{product.contactPerson}</td>
-                <td>{product.totalPrice}</td>
+                <td>{product.totalPrice} INR</td>
               </tr>
             ))}
            </tbody>
          </table>
          
-         <h1 className="text-end label-text font-bold">Total Sales To Distributer: Rs.{topProducts.reduce((total, distributor) => total + distributor.totalPrice, 0)}</h1>
+         <h1 className="text-end label-text font-bold">Total Sales To Distributer: {topProducts.reduce((total, distributor) => total + distributor.totalPrice, 0)} INR</h1>
        </div>
      </TitleCard>
    </>

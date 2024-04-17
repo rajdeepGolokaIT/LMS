@@ -255,7 +255,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
                   <input
                     type="number"
                     placeholder="Quantity"
-                    className="w-full input input-bordered input-primary"
+                    className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     id={`quantity-${index}`}
                     value={form.quantity}
                     onChange={(e) =>
@@ -293,7 +293,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
                   <input
                     type="number"
                     placeholder="Tax Value"
-                    className="w-full input input-bordered input-primary"
+                    className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     id={`tax-value-${index}`}
                     value={form.taxValue}
                     onChange={(e) =>
@@ -333,7 +333,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
                       <input
                         type="number"
                         placeholder="Discount Value"
-                        className="w-full input input-bordered input-primary"
+                        className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         id={`discount-value-${index}`}
                         value={form.discountValue}
                         onChange={(e) =>

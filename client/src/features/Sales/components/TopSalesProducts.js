@@ -311,8 +311,8 @@ const TopSalesProducts = () => {
             {topProducts.map((product, index) => (
               <tr key={index}>
                 <td>{product["Product Name"]}</td>
-                <td>{product["Total Price"]}</td>
-                <td>{product["Product Price"]}</td>
+                <td>{product["Total Price"]} INR</td>
+                <td>{product["Product Price"]} INR</td>
                 <td>{product["Product Quantity"]}</td>
 
               </tr>
@@ -320,7 +320,7 @@ const TopSalesProducts = () => {
           </tbody>
         </table>
         
-        <h1 className="text-end label-text font-bold">Total Sales By Product: Rs.{topProducts.reduce((total, product) => total + product["Total Price"], 0)}</h1>
+        <h1 className="text-end label-text font-bold">Total Sales By Product: {topProducts.reduce((total, product) => total + product["Total Price"], 0)} INR</h1>
       </div>
     </TitleCard>
   </>

@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { showNotification } from "../../common/headerSlice";
+import { showNotification, setPageTitle } from "../../common/headerSlice";
 import axios from "axios";
 import TitleCard from "../../../components/Cards/TitleCard";
 
 const ExpensesForm = () => {
+
+
+  
+
+
   const dispatch = useDispatch();
   const [salespersons, setSalespersons] = useState([]);
   const [formData, setFormData] = useState([
@@ -15,6 +20,10 @@ const ExpensesForm = () => {
       miscellaneous: 0,
     }
   ]);
+
+  useEffect(() => {
+    dispatch(setPageTitle({ title : "Expenses Entry Operations"}))
+  }, [])
 
   const fetchSalespersons = async () => {
     try {
@@ -114,7 +123,7 @@ const ExpensesForm = () => {
                         id="salary"
                         name="salary"
                         placeholder="Enter salary"
-                        className="w-full input input-bordered input-primary"
+                        className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         value={formData.salary}
                         onChange={handleChange}
                         required
@@ -127,7 +136,7 @@ const ExpensesForm = () => {
                         id="incentive"
                         name="incentive"
                         placeholder="Enter incentive"
-                        className="w-full input input-bordered input-primary"
+                        className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         value={formData.incentive}
                         onChange={handleChange}
                         required
@@ -140,7 +149,7 @@ const ExpensesForm = () => {
                         id="miscellaneous"
                         name="miscellaneous"
                         placeholder="Enter miscellaneous"
-                        className="w-full input input-bordered input-primary"
+                        className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         value={formData.miscellaneous}
                         onChange={handleChange}
                         required

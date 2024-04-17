@@ -313,13 +313,13 @@ const TopSalesCategories = () => {
             {topProducts.map((category, index) => (
              <tr key={index}>
               <td>{category.categoryName}</td>
-               <td>{category.totalPrice}</td>
+               <td>{category.totalPrice} INR</td>
                <td>{category.products.reduce((total, product) => total + product.quantity, 0)}</td>
              </tr>
 ))}
             </tbody>
           </table>
-          <h1 className="text-end label-text font-bold">Total Sales By Category: Rs.{topProducts.reduce((total, category) => total + category.totalPrice, 0)}</h1>
+          <h1 className="text-end label-text font-bold">Total Sales By Category: {topProducts.reduce((total, category) => total + category.totalPrice, 0)} INR</h1>
         </div>
 
       </TitleCard>

@@ -20,7 +20,8 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
     };
   
     const goToPage = (pageNumber) => {
-      if (pageNumber >= 1 && pageNumber <= nPages) setCurrentPage(pageNumber);
+    //   if (pageNumber >= 1 && pageNumber <= nPages) 
+      setCurrentPage(pageNumber);
     };
   
     return (
@@ -74,7 +75,7 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
           <li className="page-item">
             <input
               type="number"
-              className="input input-bordered w-20 mx-2 text-center"
+              className="input input-bordered w-20 mx-2 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               value={currentPage}
               onChange={(e) => goToPage(parseInt(e.target.value))}
             />
@@ -246,12 +247,12 @@ const handleSubmit = async (e, formData) => {
         title="All Sales Persons Table"
         topMargin="mt-2"
         TopSideButtons1={
-            <button className="btn btn-success" onClick={handleUpdate}>
+            <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-success"}`} onClick={handleUpdate}>
               Update
             </button>
           }
         TopSideButtons2={
-            <button className="btn btn-danger" onClick={handleDelete}>
+            <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-error"}`} onClick={handleDelete}>
               Delete
             </button>
           }

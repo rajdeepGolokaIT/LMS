@@ -168,7 +168,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                         <input
                             type="number"
                             placeholder="Quantity"
-                            className="w-full input input-bordered input-primary"
+                            className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             id={`quantity-${index}`}
                             value={form.quantity}
                             onChange={(e) => handleQuantityChange(index, e.target.value)}
@@ -194,7 +194,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                         <input
                             type="number"
                             placeholder="Tax Value"
-                            className="w-full input input-bordered input-primary"
+                            className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             id={`tax-value-${index}`}
                             value={form.taxValue}
                             onChange={(e) => handleTaxValueChange(index, parseFloat(e.target.value))}

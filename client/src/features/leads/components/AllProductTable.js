@@ -18,7 +18,8 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
     };
   
     const goToPage = (pageNumber) => {
-      if (pageNumber >= 1 && pageNumber <= nPages) setCurrentPage(pageNumber);
+    //   if (pageNumber >= 1 && pageNumber <= nPages)
+      setCurrentPage(pageNumber);
     };
   
     return (
@@ -72,7 +73,7 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
           <li className="page-item">
             <input
               type="number"
-              className="input input-bordered w-20 mx-2 text-center"
+              className="input input-bordered w-20 mx-2 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               value={currentPage}
               onChange={(e) => goToPage(parseInt(e.target.value))}
             />
@@ -156,7 +157,7 @@ const AllProductTable = () => {
 
   return (
     <>
-    <TitleCard title="All Product Sales Table" topMargin="mt-2"
+    <TitleCard title="All Products Table" topMargin="mt-2"
     TopSideButtons1={
         <input
           type="text"
@@ -216,8 +217,8 @@ const AllProductTable = () => {
             {currentRecords.map((product, index) => (
               <tr key={index}>
                 <td>{indexOfFirstRecord + index + 1}</td>
-                <td>{product.productName.length > 20 ? product.productName.trim().slice(0, 20) + "..." : product.productName}</td>
-                <td>₹ {product.price}</td>
+                <td title={`${product.productName}`}>{product.productName.length > 20 ? product.productName.trim().slice(0, 20) + "..." : product.productName}</td>
+                <td>{product.price} INR</td>
                 <td>{product.category.categoryName}</td>
               </tr>
             ))}

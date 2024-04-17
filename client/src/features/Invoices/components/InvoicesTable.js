@@ -15,7 +15,8 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
   };
 
   const goToPage = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= nPages) setCurrentPage(pageNumber);
+    // if (pageNumber >= 1 && pageNumber <= nPages) 
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -69,7 +70,7 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
         <li className="page-item">
           <input
             type="number"
-            className="input input-bordered w-20 mx-2 text-center"
+            className="input input-bordered w-20 mx-2 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             value={currentPage}
             onChange={(e) => goToPage(parseInt(e.target.value))}
           />
@@ -359,11 +360,11 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
         <td className="table-cell">{invoice.createDate.trim().slice(0, 10)}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.agencyName}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.gstNo}</td>
-        <td className="table-cell">{invoice.totalAmount}</td>
+        <td className="table-cell">{parseFloat(invoice.totalAmount).toFixed(2)} INR</td>
         <td className="table-cell">{invoice.igst}</td>
         <td className="table-cell">{invoice.cgst}</td>
         <td className="table-cell">{invoice.sgst}</td>
-        <td className="table-cell">{invoice.amount}</td>
+        <td className="table-cell">{parseFloat(invoice.amount).toFixed(2)} INR</td>
         <td className="table-cell">{invoice.salesperson}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.city}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.region}</td>
@@ -405,7 +406,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
               <input
                 type="number"
                 placeholder="Invoice Number"
-                className="w-full input input-bordered input-primary"
+                className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 id="invoiceNumber"
                 value={selectedInvoice.invoiceNumber}
                 onChange={(e) => {
@@ -425,7 +426,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
               <input
                 type="number"
                 placeholder="IRN"
-                className="w-full input input-bordered input-primary"
+                className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 id="irn"
                 value={selectedInvoice.irn}
                 onChange={(e) => {
@@ -537,7 +538,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
               <input
                 type="number"
                 placeholder="HSN/SAC"
-                className="w-full input input-bordered input-primary"
+                className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 id="hsnsac"
                 value={selectedInvoice.hsnsac}
                 onChange={(e) => {
@@ -557,7 +558,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
               <input
                 type="number"
                 placeholder="Amount"
-                className="w-full input input-bordered input-primary"
+                className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 id="amount"
                 value={selectedInvoice.amount}
                 onChange={(e) => {
@@ -649,7 +650,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 <input
                   type="number"
                   placeholder="Discount"
-                  className="w-full input input-bordered input-primary"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="discount"
                   value={selectedInvoice.discount}
                   onChange={(e) => {
@@ -671,7 +672,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 <input
                   type="number"
                   placeholder="Total Amount"
-                  className="w-full input input-bordered input-primary"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="totalAmount"
                   value={selectedInvoice.totalAmount}
                   onChange={(e) => {
@@ -763,7 +764,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 <input
                   type="number"
                   placeholder="Total Quantity Nos"
-                  className="w-full input input-bordered input-primary"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="totalQuantityNos"
                   value={selectedInvoice.totalQuantityNos}
                   onChange={(e) => {
@@ -787,7 +788,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 <input
                   type="number"
                   placeholder="Total Quantity Doz"
-                  className="w-full input input-bordered input-primary"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="totalQuantityDoz"
                   value={selectedInvoice.totalQuantityDoz}
                   onChange={(e) => {
