@@ -5,7 +5,7 @@ import TopSoldProduct from "./components/TopSoldProduct";
 import LeastSoldProduct from "./components/LeastSoldProduct";
 import CurrentVsPrevProduct from "./components/CurrentVsPrevProduct";
 import AllProductSalesTable from "./components/AllProductSalesTable";
-import AllProductTable from "./components/AllProductTable";
+// import AllProductTable from "./components/AllProductTable";
 
 function Leads() {
 
@@ -22,7 +22,7 @@ function Leads() {
 
     <AllProductSalesTable/>
 
-    <AllProductTable/>
+    {/* <AllProductTable/> */}
     </>
   );
 }

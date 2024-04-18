@@ -170,10 +170,12 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
             quantity: parseInt(form.quantity),
             cgstSgst: form.taxType === "cgst_sgst" ? form.taxValue : 0,
             igst: form.taxType === "igst" ? form.taxValue : 0,
-            discountInPercent:
-              form.discountType === "percentage" ? form.discountValue : 0,
-            discountInPrice:
-              form.discountType === "cashback" ? form.discountValue : 0,
+            discountInPercent:form.discountType === "percentage" ? form.discountValue : 0,
+            discountInPrice:form.discountType === "cashback" ? form.discountValue : 0,
+            cgstAmount: form.taxType === "cgst_sgst" ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2 : 0,
+            sgstAmount: form.taxType === "cgst_sgst" ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2 : 0,
+            igstAmount: form.taxType === "igst" ? totalAmountWithTax - totalAmountWithoutTaxDiscount : 0,
+            discountAmount: discountedAmount,
             totalAmountWithoutTax: amountWithoutTaxAndDiscount,
             totalAmountWithoutTaxDiscount: totalAmountWithoutTaxDiscount,
             totalAmountWithTax: totalAmountWithTax,

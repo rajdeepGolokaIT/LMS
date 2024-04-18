@@ -316,19 +316,21 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
         }
       >
         <div className="overflow-x-auto w-full" style={{ overflowY: 'auto', maxHeight: '450px' }}>
-        <table className="table table-lg w-full">
+        <table className="table table-auto table-zebra w-full">
   <thead>
-    <tr className="table-row">
+    <tr className="table-row text-center">
       <th className="table-cell">Select</th>
       <th className="table-cell">ID</th>
       <th className="table-cell">Invoice No.</th>
       <th className="table-cell">Invoice Date</th>
       <th className="table-cell">Distributor Name</th>
       <th className="table-cell">Distributor GSTIN</th>
+      <th className="table-cell">{`Discount(%)`}</th>
+      <th className="table-cell">{`Discount(INR)`}</th>
       <th className="table-cell">Total Net Amount</th>
-      <th className="table-cell">IGST</th>
-      <th className="table-cell">CGST</th>
-      <th className="table-cell">SGST</th>
+      <th className="table-cell">{`IGST(INR)`}</th>
+      <th className="table-cell">{`CGST(INR)`}</th>
+      <th className="table-cell">{`SGST(INR)`}</th>
       <th className="table-cell">Total Amount</th>
       <th className="table-cell">Sales Person Name</th>
       <th className="table-cell">City</th>
@@ -360,10 +362,12 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
         <td className="table-cell">{invoice.createDate.trim().slice(0, 10)}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.agencyName}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.gstNo}</td>
+        <td className="table-cell">{invoice.discountPercentage}%</td>
+        <td className="table-cell">{parseFloat(invoice.discountPrice).toFixed(2)} INR</td>
         <td className="table-cell">{parseFloat(invoice.totalAmount).toFixed(2)} INR</td>
-        <td className="table-cell">{invoice.igst}</td>
-        <td className="table-cell">{invoice.cgst}</td>
-        <td className="table-cell">{invoice.sgst}</td>
+        <td className="table-cell">{invoice.igst} INR</td>
+        <td className="table-cell">{invoice.cgst} INR</td>
+        <td className="table-cell">{invoice.sgst} INR</td>
         <td className="table-cell">{parseFloat(invoice.amount).toFixed(2)} INR</td>
         <td className="table-cell">{invoice.salesperson}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.city}</td>

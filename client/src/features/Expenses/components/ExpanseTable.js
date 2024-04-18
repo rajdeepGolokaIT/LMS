@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TitleCard from "../../../components/Cards/TitleCard";
 import { useDispatch } from 'react-redux'
-import { showNotification } from "../../common/headerSlice";
+import { showNotification, setPageTitle } from "../../common/headerSlice";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 
@@ -106,6 +106,9 @@ const ExpanseTable = () => {
         }
     );
 
+    useEffect(() => {
+        dispatch(setPageTitle({ title : "All Expenses Table" }))
+      }, [])
 
 
     useEffect(() => {

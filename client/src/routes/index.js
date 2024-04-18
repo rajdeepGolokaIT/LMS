@@ -23,6 +23,8 @@ const InvoicesForm = lazy(() => import('../pages/protected/InvoicesForm'))
 const SalesPersons = lazy(() => import('../pages/protected/SalesPersons'))
 const AddSalesPerson = lazy(() => import('../features/Sales-Persons/components/AddSalesPerson'))
 const ExpensesForm = lazy(() => import('../features/Expenses/components/ExpensesForm'))
+const AllProductsTable = lazy(() => import('../features/leads/components/AllProductTable'))
+const AllExpensesTable = lazy(() => import('../features/Expenses/components/ExpanseTable'))
 
 
 
@@ -40,44 +42,32 @@ const routes = [
     component: Leads,
   },
   {
-    path: '/Categories-Entry-Operations',
-    component: Team,
+    path: '/Products-Entry-Operations',
+    component: Bills,
   },
   {
-    path: '/Invoices',
-    component: DocFeatures,
-  },
-  {
-    path: '/Invoices-Form',
-    component: InvoicesForm,
+    path: '/All-Products-Table',
+    component: AllProductsTable,
   },
   {
     path: '/Categories-Dashboard',
     component: Transactions,
   },
   {
-    path: '/settings-profile',
-    component: ProfileSettings,
-  },
-  {
-    path: '/Products-Entry-Operations',
-    component: Bills,
-  },
-  {
-    path: '/Categories-by-Distributors-Dashboard',
-    component: GettingStarted,
+    path: '/Categories-Entry-Operations',
+    component: Team,
   },
   {
     path: '/Distributers-Dashboard',
     component: DistributersDashboard,
   },
   {
-    path: '/Sales',
-    component: Sales,
+    path: '/Products-by-Distributers-Dashboard',
+    component: Charts,
   },
   {
-    path: '/Notes',
-    component: Calendar,
+    path: '/Categories-by-Distributors-Dashboard',
+    component: GettingStarted,
   },
   {
     path: '/Distributors-Entry-Operations',
@@ -92,16 +82,20 @@ const routes = [
     component: ExpensesForm,
   },
   {
-    path: '/Products-by-Distributers-Dashboard',
-    component: Charts,
+    path: '/All-Expenses-Table',
+    component: AllExpensesTable,
   },
   {
-    path: '/404',
-    component: Page404,
+    path: '/Sales',
+    component: Sales,
   },
   {
-    path: '/blank',
-    component: Blank,
+    path: '/Invoices',
+    component: DocFeatures,
+  },
+  {
+    path: '/Invoices-Form',
+    component: InvoicesForm,
   },
   {
     path: '/Sales-Persons',
@@ -110,6 +104,22 @@ const routes = [
   {
     path: '/Sales-Persons-Form',
     component: AddSalesPerson,
+  },
+  {
+    path: '/Notes',
+    component: Calendar,
+  },
+  {
+    path: '/settings-profile',
+    component: ProfileSettings,
+  },
+  {
+    path: '/404',
+    component: Page404,
+  },
+  {
+    path: '/blank',
+    component: Blank,
   },
 ]
 

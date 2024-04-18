@@ -1,23 +1,14 @@
 /** Icons are imported separatly to reduce build time */
 import BellIcon from '@heroicons/react/24/outline/BellIcon'
-// import DocumentTextIcon from '@heroicons/react/24/outline/DocumentTextIcon'
 import Squares2X2Icon from '@heroicons/react/24/outline/Squares2X2Icon'
-// import TableCellsIcon from '@heroicons/react/24/outline/TableCellsIcon'
 import WalletIcon from '@heroicons/react/24/outline/WalletIcon'
-// import CodeBracketSquareIcon from '@heroicons/react/24/outline/CodeBracketSquareIcon'
-// import DocumentIcon from '@heroicons/react/24/outline/DocumentIcon'
-// import ExclamationTriangleIcon from '@heroicons/react/24/outline/ExclamationTriangleIcon'
 import CalendarDaysIcon from '@heroicons/react/24/outline/PaperClipIcon'
-// import ArrowRightOnRectangleIcon from '@heroicons/react/24/outline/ArrowRightOnRectangleIcon'
 import UserIcon from '@heroicons/react/24/outline/UserIcon'
-// import Cog6ToothIcon from '@heroicons/react/24/outline/Cog6ToothIcon'
 import BoltIcon from '@heroicons/react/24/outline/CurrencyRupeeIcon'
 import ChartBarIcon from '@heroicons/react/24/outline/ChartBarIcon'
 import CurrencyDollarIcon from '@heroicons/react/24/outline/Bars4Icon'
 import InboxArrowDownIcon from '@heroicons/react/24/outline/InboxArrowDownIcon'
-
-// import UsersIcon from '@heroicons/react/24/outline/UsersIcon'
-// import KeyIcon from '@heroicons/react/24/outline/KeyIcon'
+import TableIcon from '@heroicons/react/24/outline/TableCellsIcon'
 import DocumentDuplicateIcon from '@heroicons/react/24/outline/DocumentDuplicateIcon'
 
 const iconClasses = `h-6 w-6`
@@ -44,6 +35,11 @@ const routes = [
             path: '/app/Products-Entry-Operations',
             icon: <WalletIcon className={submenuIconClasses}/>,
             name: 'Products Entry Operations',
+          },
+          {
+            path: '/app/All-Products-Table',
+            icon: <TableIcon className={submenuIconClasses}/>,
+            name: 'All Products Table',
           }
         ]
   },
@@ -62,6 +58,11 @@ const routes = [
         icon: <WalletIcon className={submenuIconClasses}/>,
         name: 'Categories Entry Operations',
       },
+      {
+        path: '/app/All-Categories-Table',
+        icon: <TableIcon className={submenuIconClasses}/>,
+        name: 'All Categories Table',
+      }
     ]
   },
   {
@@ -78,7 +79,7 @@ const routes = [
         path: '/app/Products-by-Distributers-Dashboard', //url
         icon:  <Squares2X2Icon className={iconClasses}/>, //<UserIcon className={submenuIconClasses}/>, // icon component
         name: 'Products sold to distributers dashboard', // name that appear in Sidebar
-  },
+      },
       {
         path: '/app/Categories-by-Distributors-Dashboard',
         icon: <Squares2X2Icon className={iconClasses}/>,
@@ -89,6 +90,11 @@ const routes = [
         icon: <WalletIcon className={submenuIconClasses}/>,
         name: 'Distributors Entry Operations',
       },
+      {
+        path: '/app/All-Distributors-Table',
+        icon: <TableIcon className={submenuIconClasses}/>,
+        name: 'All Distributors Table',
+      }
     ]
   },
   {
@@ -105,6 +111,11 @@ const routes = [
         path: '/app/Expenses-Form',
         icon: <WalletIcon className={submenuIconClasses}/>,
         name: 'Expenses Entry Operations',
+      },
+      {
+        path: '/app/All-Expenses-Table',
+        icon: <TableIcon className={submenuIconClasses}/>,
+        name: 'All Expenses Table',
       }
     ]
   },

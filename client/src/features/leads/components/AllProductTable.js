@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import moment from "moment";
+// import moment from "moment";
 import axios from "axios";
+import { useDispatch } from 'react-redux'
+import { setPageTitle } from '../../common/headerSlice';
 import TitleCard from "../../../components/Cards/TitleCard";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
@@ -85,6 +87,12 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
 
 
 const AllProductTable = () => {
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(setPageTitle({ title : "All Products Table" }))
+      }, [])
 
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);

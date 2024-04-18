@@ -1,14 +1,14 @@
 import React from 'react'
-import ExpensesTable from './components/ExpanseTable'
+// import ExpensesTable from './components/ExpanseTable'
 import SalesPersonGraph from './components/SalesPersonGraph'
 import SalesPersonExpenseTable from './components/SalesPersonExpenseTable'
 
 const Expenses = () => {
   return (
     <>
-    <ExpensesTable/>
-    <SalesPersonGraph/>
+    {/* <ExpensesTable/> */}
     <SalesPersonExpenseTable/>
+    <SalesPersonGraph/>
     </>
   )
 }
