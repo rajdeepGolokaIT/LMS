@@ -111,16 +111,16 @@ function Dashboard(){
 
 const statsData = [
     {title : "Total Distributors Count", value : `${distributors}`, icon : <UserGroupIcon className='w-8 h-8'/>, description : ""},
-    {title : "Total Sales", value : `${parseFloat(sales).toFixed(2)} INR`, icon : <CreditCardIcon className='w-8 h-8'/>, description : ""},
+    {title : "Total Sales", value : `INR ${parseFloat(sales).toFixed(2)}`, icon : <CreditCardIcon className='w-8 h-8'/>, description : ""},
     {title : "Total Products Count", value : `${products}`, icon : <CircleStackIcon className='w-8 h-8'/>, description : ""},
     {title : "Total Categories Count", value : `${categories}`, icon : <UsersIcon className='w-8 h-8'/>, description : ""},
 ]
  
 
-    const updateDashboardPeriod = (newRange) => {
-        // Dashboard range changed, write code to refresh your values
-        dispatch(showNotification({message : `Period updated to ${newRange.startDate} to ${newRange.endDate}`, status : 1}))
-    }
+    // const updateDashboardPeriod = (newRange) => {
+    //     // Dashboard range changed, write code to refresh your values
+    //     dispatch(showNotification({message : `Period updated to ${newRange.startDate} to ${newRange.endDate}`, status : 1}))
+    // }
 
     return(
         <>

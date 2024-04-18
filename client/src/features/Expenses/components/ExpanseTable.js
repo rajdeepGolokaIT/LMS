@@ -290,9 +290,9 @@ const ExpanseTable = () => {
                   </td>
                     <td>{record.salesperson.name}</td>
                     <td>{record.createDate.trim().slice(0, 10)}</td>
-                    <td>{record.salary} INR</td>
-                    <td>{record.incentive} INR</td>
-                    <td>{record.miscellaneous} INR</td>
+                    <td>INR {record.salary} </td>
+                    <td>INR {record.incentive} </td>
+                    <td>INR {record.miscellaneous} </td>
                 </tr>
             ))}
         </tbody>

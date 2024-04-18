@@ -7,8 +7,8 @@ const Expenses = () => {
   return (
     <>
     {/* <ExpensesTable/> */}
-    <SalesPersonExpenseTable/>
     <SalesPersonGraph/>
+    <SalesPersonExpenseTable/>
     </>
   )
 }

@@ -6,6 +6,8 @@ import TitleCard from "../../../components/Cards/TitleCard";
 
 function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
   const [products, setProducts] = useState([]);
+  //   const [totalWithTax, setTotalWithTax] = useState(0);
+  //   const [ totalWoutTaxAndWithDiscount ,setTotalWoutTaxAndWithDiscount] = useState(0)
   const [productForms, setProductForms] = useState([
     {
       productId: "",
@@ -22,7 +24,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
     fetchProducts();
   }, []);
 
-  console.log(discountAmount, discountPercentage);
+  //   console.log(discountAmount, discountPercentage);
 
   const fetchProducts = async () => {
     try {
@@ -124,6 +126,12 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
     ]);
   };
 
+  const removeProductForm = (indexToRemove) => {
+    setProductForms((prevForms) =>
+      prevForms.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -134,7 +142,6 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
           const amountWithoutTaxAndDiscount = form.price * form.quantity;
           let totalAmountWithoutTaxDiscount = 0;
           let discountedAmount = 0;
-          
 
           // Check if discountAmount or discountPercentage is greater than 0
           if (discountAmount > 0 || discountPercentage > 0) {
@@ -146,10 +153,10 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
             totalAmountWithoutTaxDiscount =
               amountWithoutTaxAndDiscount - discount;
           } else if (form.discountValue > 0) {
-            const discount = 
-            form.discountType === "percentage"
-            ? (amountWithoutTaxAndDiscount * form.discountValue) / 100
-            : form.discountValue;
+            const discount =
+              form.discountType === "percentage"
+                ? (amountWithoutTaxAndDiscount * form.discountValue) / 100
+                : form.discountValue;
             discountedAmount = discount;
             totalAmountWithoutTaxDiscount =
               amountWithoutTaxAndDiscount - discount;
@@ -161,20 +168,29 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
             form.price,
             form.quantity,
             form.taxValue,
-            discountedAmount > 0
-              ? discountedAmount
-              : 0
+            discountedAmount > 0 ? discountedAmount : 0
           );
 
           productsData[form.productId] = {
             quantity: parseInt(form.quantity),
             cgstSgst: form.taxType === "cgst_sgst" ? form.taxValue : 0,
             igst: form.taxType === "igst" ? form.taxValue : 0,
-            discountInPercent:form.discountType === "percentage" ? form.discountValue : 0,
-            discountInPrice:form.discountType === "cashback" ? form.discountValue : 0,
-            cgstAmount: form.taxType === "cgst_sgst" ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2 : 0,
-            sgstAmount: form.taxType === "cgst_sgst" ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2 : 0,
-            igstAmount: form.taxType === "igst" ? totalAmountWithTax - totalAmountWithoutTaxDiscount : 0,
+            discountInPercent:
+              form.discountType === "percentage" ? form.discountValue : 0,
+            discountInPrice:
+              form.discountType === "cashback" ? form.discountValue : 0,
+            cgstAmount:
+              form.taxType === "cgst_sgst"
+                ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2
+                : 0,
+            sgstAmount:
+              form.taxType === "cgst_sgst"
+                ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2
+                : 0,
+            igstAmount:
+              form.taxType === "igst"
+                ? totalAmountWithTax - totalAmountWithoutTaxDiscount
+                : 0,
             discountAmount: discountedAmount,
             totalAmountWithoutTax: amountWithoutTaxAndDiscount,
             totalAmountWithoutTaxDiscount: totalAmountWithoutTaxDiscount,
@@ -212,283 +228,325 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
     }
   };
 
+  const calculateTotalAmountWithDiscount = (form) => {
+    const { price, quantity, taxValue, discountType, discountValue } = form;
+
+    if (discountPercentage + discountAmount !== 0) {
+      if (discountPercentage > 0) {
+        const discountedPrice = price * quantity * (discountPercentage / 100);
+        return (
+          calculateTotalAmount(price, quantity, taxValue, discountedPrice) -
+          (price * quantity - discountedPrice)
+        );
+      } else {
+        return (
+          calculateTotalAmount(price, quantity, taxValue, discountAmount) -
+          (price * quantity - discountAmount)
+        );
+      }
+    } else {
+      if (discountType === "percentage") {
+        const discountedPrice = price * quantity * (discountValue / 100);
+        return (
+          calculateTotalAmount(price, quantity, taxValue, discountedPrice) -
+          (price * quantity - discountedPrice)
+        );
+      } else {
+        return (
+          calculateTotalAmount(price, quantity, taxValue, discountValue) -
+          (price * quantity - discountValue)
+        );
+      }
+    }
+  };
+
+  const calculateTotalAmountWithTax = (form) => {
+    const { price, quantity, taxValue, discountType, discountValue } = form;
+
+    return discountPercentage + discountAmount !== 0
+      ? isNaN(
+          discountPercentage > 0
+            ? calculateTotalAmount(
+                price,
+                quantity,
+                taxValue,
+                price * quantity * (discountPercentage / 100)
+              )
+            : calculateTotalAmount(price, quantity, taxValue, discountAmount)
+        )
+        ? 0
+        : discountPercentage > 0
+        ? calculateTotalAmount(
+            price,
+            quantity,
+            taxValue,
+            price * quantity * (discountPercentage / 100)
+          )
+        : calculateTotalAmount(price, quantity, taxValue, discountAmount)
+      : isNaN(
+          discountType === "percentage"
+            ? calculateTotalAmount(
+                price,
+                quantity,
+                taxValue,
+                price * quantity * (discountValue / 100)
+              )
+            : calculateTotalAmount(price, quantity, taxValue, discountValue)
+        )
+      ? 0
+      : discountType === "percentage"
+      ? calculateTotalAmount(
+          price,
+          quantity,
+          taxValue,
+          price * quantity * (discountValue / 100)
+        )
+      : calculateTotalAmount(price, quantity, taxValue, discountValue);
+  };
+
+  const calculateTotalAmountWithoutTaxWithDiscount = (form) => {
+    const { price, quantity, discountType, discountValue } = form;
+
+    return discountPercentage + discountAmount !== 0
+      ? isNaN(
+          discountPercentage > 0
+            ? price * quantity * (1 - discountPercentage / 100)
+            : price * quantity - discountAmount
+        )
+        ? 0
+        : discountPercentage > 0
+        ? price * quantity * (1 - discountPercentage / 100)
+        : price * quantity - discountAmount
+      : isNaN(
+          discountType === "percentage"
+            ? price * quantity * (1 - discountValue / 100)
+            : price * quantity - discountValue
+        )
+      ? 0
+      : discountType === "percentage"
+      ? price * quantity * (1 - discountValue / 100)
+      : price * quantity - discountValue;
+  };
+
   return (
     <>
       <TitleCard title="Add Products to Invoice" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
           <form onSubmit={handleSubmit} className="space-y-4">
             {productForms.map((form, index) => (
-              <div key={index} className="grid grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor={`product-${index}`}
-                    className="label label-text text-base"
+              <>
+                <div key={index} >
+                  <button
+                    type="button"
+                    onClick={() => removeProductForm(index)}
+                    className="btn btn-error btn-sm float-right mb-2 btn-circle"
                   >
-                    Product:
-                  </label>
-                  <select
-                    id={`product-${index}`}
-                    className="w-full input input-bordered input-primary"
-                    value={form.productId}
-                    onChange={(e) => handleProductChange(index, e.target.value)}
-                    required
-                  >
-                    <option value="">Select Product</option>
-                    {products.map((product) => (
-                      <option key={product.id} value={product.id}>
-                        {product.productName}
-                      </option>
-                    ))}
-                  </select>
-                  <p>
-                    Single Unit Price:{" "}
-                    {products.find(
-                      (product) => product.id.toString() === form.productId
-                    )?.price || ""}
-                  </p>
-                </div>
-                <div>
-                  <label
-                    htmlFor={`quantity-${index}`}
-                    className="label label-text text-base"
-                  >
-                    Quantity:
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="Quantity"
-                    className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    id={`quantity-${index}`}
-                    value={form.quantity}
-                    onChange={(e) =>
-                      handleQuantityChange(index, e.target.value)
-                    }
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor={`tax-type-${index}`}
-                    className="label label-text text-base"
-                  >
-                    Tax Type:
-                  </label>
-                  <select
-                    id={`tax-type-${index}`}
-                    className="w-full input input-bordered input-primary"
-                    value={form.taxType}
-                    onChange={(e) => handleTaxTypeChange(index, e.target.value)}
-                    required
-                  >
-                    <option value="">Select Tax Type</option>
-                    <option value="cgst_sgst">CGST + SGST</option>
-                    <option value="igst">IGST</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor={`tax-value-${index}`}
-                    className="label label-text text-base"
-                  >
-                    Tax Value:
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="Tax Value"
-                    className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    id={`tax-value-${index}`}
-                    value={form.taxValue}
-                    onChange={(e) =>
-                      handleTaxValueChange(index, parseFloat(e.target.value))
-                    }
-                    required
-                  />
-                </div>
-                {discountAmount <= 0 && discountPercentage <= 0 ? (
-                  <>
-                    <div>
-                      <label className="label label-text text-base">
-                        Discount Type
-                      </label>
-                      <select
-                        id={`discount-type-${index}`}
-                        className="w-full input input-bordered input-primary"
-                        value={form.discountType}
-                        onChange={(e) =>
-                          handleDiscountTypeChange(index, e.target.value)
-                        }
-                      >
-                        <option value="">Select Discount Type</option>
-                        <option value="percentage">
-                          Discount in Percentage
-                        </option>
-                        <option value="amount">Cashback</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor={`discount-value-${index}`}
-                        className="label label-text text-base"
-                      >
-                        Discount Value:
-                      </label>
-                      <input
-                        type="number"
-                        placeholder="Discount Value"
-                        className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        id={`discount-value-${index}`}
-                        value={form.discountValue}
-                        onChange={(e) =>
-                          handleDiscountValueChange(
-                            index,
-                            parseFloat(e.target.value)
-                          )
-                        }
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
                       />
-                    </div>
-                  </>
-                ) : (
-                  <></>
-                )}
-
-                <div>
-                  <label className="label label-text text-base">
-                    Invoice Discount:
-                  </label>
-                  {discountPercentage > 0 ? (
-                    <p>{discountPercentage}%</p>
-                  ) : discountAmount > 0 ? (
-                    <p>Rs.{discountAmount}/-</p>
+                    </svg>
+                  </button>
+                  <div className="grid grid-cols-2 gap-4 w-full p-6 m-auto bg-base-200 rounded-lg shadow-lg ">
+                  <div>
+                    <label
+                      htmlFor={`product-${index}`}
+                      className="label label-text text-base"
+                    >
+                      Product:
+                    </label>
+                    <select
+                      id={`product-${index}`}
+                      className="w-full input input-bordered input-primary"
+                      value={form.productId}
+                      onChange={(e) =>
+                        handleProductChange(index, e.target.value)
+                      }
+                      required
+                    >
+                      <option value="">Select Product</option>
+                      {products.map((product) => (
+                        <option key={product.id} value={product.id}>
+                          {product.productName}
+                        </option>
+                      ))}
+                    </select>
+                    <p>
+                      Single Unit Price:{" "}
+                      {products.find(
+                        (product) => product.id.toString() === form.productId
+                      )?.price || ""}
+                    </p>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`quantity-${index}`}
+                      className="label label-text text-base"
+                    >
+                      Quantity:
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="Quantity"
+                      className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      id={`quantity-${index}`}
+                      value={form.quantity}
+                      onChange={(e) =>
+                        handleQuantityChange(index, e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`tax-type-${index}`}
+                      className="label label-text text-base"
+                    >
+                      Tax Type:
+                    </label>
+                    <select
+                      id={`tax-type-${index}`}
+                      className="w-full input input-bordered input-primary"
+                      value={form.taxType}
+                      onChange={(e) =>
+                        handleTaxTypeChange(index, e.target.value)
+                      }
+                      required
+                    >
+                      <option value="">Select Tax Type</option>
+                      <option value="cgst_sgst">CGST + SGST</option>
+                      <option value="igst">IGST</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`tax-value-${index}`}
+                      className="label label-text text-base"
+                    >
+                      Tax Percentage:
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="Tax Value"
+                      className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      id={`tax-value-${index}`}
+                      value={form.taxValue}
+                      onChange={(e) =>
+                        handleTaxValueChange(index, parseFloat(e.target.value))
+                      }
+                      required
+                    />
+                  </div>
+                  {discountAmount <= 0 && discountPercentage <= 0 ? (
+                    <>
+                      <div>
+                        <label className="label label-text text-base">
+                          Discount Type
+                        </label>
+                        <select
+                          id={`discount-type-${index}`}
+                          className="w-full input input-bordered input-primary"
+                          value={form.discountType}
+                          onChange={(e) =>
+                            handleDiscountTypeChange(index, e.target.value)
+                          }
+                        >
+                          <option value="">Select Discount Type</option>
+                          <option value="percentage">
+                            Discount in Percentage
+                          </option>
+                          <option value="amount">Cashback</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor={`discount-value-${index}`}
+                          className="label label-text text-base"
+                        >
+                          Discount Value:
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="Discount Value"
+                          className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          id={`discount-value-${index}`}
+                          value={form.discountValue}
+                          onChange={(e) =>
+                            handleDiscountValueChange(
+                              index,
+                              parseFloat(e.target.value)
+                            )
+                          }
+                        />
+                      </div>
+                    </>
                   ) : (
-                    <p>0</p>
+                    <></>
                   )}
-                </div>
-                <div>
-                  <label className="label label-text text-base">
-                    Total Amount Without Tax (Without Discount Applied):
-                  </label>
-                  <p>
-                    Rs.
-                    {isNaN(form.price * form.quantity)
-                      ? 0
-                      : form.price * form.quantity}
-                    /-
-                  </p>
-                </div>
-                <div>
-                  <label className="label label-text text-base">
-                    Total Amount With Tax:
-                  </label>
-                  <p>
-                    Rs.
-                    {discountPercentage + discountAmount !== 0
-                      ? isNaN(
-                          discountPercentage > 0
-                            ? calculateTotalAmount(
-                                form.price,
-                                form.quantity,
-                                form.taxValue,
-                                form.price *
-                                  form.quantity *
-                                  (discountPercentage / 100)
-                              )
-                            : calculateTotalAmount(
-                                form.price,
-                                form.quantity,
-                                form.taxValue,
-                                discountAmount
-                              )
-                        )
-                        ? 0
-                        : discountPercentage > 0
-                        ? calculateTotalAmount(
-                            form.price,
-                            form.quantity,
-                            form.taxValue,
-                            form.price *
-                              form.quantity *
-                              (discountPercentage / 100)
-                          )
-                        : calculateTotalAmount(
-                            form.price,
-                            form.quantity,
-                            form.taxValue,
-                            discountAmount
-                          )
-                      : isNaN(
-                          form.discountType === "percentage"
-                            ? calculateTotalAmount(
-                                form.price,
-                                form.quantity,
-                                form.taxValue,
-                                form.price *
-                                  form.quantity *
-                                  (form.discountValue / 100)
-                              )
-                            : calculateTotalAmount(
-                                form.price,
-                                form.quantity,
-                                form.taxValue,
-                                form.discountValue
-                              )
-                        )
-                      ? 0
-                      : form.discountType === "percentage"
-                      ? calculateTotalAmount(
-                          form.price,
-                          form.quantity,
-                          form.taxValue,
-                          form.price *
-                            form.quantity *
-                            (form.discountValue / 100)
-                        )
-                      : calculateTotalAmount(
-                          form.price,
-                          form.quantity,
-                          form.taxValue,
-                          form.discountValue
-                        )}
-                    /-
-                  </p>
-                </div>
 
-                <div>
-                  <label className="label label-text text-base">
-                    Total Amount Without Tax And With Discount:
-                  </label>
-                  <p>
-                    Rs.
-                    {discountPercentage + discountAmount !== 0
-                      ? isNaN(
-                          discountPercentage > 0
-                            ? form.price *
-                                form.quantity *
-                                (1 - discountPercentage / 100)
-                            : form.price * form.quantity - discountAmount
-                        )
+                  <div>
+                    <label className="label label-text text-base">
+                      Invoice Discount:
+                    </label>
+                    {discountPercentage > 0 ? (
+                      <p>{discountPercentage}%</p>
+                    ) : discountAmount > 0 ? (
+                      <p>Rs.{discountAmount}/-</p>
+                    ) : (
+                      <p>0</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="label label-text text-base">
+                      Total Amount Without Tax (Without Discount Applied):
+                    </label>
+                    <p>
+                      Rs.
+                      {isNaN(form.price * form.quantity)
                         ? 0
-                        : discountPercentage > 0
-                        ? form.price *
-                          form.quantity *
-                          (1 - discountPercentage / 100)
-                        : form.price * form.quantity - discountAmount
-                      : isNaN(
-                          form.discountType === "percentage"
-                            ? form.price *
-                                form.quantity *
-                                (1 - form.discountValue / 100)
-                            : form.price * form.quantity - form.discountValue
-                        )
-                      ? 0
-                      : form.discountType === "percentage"
-                      ? form.price *
-                        form.quantity *
-                        (1 - form.discountValue / 100)
-                      : form.price * form.quantity - form.discountValue}
-                    /-
-                  </p>
+                        : form.price * form.quantity}
+                      /-
+                    </p>
+                  </div>
+                  <div>
+                    <label className="label label-text text-base">
+                      Total Amount With Tax:
+                    </label>
+                    <p>Rs. {calculateTotalAmountWithTax(form)}/-</p>
+                  </div>
+
+                  <div>
+                    <label className="label label-text text-base">
+                      Total Amount Without Tax And With Discount:
+                    </label>
+                    <p>
+                      Rs. {calculateTotalAmountWithoutTaxWithDiscount(form)}/-
+                    </p>
+                  </div>
+                  <div>
+                    <label className="label label-text text-base">
+                      Tax Amount:
+                    </label>
+                    <p>
+                      Rs.{" "}
+                      {isNaN(calculateTotalAmountWithDiscount(form))
+                        ? 0
+                        : calculateTotalAmountWithDiscount(form)}
+                      /-
+                    </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </>
             ))}
             <button
               type="button"

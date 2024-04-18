@@ -196,7 +196,7 @@ const AllCategorySalesTable = () => {
                             <td>{indexOfFirstRecord + index + 1}</td>
                             <td>{category.categoryName}</td>
                             <td>{category.totalQuantitySold}</td>
-                            <td>{category.totalPrice} INR</td>
+                            <td>INR {category.totalPrice} </td>
                         </tr>
                     ))}
                 </tbody>

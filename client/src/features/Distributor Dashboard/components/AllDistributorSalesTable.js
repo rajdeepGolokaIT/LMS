@@ -198,7 +198,7 @@ const AllDistributorSalesTable = () => {
                                     <td>{distributor.agencyName}</td>
                                     <td>{distributor.contactPerson}</td>
                                     <td>{distributor.totalQuantitySold}</td>
-                                    <td>{distributor.totalSales} INR</td>
+                                    <td>INR {distributor.totalSales} </td>
                                 </tr>
                             ))}
                         </tbody>

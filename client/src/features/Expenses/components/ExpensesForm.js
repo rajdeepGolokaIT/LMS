@@ -120,6 +120,7 @@ const ExpensesForm = () => {
                     <label htmlFor="salary" className="label label-text text-base">Salary:</label>
                     <input
                         type="number"
+                        min="0"
                         id="salary"
                         name="salary"
                         placeholder="Enter salary"

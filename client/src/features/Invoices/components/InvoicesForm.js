@@ -567,13 +567,13 @@ function InvoicesForm() {
           </form>
         </div>
       </TitleCard>
+      <AddProductsForm
+        invoiceId={invoiceId}
+        discountPercentage={percentage}
+        discountAmount={price}
+      />
       {invoiceId != null && (
         <>
-          <AddProductsForm
-            invoiceId={invoiceId}
-            discountPercentage={percentage}
-            discountAmount={price}
-          />
           {/* Checkbox to allow editing */}
           <div className="flex items-center">
             <label

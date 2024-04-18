@@ -226,7 +226,7 @@ const AllProductTable = () => {
               <tr key={index}>
                 <td>{indexOfFirstRecord + index + 1}</td>
                 <td title={`${product.productName}`}>{product.productName.length > 20 ? product.productName.trim().slice(0, 20) + "..." : product.productName}</td>
-                <td>{product.price} INR</td>
+                <td> INR {product.price}</td>
                 <td>{product.category.categoryName}</td>
               </tr>
             ))}

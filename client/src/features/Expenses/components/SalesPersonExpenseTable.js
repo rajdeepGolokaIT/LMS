@@ -165,8 +165,8 @@ const SalesPersonExpenseTable = () => {
                 <tr className="table-row" key={index}>
                   <td className="table-cell">{index + 1}</td>
                   <td className="table-cell">{item.salespersonName}</td>
-                  <td className="table-cell">{parseFloat(item.TotalAmount).toFixed(2)} INR</td>
-                  <td className="table-cell">{parseFloat(item.Salary == null ? 0 : item.Salary) + parseFloat(item.incentives == null ? 0 : item.incentives) + parseFloat(item.mis == null ? 0 : item.mis)} INR</td>
+                  <td className="table-cell">INR {parseFloat(item.TotalAmount).toFixed(2)} </td>
+                  <td className="table-cell">INR {parseFloat(item.Salary == null ? 0 : item.Salary) + parseFloat(item.incentives == null ? 0 : item.incentives) + parseFloat(item.mis == null ? 0 : item.mis)} </td>
                 </tr>
               ))}
             </tbody>
