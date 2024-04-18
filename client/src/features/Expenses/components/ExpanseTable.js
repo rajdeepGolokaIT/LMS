@@ -107,7 +107,7 @@ const ExpanseTable = () => {
     );
 
     useEffect(() => {
-        dispatch(setPageTitle({ title : "All Expenses Table" }))
+        dispatch(setPageTitle({ title : "All Expenses" }))
       }, [])
 
 
@@ -250,7 +250,7 @@ const ExpanseTable = () => {
 
   return (
     <>
-    <TitleCard title="Expenses Table" topMargin="mt-2"
+    <TitleCard title="Expenses" topMargin="mt-2"
     TopSideButtons1={
         <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-success"}`} onClick={handleUpdate}>
           Update

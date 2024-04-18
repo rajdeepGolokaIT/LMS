@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import moment from "moment";
 import axios from "axios";
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../common/headerSlice';
@@ -85,16 +84,9 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
     );
   };
 
-
-const AllProductTable = () => {
-
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        dispatch(setPageTitle({ title : "All Products List" }))
-      }, [])
-
-    const [data, setData] = useState([]);
+const AllCategoryTable = () => {
+    const [selectedId, setSelectedId] = useState(null);
+    const [categoryData, setCategoryData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
     const [sortConfig, setSortConfig] = useState({
@@ -103,23 +95,71 @@ const AllProductTable = () => {
     });
     const [searchTerm, setSearchTerm] = useState('');
 
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await axios.get(
-              `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all`
-            );
-            setData(response.data);
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
-        };
-        fetchData();
-      }, []);
+    const dispatch = useDispatch()
 
-      const filteredRecords = data.filter(products => {
+    useEffect(() => {
+        dispatch(setPageTitle({ title : "All Categories List" }))
+      }, [])
+
+      useEffect(() => {
+        fetchCategoryData();
+      }, []);
+    
+      const fetchCategoryData = async () => {
+        try {
+          const response = await axios.get(
+            "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all"
+          );
+          const products = response.data;
+          const categoryCounts = {};
+    
+          products.forEach((product) => {
+            const categoryName = product.category.categoryName;
+            if (categoryCounts[categoryName]) {
+              categoryCounts[categoryName]++;
+            } else {
+              categoryCounts[categoryName] = 1;
+            }
+          });
+    
+          const categoryData = Object.entries(categoryCounts).map(
+            ([categoryName, count], index) => {
+              const categoryId = products.find(
+                (product) => product.category.categoryName === categoryName
+              ).category.id;
+              return {
+                index: index + 1,
+                categoryId: categoryId,
+                categoryName: categoryName,
+                totalCount: count,
+              };
+            }
+          );
+    
+          setCategoryData(categoryData);
+        } catch (error) {
+          console.error("Error fetching category data:", error);
+        }
+      };
+
+      const handleDelete = async () => {
+        try {
+           {
+            await axios.delete(
+              `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/delete-category?id=${selectedId}`
+            );
+          }
+          setSelectedId([]);
+          // Reload data after deletion
+          fetchCategoryData();
+        } catch (error) {
+          console.error("Error deleting Category:", error);
+        }
+      };
+
+      const filteredRecords = categoryData.filter(categories => {
         return (
-          String(products.productName).toLowerCase().includes(searchTerm.toLowerCase())
+          String(categories.categoryName).toLowerCase().includes(searchTerm.toLowerCase())
         )
       });
 
@@ -163,9 +203,27 @@ const AllProductTable = () => {
         indexOfLastRecord
       );
 
+      const handleCheckboxChange = (e, id) => {
+        const isChecked = e.target.checked;
+        if (isChecked) {
+            setSelectedId(id);
+            // const foundSalespersons = data.find((expense) => parseInt(expense.id) === parseInt(id));
+
+                // if (foundSalespersons){
+                //     setFormData(foundSalespersons);
+
+                // }
+        } else {
+            // setFormData([]);
+            setSelectedId(null);
+        }
+    }
+
+    console.log(selectedId)
+
   return (
     <>
-    <TitleCard title="All Products List" topMargin="mt-2"
+    <TitleCard title="All Categories List" topMargin="mt-2"
     TopSideButtons1={
         <input
           type="text"
@@ -175,72 +233,54 @@ const AllProductTable = () => {
           onChange={handleSearchChange}
            />
       }
+
+      TopSideButtons2={
+        <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-error"}`} onClick={handleDelete}>
+          Delete
+        </button>
+      }
     
     >
       <div className="overflow-x-auto w-full">
         <table className="table table-lg w-full">
           <thead>
             <tr className="">
+                <th className="table-cell">Select</th>
               <th className="table-cell">Serial No.</th>
-              <th
-                className=" table-cell cursor-pointer"
-                onClick={() => requestSort("productName")}
-              >
-                Product Name
-                {sortConfig.key === "productName" &&
-                sortConfig.direction === "ascending" ? (
-                  <SortIcon1 className="h-5 w-5 inline" />
-                ) : (
-                  <SortIcon2 className="h-5 w-5 inline" />
-                )}
-              </th>
-              <th
-                className="table-cell  cursor-pointer"
-                onClick={() => requestSort("price")}
-              >
-                Price Per Unit
-                {sortConfig.key === "price" &&
-                sortConfig.direction === "ascending" ? (
-                  <SortIcon1 className="h-5 w-5 inline" />
-                ) : (
-                  <SortIcon2 className="h-5 w-5 inline" />
-                )}
-              </th>
-              <th
-                className="table-cell  cursor-pointer"
-                onClick={() => requestSort("category.categoryName")}
-              >
-                Category
-                {sortConfig.key === "category.categoryName" &&
-                sortConfig.direction === "ascending" ? (
-                  <SortIcon1 className="h-5 w-5 inline" />
-                ) : (
-                  <SortIcon2 className="h-5 w-5 inline" />
-                )}
-              </th>
-              
+              <th className="table-cell cursor-pointer" onClick={() => requestSort("categoryName")}>Category Name {sortConfig.key === "categoryName" && sortConfig.direction === "ascending" ? (<SortIcon1 className="h-5 w-5 inline" />) : (<SortIcon2 className="h-5 w-5 inline" />)}</th>
+              <th className="table-cell cursor-pointer" onClick={() => requestSort("totalCount")}>Total Products Count {sortConfig.key === "totalCount" && sortConfig.direction === "ascending" ? (<SortIcon1 className="h-5 w-5 inline" />) : (<SortIcon2 className="h-5 w-5 inline" />)}</th>
             </tr>
-          </thead>
-          <tbody>
-            {currentRecords.map((product, index) => (
-              <tr key={index}>
-                <td>{indexOfFirstRecord + index + 1}</td>
-                <td title={`${product.productName}`}>{product.productName.length > 20 ? product.productName.trim().slice(0, 20) + "..." : product.productName}</td>
-                <td> INR {product.price}</td>
-                <td>{product.category.categoryName}</td>
+            </thead>
+            <tbody>
+            {currentRecords.map((category, index) => (
+              <tr key={category.categoryId}>
+                <td>
+                    <label>
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-primary"
+                        onChange={(e) => handleCheckboxChange(e, category.categoryId)}
+                        checked={category.categoryId === selectedId}
+                      />
+                    </label>
+                  </td>
+                <td className="table-cell">{indexOfFirstRecord + index + 1}</td>
+                <td className="table-cell">{category.categoryName}</td>
+                <td className="table-cell">{category.totalCount}</td>
               </tr>
             ))}
-          </tbody>
+            </tbody>
         </table>
       </div>
-      <Pagination
-        nPages={Math.ceil(filteredRecords.length / recordsPerPage)}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
+        <Pagination
+          nPages={Math.ceil(filteredRecords.length / recordsPerPage)}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
     </TitleCard>
-  </>
+    </>
+
   )
 }
 
-export default AllProductTable
+export default AllCategoryTable

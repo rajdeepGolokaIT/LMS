@@ -24,6 +24,7 @@ const SalesPersons = lazy(() => import('../pages/protected/SalesPersons'))
 const AddSalesPerson = lazy(() => import('../features/Sales-Persons/components/AddSalesPerson'))
 const ExpensesForm = lazy(() => import('../features/Expenses/components/ExpensesForm'))
 const AllProductsTable = lazy(() => import('../features/leads/components/AllProductTable'))
+const AllCategoriesTable = lazy(() => import('../features/transactions/components/AllCategoryTable'))
 const AllExpensesTable = lazy(() => import('../features/Expenses/components/ExpanseTable'))
 
 
@@ -56,6 +57,10 @@ const routes = [
   {
     path: '/Categories-Entry-Operations',
     component: Team,
+  },
+  {
+    path: '/All-Categories-Table',
+    component: AllCategoriesTable,
   },
   {
     path: '/Distributers-Dashboard',

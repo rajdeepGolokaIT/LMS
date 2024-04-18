@@ -39,7 +39,7 @@ const routes = [
           {
             path: '/app/All-Products-Table',
             icon: <TableIcon className={submenuIconClasses}/>,
-            name: 'All Products Table',
+            name: 'All Products List',
           }
         ]
   },
@@ -115,7 +115,7 @@ const routes = [
       {
         path: '/app/All-Expenses-Table',
         icon: <TableIcon className={submenuIconClasses}/>,
-        name: 'All Expenses Table',
+        name: 'All Expenses ',
       }
     ]
   },
