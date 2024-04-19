@@ -215,7 +215,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
       );
 
       setProductForms([
-        { productId: "", quantity: "", taxType: "", taxValue: 0 },
+        { productId: "", quantity: "", taxType: "", taxValue: 0, discountType: "", discountValue: 0 },
       ]);
     } catch (error) {
       console.error("Error adding products to invoice:", error);
@@ -500,7 +500,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
                     {discountPercentage > 0 ? (
                       <p>{discountPercentage}%</p>
                     ) : discountAmount > 0 ? (
-                      <p>Rs.{discountAmount}/-</p>
+                      <p>INR {discountAmount}/-</p>
                     ) : (
                       <p>0</p>
                     )}
@@ -510,10 +510,9 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
                       Total Amount Without Tax (Without Discount Applied):
                     </label>
                     <p>
-                      Rs.
-                      {isNaN(form.price * form.quantity)
+                      INR {parseFloat(isNaN(form.price * form.quantity)
                         ? 0
-                        : form.price * form.quantity}
+                        : form.price * form.quantity).toFixed(2)}
                       /-
                     </p>
                   </div>
@@ -521,7 +520,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
                     <label className="label label-text text-base">
                       Total Amount With Tax:
                     </label>
-                    <p>Rs. {calculateTotalAmountWithTax(form)}/-</p>
+                    <p>INR {parseFloat(calculateTotalAmountWithTax(form)).toFixed(2)}/-</p>
                   </div>
 
                   <div>
@@ -529,7 +528,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
                       Total Amount Without Tax And With Discount:
                     </label>
                     <p>
-                      Rs. {calculateTotalAmountWithoutTaxWithDiscount(form)}/-
+                      INR {parseFloat(calculateTotalAmountWithoutTaxWithDiscount(form)).toFixed(2)}/-
                     </p>
                   </div>
                   <div>
@@ -537,10 +536,10 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
                       Tax Amount:
                     </label>
                     <p>
-                      Rs.{" "}
-                      {isNaN(calculateTotalAmountWithDiscount(form))
+                      INR {" "}
+                      {parseFloat(isNaN(calculateTotalAmountWithDiscount(form))
                         ? 0
-                        : calculateTotalAmountWithDiscount(form)}
+                        : calculateTotalAmountWithDiscount(form)).toFixed(2)}
                       /-
                     </p>
                     </div>

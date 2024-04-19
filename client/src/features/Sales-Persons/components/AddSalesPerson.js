@@ -90,6 +90,8 @@ const AddSalesPerson = () => {
                 </label>
                 <input
                   type="text"
+                  pattern="[0-9]{10}"
+                  
                   id="contactNumber"
                   name="contactNumber"
                   value={formData.contactNumber}

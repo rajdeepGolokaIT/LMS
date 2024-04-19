@@ -409,6 +409,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
               </label>
               <input
                 type="number"
+                min="0"
                 placeholder="Invoice Number"
                 className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 id="invoiceNumber"
@@ -429,6 +430,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
               </label>
               <input
                 type="number"
+                min="0"
                 placeholder="IRN"
                 className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 id="irn"
@@ -442,8 +444,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 }}
               />
             </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+           
             <div>
               <label htmlFor="ackNo" className="label label-text text-base">
                 Ack No.:
@@ -486,8 +487,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 }}
               />
             </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            
             <div>
               <label
                 htmlFor="termsOfDelivery"
@@ -533,163 +533,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 }}
               />
             </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="hsnsac" className="label label-text text-base">
-                HSN/SAC:
-              </label>
-              <input
-                type="number"
-                placeholder="HSN/SAC"
-                className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                id="hsnsac"
-                value={selectedInvoice.hsnsac}
-                onChange={(e) => {
-                  // Handle changes to input field and update selectedInvoice
-                  setSelectedInvoice({
-                    ...selectedInvoice,
-                    hsnsac: parseInt(e.target.value),
-                  });
-                }}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="amount" className="label label-text text-base">
-                Amount:
-              </label>
-              <input
-                type="number"
-                placeholder="Amount"
-                className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                id="amount"
-                value={selectedInvoice.amount}
-                onChange={(e) => {
-                  // Handle changes to input field and update selectedInvoice
-                  setSelectedInvoice({
-                    ...selectedInvoice,
-                    amount: parseInt(e.target.value),
-                  });
-                }}
-              />
-            </div>
-            </div>
-            {/* <div>
-                <label
-                  htmlFor="igst"
-                  className="label label-text text-base"
-                >
-                  IGST:
-                </label>
-                <input
-                  type="number"
-                  placeholder="IGST"
-                  className="w-full input input-bordered input-primary"
-                  id="igst"
-                  value={selectedInvoice.igst}
-                  onChange={(e) => {
-                    // Handle changes to input field and update selectedInvoice
-                    setSelectedInvoice({
-                      ...selectedInvoice,
-                      igst: parseInt(e.target.value),
-                    });
-                  }}
-                />
-              </div> */}
-
-              {/* <div>
-                <label
-                  htmlFor="cgst"
-                  className="label label-text text-base"
-                >
-                  CGST:
-                </label>
-                <input
-                  type="number"
-                  placeholder="CGST"
-                  className="w-full input input-bordered input-primary"
-                  id="cgst"
-                  value={selectedInvoice.cgst}
-                  onChange={(e) => {
-                    // Handle changes to input field and update selectedInvoice
-                    setSelectedInvoice({
-                      ...selectedInvoice,
-                      cgst: parseInt(e.target.value),
-                    });
-                  }}
-                />
-              </div> */}
-
-              {/* <div>
-                <label
-                  htmlFor="sgst"
-                  className="label label-text text-base"
-                >
-                  SGST:
-                </label>
-                <input
-                  type="number"
-                  placeholder="SGST"
-                  className="w-full input input-bordered input-primary"
-                  id="sgst"
-                  value={selectedInvoice.sgst}
-                  onChange={(e) => {
-                    // Handle changes to input field and update selectedInvoice
-                    setSelectedInvoice({
-                      ...selectedInvoice,
-                      sgst: parseInt(e.target.value),
-                    });
-                  }}
-                />
-              </div> */}
-              <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="discount"
-                  className="label label-text text-base"
-                >
-                  Discount:
-                </label>
-                <input
-                  type="number"
-                  placeholder="Discount"
-                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  id="discount"
-                  value={selectedInvoice.discount}
-                  onChange={(e) => {
-                    // Handle changes to input field and update selectedInvoice
-                    setSelectedInvoice({
-                      ...selectedInvoice,
-                      discount: parseInt(e.target.value),
-                    });
-                  }}
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="totalAmount"
-                  className="label label-text text-base"
-                >
-                  Total Amount:
-                </label>
-                <input
-                  type="number"
-                  placeholder="Total Amount"
-                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  id="totalAmount"
-                  value={selectedInvoice.totalAmount}
-                  onChange={(e) => {
-                    // Handle changes to input field and update selectedInvoice
-                    setSelectedInvoice({
-                      ...selectedInvoice,
-                      totalAmount: parseInt(e.target.value),
-                    });
-                  }}
-                />
-              </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+            
               <div>
                 <label
                   htmlFor="deliveryDate"
@@ -734,8 +578,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                   }}
                 />
               </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+              
               <div>
                 <label
                   htmlFor="supplierName"
@@ -758,52 +601,9 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                   }}
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="totalQuantityNos"
-                  className="label label-text text-base"
-                >
-                  Total Quantity Nos:
-                </label>
-                <input
-                  type="number"
-                  placeholder="Total Quantity Nos"
-                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  id="totalQuantityNos"
-                  value={selectedInvoice.totalQuantityNos}
-                  onChange={(e) => {
-                    // Handle changes to input field and update selectedInvoice
-                    setSelectedInvoice({
-                      ...selectedInvoice,
-                      totalQuantityNos: parseInt(e.target.value),
-                    });
-                  }}
-                />
-              </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="totalQuantityDoz"
-                  className="label label-text text-base"
-                >
-                  Total Quantity Doz:
-                </label>
-                <input
-                  type="number"
-                  placeholder="Total Quantity Doz"
-                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  id="totalQuantityDoz"
-                  value={selectedInvoice.totalQuantityDoz}
-                  onChange={(e) => {
-                    // Handle changes to input field and update selectedInvoice
-                    setSelectedInvoice({
-                      ...selectedInvoice,
-                      totalQuantityDoz: parseInt(e.target.value),
-                    });
-                  }}
-                />
-              </div>
+              
+              
+              
               <div>
                 <label
                   htmlFor="vehicleNo"
@@ -853,9 +653,6 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                             ))}
                 </select>
               </div>
-
-
-
             {/* Add other input fields for editing */}
             <div className="modal-action">
               <button className="btn" onClick={handleUpdateInvoice}>
@@ -872,9 +669,9 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
         </dialog>
 
         <dialog id="update_modal_2" className="modal">
-            <div className="modal-box">
+            <div className="modal-box w-5/6 max-w-5xl">
             <TitleCard title="Update Products of the Invoice" topMargin="mt-2">
-    <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
+    <div className="w-full p-6 m-auto bg-base-200 rounded-lg shadow-lg">
                 <InvoiceUpdateProducts invoiceId={selectedInvoices}/>  
             </div>
             </TitleCard>

@@ -121,10 +121,10 @@ const ExpensesForm = () => {
                     <input
                         type="number"
                         min="0"
+                        className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         id="salary"
                         name="salary"
                         placeholder="Enter salary"
-                        className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         value={formData.salary}
                         onChange={handleChange}
                         required
@@ -134,6 +134,7 @@ const ExpensesForm = () => {
                     <label htmlFor="incentive" className="label label-text text-base">Incentive:</label>
                     <input
                         type="number"
+                        min="0"
                         id="incentive"
                         name="incentive"
                         placeholder="Enter incentive"
@@ -147,6 +148,7 @@ const ExpensesForm = () => {
                     <label htmlFor="miscellaneous" className="label label-text text-base">Miscellaneous:</label>
                     <input
                         type="number"
+                        min="0"
                         id="miscellaneous"
                         name="miscellaneous"
                         placeholder="Enter miscellaneous"

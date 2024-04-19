@@ -84,6 +84,7 @@ function Billing(){
                         <label htmlFor="price">Price:</label>
                         <input
                             type="number"
+                            min="0"
                             placeholder="Price"
                             className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             id="price"

@@ -9,13 +9,18 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
 
 
     const [products, setProducts] = useState([]);
+    const [discountAmount, setDiscountAmount] = useState(0);
+    const [discountPercentage, setDiscountPercentage] = useState(0);
+    const [productDiscountPercentage, setProductDiscountPercentage] = useState(0);
+    const [productDiscountAmount, setProductDiscountAmount] = useState(0);
     const [productForms, setProductForms] = useState([]);
     const dispatch = useDispatch();
 
-    console.log(invoiceId);
+    console.log(invoiceId[0]);
 
     useEffect(() => {
         fetchProducts();
+        fetchInvoices();
         fetchInvoiceProducts();
     }, []);
 
@@ -25,6 +30,24 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
             setProducts(response.data);
         } catch (error) {
             console.error('Error fetching products:', error);
+            // Handle error, show error message to the user, etc.
+        }
+    };
+
+    const fetchInvoices = async () => {
+        try {
+            const response = await axios.get('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all');
+            
+            const foundInvoice = response.data.find(invoice => invoice.id === invoiceId[0]);
+            
+            setDiscountAmount(foundInvoice.discountPrice);
+            setDiscountPercentage(foundInvoice.discountPercentage);
+            
+
+            console.log(foundInvoice);
+
+        } catch (error) {
+            console.error('Error fetching invoices:', error);
             // Handle error, show error message to the user, etc.
         }
     };
@@ -40,6 +63,8 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                 const invoiceInfo = item[2];
     
                 console.log(productInfo.price)
+                console.log(invoiceInfo)
+                console.log(fetchProducts)
 
                 return {
                     productId: productInfo.id,
@@ -47,6 +72,9 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                     taxType: invoiceInfo.cgstSgst > 0 ? 'cgst_sgst' : 'igst', // Assuming tax type can be deduced from cgstSgst and igst
                     taxValue: invoiceInfo.cgstSgst > 0 ? invoiceInfo.cgstSgst : invoiceInfo.igst, // Assuming tax value can be deduced from cgstSgst and igst
                     price: productInfo.price, // Price directly obtained from productInfo
+                    discountType: invoiceInfo.discountInPercent > 0 ? 'percentage' : 'cashback',
+                    discountValue: invoiceInfo.discountInPercent > 0 ? invoiceInfo.discountInPercent : invoiceInfo.discountInPrice
+
                 };
             });
     
@@ -88,11 +116,30 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
         setProductForms(updatedForms);
     };
 
-    const calculateTotalAmount = (price, quantity, taxValue) => {
+    const handleDiscountTypeChange = (index, value) => {
+        const updatedForms = [...productForms];
+        updatedForms[index].discountType = value;
+        // Set the discount value to 0 for the other discount type
+        updatedForms[index].discountValue =
+          value === "percentage" ? 0 : updatedForms[index].discountValue;
+        setProductForms(updatedForms);
+      };
+
+      const handleDiscountValueChange = (index, value) => {
+        const updatedForms = [...productForms];
+        updatedForms[index].discountValue = value;
+        setProductForms(updatedForms);
+      };
+
+      const calculateTotalAmount = (price, quantity, taxValue, discountAmount) => {
         const subtotal = price * quantity;
-        const tax = taxValue ? (subtotal * taxValue) / 100 : 0;
-        return subtotal + tax;
-    };
+        // Apply discount amount
+        const discountedSubtotal = subtotal - discountAmount;
+        // Calculate tax on discounted subtotal
+        const tax = taxValue ? (discountedSubtotal * taxValue) / 100 : 0;
+        // Total amount with tax
+        return discountedSubtotal + tax;
+      };
 
     // const addProductForm = () => {
     //     setProductForms([...productForms, { productId: '', quantity: '', taxType: '', taxValue: 0 }]);
@@ -104,16 +151,65 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
         try {
             const productsData = {};
             productForms.forEach((form) => {
-                if (form.productId && form.quantity) {
-                    const totalAmountWithTax = calculateTotalAmount(form.price, form.quantity, form.taxValue);
-                    productsData[form.productId] = {
-                        quantity: parseInt(form.quantity),
-                        cgstSgst: form.taxType === 'cgst_sgst' ? form.taxValue : 0,
-                        igst: form.taxType === 'igst' ? form.taxValue : 0,
-                        totalAmountWithoutTax: form.price * form.quantity,
-                        totalAmountWithTax: totalAmountWithTax
-                    };
+              if (form.productId && form.quantity) {
+                const amountWithoutTaxAndDiscount = form.price * form.quantity;
+                let totalAmountWithoutTaxDiscount = 0;
+                let discountedAmount = 0;
+      
+                // Check if discountAmount or discountPercentage is greater than 0
+                if (discountAmount > 0 || discountPercentage > 0) {
+                  const discount =
+                    discountPercentage > 0
+                      ? (amountWithoutTaxAndDiscount * discountPercentage) / 100
+                      : discountAmount;
+                  discountedAmount = discount;
+                  totalAmountWithoutTaxDiscount =
+                    amountWithoutTaxAndDiscount - discount;
+                } else if (form.discountValue > 0) {
+                  const discount =
+                    form.discountType === "percentage"
+                      ? (amountWithoutTaxAndDiscount * form.discountValue) / 100
+                      : form.discountValue;
+                  discountedAmount = discount;
+                  totalAmountWithoutTaxDiscount =
+                    amountWithoutTaxAndDiscount - discount;
                 }
+      
+                // Calculate tax based on the totalAmountWithoutTaxDiscount if it's greater than 0,
+                // otherwise calculate tax based on amountWithoutTaxAndDiscount
+                const totalAmountWithTax = calculateTotalAmount(
+                  form.price,
+                  form.quantity,
+                  form.taxValue,
+                  discountedAmount > 0 ? discountedAmount : 0
+                );
+      
+                productsData[form.productId] = {
+                  quantity: parseInt(form.quantity),
+                  cgstSgst: form.taxType === "cgst_sgst" ? form.taxValue : 0,
+                  igst: form.taxType === "igst" ? form.taxValue : 0,
+                  discountInPercent:
+                    form.discountType === "percentage" ? form.discountValue : 0,
+                  discountInPrice:
+                    form.discountType === "cashback" ? form.discountValue : 0,
+                  cgstAmount:
+                    form.taxType === "cgst_sgst"
+                      ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2
+                      : 0,
+                  sgstAmount:
+                    form.taxType === "cgst_sgst"
+                      ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2
+                      : 0,
+                  igstAmount:
+                    form.taxType === "igst"
+                      ? totalAmountWithTax - totalAmountWithoutTaxDiscount
+                      : 0,
+                  discountAmount: discountedAmount,
+                  totalAmountWithoutTax: amountWithoutTaxAndDiscount,
+                  totalAmountWithoutTaxDiscount: totalAmountWithoutTaxDiscount,
+                  totalAmountWithTax: totalAmountWithTax,
+                };
+              }
             });
 
             console.log(productsData);
@@ -138,6 +234,107 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
             dispatch(showNotification({ message: 'Error updating products to invoice! 😵', status: 0 }));
         }
     };
+
+
+    const calculateTotalAmountWithDiscount = (form) => {
+        const { price, quantity, taxValue, discountType, discountValue } = form;
+    
+        if (discountPercentage + discountAmount !== 0) {
+          if (discountPercentage > 0) {
+            const discountedPrice = price * quantity * (discountPercentage / 100);
+            return (
+              calculateTotalAmount(price, quantity, taxValue, discountedPrice) -
+              (price * quantity - discountedPrice)
+            );
+          } else {
+            return (
+              calculateTotalAmount(price, quantity, taxValue, discountAmount) -
+              (price * quantity - discountAmount)
+            );
+          }
+        } else {
+          if (discountType === "percentage") {
+            const discountedPrice = price * quantity * (discountValue / 100);
+            return (
+              calculateTotalAmount(price, quantity, taxValue, discountedPrice) -
+              (price * quantity - discountedPrice)
+            );
+          } else {
+            return (
+              calculateTotalAmount(price, quantity, taxValue, discountValue) -
+              (price * quantity - discountValue)
+            );
+          }
+        }
+      };
+    
+      const calculateTotalAmountWithTax = (form) => {
+        const { price, quantity, taxValue, discountType, discountValue } = form;
+    
+        return discountPercentage + discountAmount !== 0
+          ? isNaN(
+              discountPercentage > 0
+                ? calculateTotalAmount(
+                    price,
+                    quantity,
+                    taxValue,
+                    price * quantity * (discountPercentage / 100)
+                  )
+                : calculateTotalAmount(price, quantity, taxValue, discountAmount)
+            )
+            ? 0
+            : discountPercentage > 0
+            ? calculateTotalAmount(
+                price,
+                quantity,
+                taxValue,
+                price * quantity * (discountPercentage / 100)
+              )
+            : calculateTotalAmount(price, quantity, taxValue, discountAmount)
+          : isNaN(
+              discountType === "percentage"
+                ? calculateTotalAmount(
+                    price,
+                    quantity,
+                    taxValue,
+                    price * quantity * (discountValue / 100)
+                  )
+                : calculateTotalAmount(price, quantity, taxValue, discountValue)
+            )
+          ? 0
+          : discountType === "percentage"
+          ? calculateTotalAmount(
+              price,
+              quantity,
+              taxValue,
+              price * quantity * (discountValue / 100)
+            )
+          : calculateTotalAmount(price, quantity, taxValue, discountValue);
+      };
+    
+      const calculateTotalAmountWithoutTaxWithDiscount = (form) => {
+        const { price, quantity, discountType, discountValue } = form;
+    
+        return discountPercentage + discountAmount !== 0
+          ? isNaN(
+              discountPercentage > 0
+                ? price * quantity * (1 - discountPercentage / 100)
+                : price * quantity - discountAmount
+            )
+            ? 0
+            : discountPercentage > 0
+            ? price * quantity * (1 - discountPercentage / 100)
+            : price * quantity - discountAmount
+          : isNaN(
+              discountType === "percentage"
+                ? price * quantity * (1 - discountValue / 100)
+                : price * quantity - discountValue
+            )
+          ? 0
+          : discountType === "percentage"
+          ? price * quantity * (1 - discountValue / 100)
+          : price * quantity - discountValue;
+      };
 
 
 
@@ -201,13 +398,90 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                             required
                         />
                     </div>
-                    <div>
-                        <label className="label label-text text-base">Total Amount Without Tax:</label>
-                        <p>{isNaN(form.price * form.quantity) ? 0 : (form.price * form.quantity)}</p>
-                    </div>
-                    <div>
-                        <label className="label label-text text-base">Total Amount With Tax:</label>
-                        <p>{isNaN(calculateTotalAmount(form.price, form.quantity, form.taxValue)) ? 0 : calculateTotalAmount(form.price, form.quantity, form.taxValue)}</p>
+                    {discountAmount <= 0 && discountPercentage <= 0 ? (
+                    <>
+                     {/* Discount type */}
+                <div>
+                    <label htmlFor="discountType" className="label label-text text-base">Discount Type:</label>
+                    <select
+                        id="discountType"
+                        className="w-full input input-bordered input-primary"
+                        value={form.discountType}
+                        onChange={handleDiscountTypeChange}
+                    >
+                        <option value="">Select Discount Type</option>
+                        <option value="percentage">Percentage</option>
+                        <option value="cashback">Cashback</option>
+                    </select>
+                </div>
+                {/* Discount value */}
+                <div>
+                    <label htmlFor="discountValue" className="label label-text text-base">Discount Value:</label>
+                    <input
+                        type="number"
+                        placeholder="Discount Value"
+                        className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        id="discountValue"
+                        value={form.discountValue}
+                        onChange={handleDiscountValueChange}
+                    />
+                </div>
+                    </>
+                    ) : (
+                        <></>
+                      )}
+
+
+
+<div>
+                    <label className="label label-text text-base">
+                      Invoice Discount:
+                    </label>
+                    {discountPercentage > 0 ? (
+                      <p>{discountPercentage}%</p>
+                    ) : discountAmount > 0 ? (
+                      <p>INR {discountAmount}/-</p>
+                    ) : (
+                      <p>0</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="label label-text text-base">
+                      Total Amount Without Tax (Without Discount Applied):
+                    </label>
+                    <p>
+                      INR {parseFloat(isNaN(form.price * form.quantity)
+                        ? 0
+                        : form.price * form.quantity).toFixed(2)}
+                      /-
+                    </p>
+                  </div>
+                  <div>
+                    <label className="label label-text text-base">
+                      Total Amount With Tax:
+                    </label>
+                    <p>INR {parseFloat(calculateTotalAmountWithTax(form)).toFixed(2)}/-</p>
+                  </div>
+
+                  <div>
+                    <label className="label label-text text-base">
+                      Total Amount Without Tax And With Discount:
+                    </label>
+                    <p>
+                      INR {parseFloat(calculateTotalAmountWithoutTaxWithDiscount(form)).toFixed(2)}/-
+                    </p>
+                  </div>
+                  <div>
+                    <label className="label label-text text-base">
+                      Tax Amount:
+                    </label>
+                    <p>
+                      INR {" "}
+                      {parseFloat(isNaN(calculateTotalAmountWithDiscount(form))
+                        ? 0
+                        : calculateTotalAmountWithDiscount(form)).toFixed(2)}
+                      /-
+                    </p>
                     </div>
                 </div>
             ))}
@@ -221,7 +495,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
         </form>
             
         <dialog id='update_modal_3' className="modal">
-            <div className="modal-box">
+            <div className="modal-box w-11/12 max-w-7xl">
             <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
             <InvoiceUpdateEway invoiceID={invoiceId}/>
             </div>

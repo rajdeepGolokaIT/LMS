@@ -156,6 +156,7 @@ function InvoicesForm() {
                 </label>
                 <input
                   type="number"
+                  min="0"
                   placeholder="Invoice Number"
                   className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="invoiceNumber"
@@ -175,6 +176,7 @@ function InvoicesForm() {
                 </label>
                 <input
                   type="number"
+                  min="0"
                   placeholder="IRN"
                   className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="irn"
@@ -185,59 +187,6 @@ function InvoicesForm() {
                   required
                 />
               </div>
-            
-            {/* <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label htmlFor="sgst" className="label label-text text-base">SGST:</label>
-                        <input
-                            type="number"
-                            placeholder="SGST"
-                            className="w-full input input-bordered input-primary"
-                            id="sgst"
-                            value={formData.sgst}
-                            onChange={(e) => setFormData({...formData, sgst: parseInt(e.target.value)})}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="igst" className="label label-text text-base">IGST:</label>
-                        <input
-                            type="number"
-                            placeholder="IGST"
-                            className="w-full input input-bordered input-primary"
-                            id="igst"
-                            value={formData.igst}
-                            onChange={(e) => setFormData({...formData, igst: parseInt(e.target.value)})}
-                            required
-                            />
-                        </div>
-                </div> */}
-
-            
-              {/* <div>
-                        <label htmlFor="cgst" className="label label-text text-base">CGST:</label>
-                        <input
-                            type="number"
-                            placeholder="CGST"
-                            className="w-full input input-bordered input-primary"
-                            id="cgst"
-                            value={formData.cgst}
-                            onChange={(e) => setFormData({...formData, cgst: parseInt(e.target.value)})}
-                            required
-                        />
-                    </div> */}
-              {/* <div>
-                        <label htmlFor="totalAmount" className="label label-text text-base">Total Amount Without Tax:</label>
-                        <input
-                            type="number"
-                            placeholder="Total Amount Without Tax"
-                            className="w-full input input-bordered input-primary"
-                            id="totalAmount"
-                            value={formData.totalAmount}
-                            onChange={(e) => setFormData({...formData, totalAmount: parseInt(e.target.value)})}
-                            required
-                        />
-                    </div> */}
               <div>
                 <label
                   htmlFor="salespersonId"
@@ -284,7 +233,7 @@ function InvoicesForm() {
                       termsOfDelivery: e.target.value,
                     })
                   }
-                  required
+                  
                 />
               </div>
             
@@ -298,6 +247,7 @@ function InvoicesForm() {
                 </label>
                 <input
                   type="text"
+                  pattern="[A-Za-z0-9]+"
                   placeholder="Purchase Number"
                   className="w-full input input-bordered input-primary"
                   id="purchaseNumber"
@@ -375,6 +325,7 @@ function InvoicesForm() {
                 </label>
                 <input
                   type="number"
+                  min="0"
                   placeholder="Discount Value"
                   className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="discount"
@@ -466,6 +417,7 @@ function InvoicesForm() {
                 </label>
                 <input
                   type="text"
+                  pattern="[A-Za-z0-9]+"
                   placeholder="Vehicle No"
                   className="w-full input input-bordered input-primary"
                   id="vechicleNo"
@@ -476,15 +428,13 @@ function InvoicesForm() {
                   required
                 />
               </div>
-            
-
-            
               <div>
                 <label htmlFor="ackNo" className="label label-text text-base">
                   Ack No:
                 </label>
                 <input
                   type="number"
+                  min="0"
                   placeholder="Ack No"
                   className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="ackNo"
@@ -567,20 +517,21 @@ function InvoicesForm() {
           </form>
         </div>
       </TitleCard>
-      <AddProductsForm
-        invoiceId={invoiceId}
-        discountPercentage={percentage}
-        discountAmount={price}
-      />
       {invoiceId != null && (
-        <>
+          <>
+          <AddProductsForm
+            invoiceId={invoiceId}
+            discountPercentage={percentage}
+            discountAmount={price}
+          />
           {/* Checkbox to allow editing */}
-          <div className="flex items-center">
+          <div className="flex justify-between items-center w-full mt-5">
+          <div className="flex justify-center items-center gap-2">
             <label
               htmlFor="allowEditingCheckbox"
-              className="label label-text text-base"
+              className="label text-base"
             >
-              Need Eway Bill:
+              Need Eway Bill :
             </label>
             <input
               type="checkbox"
@@ -590,7 +541,9 @@ function InvoicesForm() {
               onChange={handleCheckboxChange}
             />
           </div>
-          {allowEditing == true ? <EwayForm invoiceID={invoiceId} /> : null}
+          <button className="btn btn-primary items-center btn-sm" onClick={() => setInvoiceId(null)}>Done</button>
+          </div>
+          {allowEditing == true ? <EwayForm invoiceID={invoiceId} onSubmitSuccess={() => setInvoiceId(null)} /> : null}
         </>
       )}
     </>

@@ -155,7 +155,9 @@ function DistributorProfileForm() {
                             <label htmlFor="contactNumber" className="label label-text text-base">Contact Number:</label>
                             <input
                                 type="phone"
-                                placeholder="Contact Number"
+                                pattern="[0-9]{10}"
+                                title="Please enter a valid 10-digit phone number"
+                                placeholder="Please enter a 10-digit phone number"
                                 className="w-full input input-bordered input-primary"
                                 id="contactNumber"
                                 value={contactNumber}
@@ -179,7 +181,8 @@ function DistributorProfileForm() {
                             <label htmlFor="gstNo" className="label label-text text-base">GST Number:</label>
                             <input
                                 type="text"
-                                placeholder="GST Number"
+                                pattern="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9A-Z]{1}"
+                                placeholder="Enter a valid GST Number [Eg. 22AAAAA0000A1Z5]"
                                 className="w-full input input-bordered input-primary"
                                 id="gstNo"
                                 value={gstNo}
@@ -191,7 +194,8 @@ function DistributorProfileForm() {
                             <label htmlFor="panNo" className="label label-text text-base">PAN Number:</label>
                             <input
                                 type="text"
-                                placeholder="PAN Number"
+                                pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                                placeholder="Enter a valid PAN Number [Eg. AAAAA1234A]"
                                 className="w-full input input-bordered input-primary"
                                 id="panNo"
                                 value={panNo}

@@ -187,6 +187,10 @@ const ExpanseTable = () => {
         return 0;
     }))
 
+    const handleDeleteModal = async (e) => {
+        document.getElementById("delete_modal").showModal();
+      };
+
     const handleDelete = async () => {
         try {
            {
@@ -257,7 +261,7 @@ const ExpanseTable = () => {
         </button>
       }
     TopSideButtons2={
-        <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-error"}`} onClick={handleDelete}>
+        <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-error"}`} onClick={handleDeleteModal}>
           Delete
         </button>
       }
@@ -319,9 +323,10 @@ const ExpanseTable = () => {
                   Salery:
                 </label>
                 <input
-                  type="text"
+                  type="number"
+                  min="0"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="Salery"
-                  className="w-full input input-bordered input-primary"
                   id="salary"
                   name="salary"
                   value={formData.salary}
@@ -338,9 +343,10 @@ const ExpanseTable = () => {
                   Incentive:
                 </label>
                 <input
-                  type="text"
+                  type="number"
+                  min="0"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="Incentive"
-                  className="w-full input input-bordered input-primary"
                   id="incentive"
                   name="incentive"
                   value={formData.incentive}
@@ -356,9 +362,10 @@ const ExpanseTable = () => {
                   Miscellaneous:
                 </label>
                 <input
-                  type="text"
+                  type="number"
+                  min="0"
+                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="Miscellaneous"
-                  className="w-full input input-bordered input-primary"
                   id="miscellaneous"
                   name="miscellaneous"
                   value={formData.miscellaneous}
@@ -374,9 +381,35 @@ const ExpanseTable = () => {
                 </TitleCard>
              </div>
         </dialog>
-    )
+    )}
 
-    }
+{selectedId !== null && (
+        <dialog id="delete_modal" className="modal">
+          <div className="modal-box ">
+            <TitleCard title="CAUSION !!!">
+              <p className="py-4 text-center">Are you sure you want to delete this Expense Entry?</p>
+              <div className="flex justify-between w-1/2 m-auto mt-10">
+                <label
+                  htmlFor="delete_modal"
+                  className="btn btn-error px-8"
+                  onClick={handleDelete}
+                >
+                  Yes
+                </label>
+                <label
+                  htmlFor="delete_modal"
+                  className="btn btn-ghost px-8"
+                  onClick={() =>
+                    document.getElementById("delete_modal").close()
+                  }
+                >
+                  No
+                </label>
+              </div>
+            </TitleCard>
+          </div>
+        </dialog>
+      )}
     
     </>
   )

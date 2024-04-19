@@ -4,7 +4,7 @@ import { showNotification } from "../../common/headerSlice";
 import axios from "axios";
 import TitleCard from "../../../components/Cards/TitleCard";
 
-function EwayForm({ invoiceID }) {
+function EwayForm({ invoiceID, onSubmitSuccess }) {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     invoiceId: `${invoiceID}`,
@@ -74,6 +74,7 @@ function EwayForm({ invoiceID }) {
         ewayVechileNo: "",
         ewayVehicleFrom: "",
       });
+      onSubmitSuccess();
     } catch (error) {
       console.error("Error adding Eway:", error);
       // dispatch(
