@@ -98,6 +98,7 @@ const ExpanseTable = () => {
     const [recordsPerPage] = useState(5);
     const [selectedId, setSelectedId] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+    const [searchTerm, setSearchTerm] = useState('');
     const [formData, setFormData] = useState(
         {
             salary: 0,
@@ -142,7 +143,17 @@ const ExpanseTable = () => {
         }
     }
 
-    const sortedData = data.slice().sort((a, b) => {
+    const filteredRecords = data.filter(expenses => {
+        return (
+          String(expenses.salesperson.name).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      });
+
+    const handleSearchChange = event => {
+        setSearchTerm(event.target.value);
+      };
+
+    const sortedData = filteredRecords.slice().sort((a, b) => {
         if (sortConfig.key !== null) {
           const keys = sortConfig.key.split(".");
           let aValue = a;
@@ -174,7 +185,7 @@ const ExpanseTable = () => {
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
     const currentRecords = sortedData.slice(indexOfFirstRecord, indexOfLastRecord);
-    const nPages = Math.ceil(data.length / recordsPerPage);
+    const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
 
     
     console.log(data.slice().sort((a,b) => {
@@ -258,15 +269,24 @@ const ExpanseTable = () => {
   return (
     <>
     <TitleCard title="Expenses" topMargin="mt-2"
-    TopSideButtons1={
+    TopSideButtons2={
         <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-success"}`} onClick={handleUpdate}>
           Update
         </button>
       }
-    TopSideButtons2={
+    TopSideButtons3={
         <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-error"}`} onClick={handleDeleteModal}>
           Delete
         </button>
+      }
+      TopSideButtons1={
+        <input
+          type="text"
+          className="input input-bordered w-full max-w-xs"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+           />
       }
     >
     <table className="table w-full">
@@ -316,7 +336,7 @@ const ExpanseTable = () => {
              <div className="modal-box w-11/12 max-w-7xl">
                 <TitleCard title="Update Expense">
                     <form onSubmit={handleSubmit} className="space-y-4">
-                    <button onClick={() => document.getElementById("update_modal").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    <label onClick={() => document.getElementById("update_modal").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
                     <div className="grid grid-cols-3 gap-4">
                     <div>
                 <label
