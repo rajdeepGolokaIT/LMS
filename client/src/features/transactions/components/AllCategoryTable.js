@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setPageTitle } from "../../common/headerSlice";
+import { setPageTitle, showNotification } from "../../common/headerSlice";
 import TitleCard from "../../../components/Cards/TitleCard";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
@@ -87,6 +87,12 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
 const AllCategoryTable = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
+  const [formData, setFormData] = useState(
+    {
+        categoryName: '',
+        isActive: true
+    }
+);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
   const [sortConfig, setSortConfig] = useState({
@@ -149,17 +155,54 @@ const AllCategoryTable = () => {
   const handleDelete = async () => {
     try {
       {
-        await axios.delete(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/delete-category?id=${selectedId}`
+        await axios.put(
+          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/category-status?id=${selectedId}`
         );
       }
       setSelectedId([]);
+      document.getElementById("delete_modal").close();
       // Reload data after deletion
       fetchCategoryData();
     } catch (error) {
       console.error("Error deleting Category:", error);
     }
   };
+
+  const handleUpdate = async (e) => {
+    document.getElementById("update_modal").showModal();
+}
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        
+        await axios.put(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/update-category/${selectedId}`, formData,
+        // {
+        //     headers: {
+        //         "Content-Type": "application/x-www-form-urlencoded",
+        //     },
+        // }
+        );
+        console.log("Category updated successfully");
+        fetchCategoryData();
+        dispatch(
+            showNotification({
+              message: "Category updated to invoice successfully 😁",
+              status: 1,
+            })
+          );
+          document.getElementById("update_modal").close()
+
+        } catch (error) {
+            console.error("Error updating Category:", error);
+            dispatch(
+              showNotification({
+                message: "Error updating Category! 😵",
+                status: 0,
+              })
+            );
+          }
+        };
 
   const filteredRecords = categoryData.filter((categories) => {
     return String(categories.categoryName)
@@ -211,14 +254,14 @@ const AllCategoryTable = () => {
     const isChecked = e.target.checked;
     if (isChecked) {
       setSelectedId(id);
-      // const foundSalespersons = data.find((expense) => parseInt(expense.id) === parseInt(id));
+      const foundCategories = categoryData.find((category) => parseInt(category.categoryId) === parseInt(id));
 
-      // if (foundSalespersons){
-      //     setFormData(foundSalespersons);
-
-      // }
+      if (foundCategories) {
+        setFormData(foundCategories);
+      }
+      
     } else {
-      // setFormData([]);
+      setFormData([]);
       setSelectedId(null);
     }
   };
@@ -249,6 +292,17 @@ const AllCategoryTable = () => {
             Delete
           </button>
         }
+        TopSideButtons3={
+            <button
+              className={`btn ${
+                selectedId === null ? "btn-disabled" : "btn-success"
+              }`}
+              onClick={handleUpdate}
+            >
+              Update
+            </button>
+          }
+        
       >
         <div className="overflow-x-auto w-full">
           <table className="table table-lg w-full">
@@ -317,7 +371,9 @@ const AllCategoryTable = () => {
         <dialog id="delete_modal" className="modal">
           <div className="modal-box ">
             <TitleCard title="CAUSION !!!">
-              <p className="py-4 text-center">Are you sure you want to delete this Category?</p>
+              <p className="py-4 text-center text-xl">Are you sure you want to delete this Category?</p>
+                <br/>
+              <p className="text-center font-bold text-sm">Note : All Products under this Category will be deleted!</p>
               <div className="flex justify-between w-1/2 m-auto mt-10">
                 <label
                   htmlFor="delete_modal"
@@ -340,6 +396,34 @@ const AllCategoryTable = () => {
           </div>
         </dialog>
       )}
+      {/*modal for update*/}
+{selectedId && (
+        <dialog id='update_modal' className='modal'>
+             <div className="modal-box">
+                <TitleCard title="Update Category">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <label onClick={() => document.getElementById("update_modal").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
+                    
+                    <div>
+                    <label htmlFor="categoryName" className="label label-text text-base">Category Name:</label>
+                <input
+                  type="text"
+                  placeholder="Category Name"
+                  className="w-full input input-bordered input-primary"
+                  id="productName"
+                  value={formData.categoryName}
+                  onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="modal-action">
+                        <button type="submit" className="btn btn-primary">Update</button>
+                    </div>
+              </form>
+              </TitleCard>
+              </div>
+              </dialog>
+              )}
     </>
   );
 };

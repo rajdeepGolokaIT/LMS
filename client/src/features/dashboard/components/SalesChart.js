@@ -31,7 +31,7 @@ function LineChart() {
     const [rangeData, setRangeData] = useState({});
     const [selectedStartMonth, setSelectedStartMonth] = useState('04-01');
     const [selectedEndMonth, setSelectedEndMonth] = useState('03-31');
-
+    
 
 
     function getFinancialYear(yearsBefore = 0) {
@@ -82,13 +82,47 @@ function LineChart() {
     const [selectedStartYear, setSelectedStartYear ] = useState(`${currentStart}`);
     const [selectedEndYear, setSelectedEndYear] = useState(`${currentEnd}`);
     
-
+  //   useEffect(() => {
+  //     fetchData(selectedRange);
+  // }, [selectedRange, selectedStartMonth, selectedEndMonth, selectedStartYear, selectedEndYear]);
     
   
     const handleRangeChange = async (event) => {
         const value = event.target.value;
         setSelectedRange(value);
     };
+
+    const handleCustomRangeChange = (field, value) => {
+      if (field === 'startYear' || field === 'endYear') {
+          // Validate that end year is after start year
+          if (field === 'startYear' && value >= selectedEndYear) {
+              alert('Start year must be before end year');
+              return;
+          }
+          if (field === 'endYear' && value <= selectedStartYear) {
+              alert('End year must be after start year');
+              return;
+          }
+      } else if (field === 'startMonth' || field === 'endMonth') {
+          // Validate that end month is after start month
+          const start = moment(`${selectedStartYear}-${selectedStartMonth}`);
+          const end = moment(`${selectedEndYear}-${selectedEndMonth}`);
+          if (start >= end) {
+              alert('End month must be after start month');
+              return;
+          }
+      }
+      // If validation passes, update the state
+      if (field === 'startYear') {
+          setSelectedStartYear(value);
+      } else if (field === 'startMonth') {
+          setSelectedStartMonth(value);
+      } else if (field === 'endYear') {
+          setSelectedEndYear(value);
+      } else if (field === 'endMonth') {
+          setSelectedEndMonth(value);
+      }
+  };
 
     const fetchData = async (range) => {
         try {
@@ -172,14 +206,14 @@ function LineChart() {
             <div>
             <div className="grid grid-cols-3 gap-4">
             <labels className="label">Start Range:</labels>
-            <select className='select select-ghost select-sm' value={selectedStartYear} onChange={(e) => setSelectedStartYear(e.target.value)}>
+            <select className='select select-ghost select-sm' value={selectedStartYear} onChange={(e) => handleCustomRangeChange('startYear', e.target.value)}>
             {/* Starting Year */}
             <option value={currentEnd}>{currentEnd}</option>
             <option value={currentStart}>{currentStart}</option>
             <option value={previousStart}>{previousStart}</option>
             <option value={yearBeforePreviousStart}>{yearBeforePreviousStart}</option>
             </select>
-            <select className='select select-ghost select-sm' value={selectedStartMonth} onChange={(e) => setSelectedStartMonth(e.target.value)}>
+            <select className='select select-ghost select-sm' value={selectedStartMonth} onChange={(e) => handleCustomRangeChange('startMonth', e.target.value)}>
             {/* Starting Month */}
             <option value="04-01">April</option>
             <option value="05-01">May</option>
@@ -198,14 +232,14 @@ function LineChart() {
 
             <div className="grid grid-cols-3 gap-4">
                 <labels className="label">End Range:</labels>
-            <select className='select select-ghost select-sm' value={selectedEndYear} onChange={(e) => setSelectedEndYear(e.target.value)}>
+            <select className='select select-ghost select-sm' value={selectedEndYear} onChange={(e) => handleCustomRangeChange('endYear', e.target.value)}>
             {/* Ending Year */}
             <option value={currentEnd}>{currentEnd}</option>
             <option value={currentStart}>{currentStart}</option>
             <option value={previousStart}>{previousStart}</option>
             <option value={yearBeforePreviousStart}>{yearBeforePreviousStart}</option>
             </select>
-            <select className='select select-ghost select-sm' value={selectedEndMonth} onChange={(e) => setSelectedEndMonth(e.target.value)}>
+            <select className='select select-ghost select-sm' value={selectedEndMonth} onChange={(e) => handleCustomRangeChange('endMonth', e.target.value)}>
             {/* Ending Month */}
             <option value="03-31">March</option>
             <option value="04-30">April</option>

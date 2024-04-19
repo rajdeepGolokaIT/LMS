@@ -109,6 +109,7 @@ const AddSalesPerson = () => {
                 </label>
                 <input
                   type="email"
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   id="email"
                   name="email"
                   value={formData.email}

@@ -183,7 +183,7 @@ console.log(formData)
       <TitleCard title="Update/Add Eway Bill" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
           <form onSubmit={(e) => handleSubmit(e, formData)} className="space-y-4">
-          <button onClick={() => document.getElementById("update_modal_3").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          <label onClick={() => document.getElementById("update_modal_3").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label

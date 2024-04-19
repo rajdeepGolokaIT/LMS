@@ -341,7 +341,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
   return (
     <>
         <form onSubmit={handleSubmit} id='invoice-form' className="space-y-4">
-        <button onClick={() => document.getElementById("update_modal_2").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        <label onClick={() => document.getElementById("update_modal_2").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
             {productForms.map((form, index) => (
                 <div key={index} className="grid grid-cols-2 gap-4">
                     <div>

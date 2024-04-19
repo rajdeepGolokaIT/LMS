@@ -204,6 +204,9 @@ const ExpanseTable = () => {
             "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/all"
           );
           setData(response.data);
+
+          document.getElementById("delete_modal").close();
+
         } catch (error) {
           console.error("Error deleting salesperson:", error);
         }

@@ -83,6 +83,7 @@ function DistributorProfileForm() {
                             <label htmlFor="zone" className="label label-text text-base">Zone:</label>
                             <input
                                 type="text"
+                                pattern="[A-Za-z]+"
                                 placeholder="Zone"
                                 className="w-full input input-bordered input-primary"
                                 id="zone"
@@ -95,6 +96,7 @@ function DistributorProfileForm() {
                             <label htmlFor="city" className="label label-text text-base">City:</label>
                             <input
                                 type="text"
+                                pattern="[A-Za-z]+"
                                 placeholder="City"
                                 className="w-full input input-bordered input-primary"
                                 id="city"
@@ -107,6 +109,7 @@ function DistributorProfileForm() {
                             <label htmlFor="region" className="label label-text text-base">Region:</label>
                             <input
                                 type="text"
+                                pattern="[A-Za-z]+"
                                 placeholder="Region"
                                 className="w-full input input-bordered input-primary"
                                 id="region"
@@ -119,6 +122,7 @@ function DistributorProfileForm() {
                             <label htmlFor="state" className="label label-text text-base">State:</label>
                             <input
                                 type="text"
+                                pattern="[A-Za-z]+"
                                 placeholder="State"
                                 className="w-full input input-bordered input-primary"
                                 id="state"
@@ -131,6 +135,7 @@ function DistributorProfileForm() {
                             <label htmlFor="agencyName" className="label label-text text-base">Agency Name:</label>
                             <input
                                 type="text"
+                                pattern="[A-Z0-9a-z]+"
                                 placeholder="Agency Name"
                                 className="w-full input input-bordered input-primary"
                                 id="agencyName"
@@ -143,6 +148,8 @@ function DistributorProfileForm() {
                             <label htmlFor="contactPerson" className="label label-text text-base">Contact Person:</label>
                             <input
                                 type="text"
+                                pattern="[A-Za-z]+"
+                                
                                 placeholder="Contact Person"
                                 className="w-full input input-bordered input-primary"
                                 id="contactPerson"
@@ -169,6 +176,7 @@ function DistributorProfileForm() {
                             <label htmlFor="email" className="label label-text text-base">Email:</label>
                             <input
                                 type="email"
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                                 placeholder="Email"
                                 className="w-full input input-bordered input-primary"
                                 id="email"
