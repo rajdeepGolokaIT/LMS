@@ -28,27 +28,35 @@ const TopSalesCategories = () => {
   
     const fetchLocations = async () => {
       try {
-        const response = await fetch(
-          "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
-        );
-        const data = await response.json();
-        console.log(data);
-        const category = selectedCategory.toLowerCase();
-        console.log(category);
-    
-        // Extract all locations based on the selected category
-        const allLocations = data.map(item => item.distributor.distributorProfile[category]);
-        console.log(allLocations);
-    
-        // Filter out unique locations
-        const uniqueLocations = [...new Set(allLocations)];
-    
-        setLocations(uniqueLocations);
-        console.log(uniqueLocations);
+          const response = await fetch(
+              "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
+          );
+          const data = await response.json();
+          console.log(data);
+          const category = selectedCategory.toLowerCase();
+          console.log(category);
+  
+          // Extract all locations based on the selected category
+          const allLocations = data.map(item => item.distributor.distributorProfile[category]);
+          console.log(allLocations);
+  
+          // Filter out unique locations
+          const uniqueLocations = new Set();
+          allLocations.forEach(location => {
+              // Trim the location before adding it to the set
+              uniqueLocations.add(location.trim());
+          });
+  
+          // Convert the set back to an array
+          const uniqueLocationsArray = Array.from(uniqueLocations);
+  
+          setLocations(uniqueLocationsArray);
+          console.log(uniqueLocationsArray);
       } catch (error) {
-        console.error("Error fetching locations:", error);
+          console.error("Error fetching locations:", error);
       }
-    };
+  };
+  
     
   
     const fetchTopSellingProducts = async () => {
