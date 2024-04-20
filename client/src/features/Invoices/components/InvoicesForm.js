@@ -41,6 +41,7 @@ function InvoicesForm() {
   const [percentage, setPercentage] = useState(0);
   const [price, setPrice] = useState(0);
   const [allowEditing, setAllowEditing] = useState(false); // State to manage whether editing is allowed
+  const [productsAdded, setProductsAdded] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -134,8 +135,10 @@ function InvoicesForm() {
     }
   };
 
-  const handleCheckboxChange = () => {
+  const handleCheckboxChange = ( ) => {
+   
     setAllowEditing(!allowEditing);
+    setProductsAdded(!productsAdded);
   };
 
   console.log(discountValue);
@@ -321,7 +324,7 @@ function InvoicesForm() {
                   htmlFor="discount"
                   className="label label-text text-base"
                 >
-                  Discount Value:
+                  Discount:
                 </label>
                 <input
                   type="number"
@@ -347,7 +350,7 @@ function InvoicesForm() {
                         discountPrice: newValue,
                         discountPercentage: 0,
                       });
-                    }
+                    } 
                     setDiscountValue(newValue);
                   }}
                 />
@@ -523,6 +526,7 @@ function InvoicesForm() {
             invoiceId={invoiceId}
             discountPercentage={percentage}
             discountAmount={price}
+            onSubmitSuccess={() => setProductsAdded(true)}
           />
           {/* Checkbox to allow editing */}
           <div className="flex justify-between items-center w-full mt-5">
@@ -537,13 +541,14 @@ function InvoicesForm() {
               type="checkbox"
               id="allowEditingCheckbox"
               className="checkbox checkbox-primary"
-              checked={allowEditing}
+              checked={allowEditing && productsAdded}
               onChange={handleCheckboxChange}
             />
           </div>
-          <button className="btn btn-primary items-center btn-sm" onClick={() => setInvoiceId(null)}>Done</button>
+          {productsAdded === true &&
+          <button className="btn btn-primary items-center btn-sm" onClick={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")}>Done</button> }
           </div>
-          {allowEditing == true ? <EwayForm invoiceID={invoiceId} onSubmitSuccess={() => setInvoiceId(null)} /> : null}
+          {allowEditing == true ? <EwayForm invoiceID={invoiceId} onSubmitSuccess={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")} /> : null}
         </>
       )}
     </>

@@ -4,7 +4,7 @@ import { showNotification } from "../../common/headerSlice";
 import axios from "axios";
 import TitleCard from "../../../components/Cards/TitleCard";
 
-function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
+function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubmitSuccess }) {
   const [products, setProducts] = useState([]);
   //   const [totalWithTax, setTotalWithTax] = useState(0);
   //   const [ totalWoutTaxAndWithDiscount ,setTotalWoutTaxAndWithDiscount] = useState(0)
@@ -213,6 +213,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount }) {
           status: 1,
         })
       );
+      onSubmitSuccess();
 
       setProductForms([
         { productId: "", quantity: "", taxType: "", taxValue: 0, discountType: "", discountValue: 0 },
