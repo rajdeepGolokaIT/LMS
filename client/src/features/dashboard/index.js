@@ -36,7 +36,7 @@ function Dashboard(){
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/count');
+            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/count-active');
             const data = await response.json();
             setProducts(data);
             console.log(data);
@@ -51,7 +51,7 @@ function Dashboard(){
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/count');
+            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/count-active');
             const data2 = await response.json();
             setCategories(data2);
             console.log(data2);

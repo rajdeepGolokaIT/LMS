@@ -289,7 +289,8 @@ const ExpanseTable = () => {
            />
       }
     >
-    <table className="table w-full">
+   <div className="overflow-x-auto w-full">
+        <table className="table table-lg w-full">
         <thead>
             <tr>
                 <th>Select</th>
@@ -324,6 +325,7 @@ const ExpanseTable = () => {
             ))}
         </tbody>
     </table>
+    </div>
     <Pagination
         nPages={nPages}
         currentPage={currentPage}
