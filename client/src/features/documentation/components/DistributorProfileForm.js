@@ -135,7 +135,7 @@ function DistributorProfileForm() {
                             <label htmlFor="agencyName" className="label label-text text-base">Agency Name:</label>
                             <input
                                 type="text"
-                                pattern="[A-Z0-9a-z]+"
+                                pattern="^[a-zA-Z\s]*$"
                                 placeholder="Agency Name"
                                 className="w-full input input-bordered input-primary"
                                 id="agencyName"

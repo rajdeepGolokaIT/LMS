@@ -138,7 +138,7 @@ function InvoicesForm() {
   const handleCheckboxChange = ( ) => {
    
     setAllowEditing(!allowEditing);
-    setProductsAdded(!productsAdded);
+    // setProductsAdded(!productsAdded);
   };
 
   console.log(discountValue);
@@ -290,6 +290,7 @@ function InvoicesForm() {
                 </label>
                 <input
                   type="text"
+                  pattern="[A-Za-z0-9\s]+"
                   placeholder="Supplier Name"
                   className="w-full input input-bordered input-primary"
                   id="supplierName"
@@ -355,33 +356,6 @@ function InvoicesForm() {
                   }}
                 />
               </div>
-            
-            {/* <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label htmlFor="totalQuantity_Nos" className="label label-text text-base">Total Quantity Nos:</label>
-                        <input
-                            type="number"
-                            placeholder="Total Quantity Nos"
-                            className="w-full input input-bordered input-primary"
-                            id="totalQuantity_Nos"
-                            value={formData.totalQuantityNos}
-                            onChange={(e) => setFormData({...formData, totalQuantityNos: parseInt(e.target.value)})}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="totalQuantity_Doz" className="label label-text text-base">Total Quantity Nos:</label>
-                        <input
-                            type="number"
-                            placeholder="Total Quantity Doz"
-                            className="w-full input input-bordered input-primary"
-                            id="totalQuantity_Doz"
-                            value={formData.totalQuantityDoz}
-                            onChange={(e) => setFormData({...formData, totalQuantityDoz: parseInt(e.target.value)})}
-                            required
-                        />
-                    </div>
-                    </div> */}
 
             
               <div>
@@ -420,8 +394,8 @@ function InvoicesForm() {
                 </label>
                 <input
                   type="text"
-                  pattern="[A-Za-z0-9]+"
-                  placeholder="Vehicle No"
+                  pattern="[A-Z]{2}[0-9]{2}[A-Z]{1}[0-9]{4}"
+                  placeholder="Vehicle No (Eg. AA11A1111)"
                   className="w-full input input-bordered input-primary"
                   id="vechicleNo"
                   value={formData.vehicleNo}
@@ -493,25 +467,6 @@ function InvoicesForm() {
                   required
                 />
               </div>
-              {/* <div>
-                <label htmlFor="hsnsac" className="label label-text text-base">
-                  HSN/SAC:
-                </label>
-                <input
-                  type="number"
-                  placeholder="HSN/SAC"
-                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  id="hsnsac"
-                  value={formData.hsnsac}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      hsnsac: parseInt(e.target.value),
-                    })
-                  }
-                  required
-                />
-              </div> */}
             </div>
             <div className="grid grid-cols-2 gap-4"></div>
             <button type="submit" className="btn btn-primary">
@@ -540,12 +495,12 @@ function InvoicesForm() {
             <input
               type="checkbox"
               id="allowEditingCheckbox"
-              className="checkbox checkbox-primary"
-              checked={allowEditing && productsAdded}
+              className="toggle toggle-primary"
+              checked={allowEditing}
               onChange={handleCheckboxChange}
             />
           </div>
-          {productsAdded === true &&
+          {allowEditing == false && productsAdded == true &&
           <button className="btn btn-primary items-center btn-sm" onClick={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")}>Done</button> }
           </div>
           {allowEditing == true ? <EwayForm invoiceID={invoiceId} onSubmitSuccess={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")} /> : null}

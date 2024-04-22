@@ -50,7 +50,8 @@ function Team(){
             <label htmlFor="categoryName" className="label label-text text-base">Category Name:</label>
             <input
               type="text"
-              placeholder="Category Name"
+              pattern="[A-Za-z0-9\s]+"
+              placeholder="Category Name (letters and numbers only)"
               className="w-full input input-bordered input-primary"
               id="categoryName"
               value={categoryName}

@@ -26,6 +26,7 @@ const ExpensesForm = lazy(() => import('../features/Expenses/components/Expenses
 const AllProductsTable = lazy(() => import('../features/leads/components/AllProductTable'))
 const AllCategoriesTable = lazy(() => import('../features/transactions/components/AllCategoryTable'))
 const AllExpensesTable = lazy(() => import('../features/Expenses/components/ExpanseTable'))
+const AllDistributorsTable = lazy(() => import('../features/Distributor Dashboard/components/AllDistributorsTable'))
 
 
 
@@ -77,6 +78,10 @@ const routes = [
   {
     path: '/Distributors-Entry-Operations',
     component: DocComponents,
+  },
+  {
+    path: '/All-Distributors-Table',
+    component: AllDistributorsTable,
   },
   {
     path: '/Expenses',

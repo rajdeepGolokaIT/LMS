@@ -73,7 +73,8 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                     taxValue: invoiceInfo.cgstSgst > 0 ? invoiceInfo.cgstSgst : invoiceInfo.igst, // Assuming tax value can be deduced from cgstSgst and igst
                     price: productInfo.price, // Price directly obtained from productInfo
                     discountType: invoiceInfo.discountInPercent > 0 ? 'percentage' : 'cashback',
-                    discountValue: invoiceInfo.discountInPercent > 0 ? invoiceInfo.discountInPercent : invoiceInfo.discountInPrice
+                    discountValue: invoiceInfo.discountInPercent > 0 ? invoiceInfo.discountInPercent : invoiceInfo.discountInPrice,
+                    hsnSac: invoiceInfo.hsnsac
 
                 };
             });
@@ -99,6 +100,12 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
     const handleQuantityChange = (index, value) => {
         const updatedForms = [...productForms];
         updatedForms[index].quantity = value;
+        setProductForms(updatedForms);
+    };
+
+    const handleHsnSacChange = (index, value) => {
+        const updatedForms = [...productForms];
+        updatedForms[index].hsnSac = value;
         setProductForms(updatedForms);
     };
 
@@ -208,6 +215,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                   totalAmountWithoutTax: amountWithoutTaxAndDiscount,
                   totalAmountWithoutTaxDiscount: totalAmountWithoutTaxDiscount,
                   totalAmountWithTax: totalAmountWithTax,
+                  hsnSac: form.hsnSac
                 };
               }
             });
@@ -349,7 +357,10 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                         <select
                             id={`product-${index}`}
                             className="w-full input input-bordered input-primary"
-                            value={form.productId}
+                            title={`${(products.find(
+                                (product) => product.id.toString() !== form.productId
+                              )) ? 'This Product is deactivated' : ''}`}
+                            value={(form.productId)}
                             onChange={(e) => handleProductChange(index, e.target.value)}
                             required
                         >
@@ -431,9 +442,25 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                         <></>
                       )}
 
-
-
-<div>
+                    <div>
+                        <label htmlFor="hsnsac">HSN/SAC:</label>
+                        <input
+                            type="text"
+                            placeholder="HSN/SAC"
+                            pattern="[0-9]{6-8}"
+                            className="w-full input input-bordered input-primary"
+                            id="hsnsac"
+                            value={form.hsnSac}
+                            onChange={(e) => handleHsnSacChange(index, e.target.value)}
+                            required
+                        />
+                        <p> HSN/SAC : {" "}
+                        {products.find(
+                        (product) => product.id.toString() === form.productId
+                      )?.hsnsac || "This product is deactivated!"}
+                        </p>
+                    </div>
+                    <div>
                     <label className="label label-text text-base">
                       Invoice Discount:
                     </label>
@@ -485,12 +512,10 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                     </div>
                 </div>
             ))}
-            {/* <button type="button" onClick={addProductForm} className="btn btn-outline btn-sm">Add More Products</button> */}
             <br/>
             <br/>
             <div className='modal-action'>
             <button type="submit" className="btn btn-primary">Update Products</button>
-            {/* <button onClick={() => document.getElementById("product_update_modal").close()} className='btn btn-danger'>Cancel</button> */}
             </div>
         </form>
             

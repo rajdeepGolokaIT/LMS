@@ -16,6 +16,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
       taxValue: 0,
       discountType: "",
       discountValue: 0,
+      hsnSac: "",
     },
   ]);
   const dispatch = useDispatch();
@@ -53,6 +54,12 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
   const handleQuantityChange = (index, value) => {
     const updatedForms = [...productForms];
     updatedForms[index].quantity = value;
+    setProductForms(updatedForms);
+  };
+
+  const handleHsnSacChange = (index, value) => {
+    const updatedForms = [...productForms];
+    updatedForms[index].hsnSac = value;
     setProductForms(updatedForms);
   };
 
@@ -122,9 +129,12 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
         taxValue: 0,
         discountType: "",
         discountValue: 0,
+        hsnSac: "",
       },
     ]);
   };
+
+  console.log(productForms)
 
   const removeProductForm = (indexToRemove) => {
     setProductForms((prevForms) =>
@@ -195,6 +205,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
             totalAmountWithoutTax: amountWithoutTaxAndDiscount,
             totalAmountWithoutTaxDiscount: totalAmountWithoutTaxDiscount,
             totalAmountWithTax: totalAmountWithTax,
+            hsnSac: parseInt(form.hsnSac),
           };
         }
       });
@@ -216,7 +227,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
       onSubmitSuccess();
 
       setProductForms([
-        { productId: "", quantity: "", taxType: "", taxValue: 0, discountType: "", discountValue: 0 },
+        { productId: "", quantity: "", taxType: "", taxValue: 0, discountType: "", discountValue: 0, hsnSac: 0, },
       ]);
     } catch (error) {
       console.error("Error adding products to invoice:", error);
@@ -493,6 +504,32 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                   ) : (
                     <></>
                   )}
+
+                  <div>
+                    <label
+                      htmlFor={`hsnsac-${index}`}
+                      className="label label-text text-base"
+                    >
+                      HSN/SAC:
+                    </label>
+                    <input
+                      type="text"
+                      pattern="[0-9]{6-8}"
+                      placeholder="HSN/SAC"
+                      className="w-full input input-bordered input-primary"
+                      id={`hsnsac-${index}`}
+                      value={form.hsnSac}
+                      onChange={(e) =>
+                        handleHsnSacChange(index, e.target.value)
+                      }
+                    //   required
+                    />
+                    <p>Existing HSN/SAC: 
+                    {products.find(
+                        (product) => product.id.toString() === form.productId
+                      )?.hsnsac}
+                        </p>
+                  </div>
 
                   <div>
                     <label className="label label-text text-base">

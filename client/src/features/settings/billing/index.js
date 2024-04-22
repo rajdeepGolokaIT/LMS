@@ -113,7 +113,7 @@ function Billing(){
                         <input
                             type="text"
                             placeholder="HSN/SAC"
-                            pattern="[0-9]{8}"
+                            pattern="[0-9]{6-8}"
                             className="w-full input input-bordered input-primary"
                             id="hsnsac"
                             value={hsnsac}

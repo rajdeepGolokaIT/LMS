@@ -327,7 +327,7 @@ const ExpanseTable = () => {
     </table>
     </div>
     <Pagination
-        nPages={nPages}
+        nPages={Math.ceil(filteredRecords.length / recordsPerPage)}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
