@@ -115,26 +115,40 @@ const AllProductTable = () => {
       direction: "ascending",
     });
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedList, setSelectedList] = useState('active_products')
 
     useEffect(() => {
         const fetchData = async () => {
           try {
+            if(selectedList === 'active_products'){
             const response = await axios.get(
               `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all`
             );
+
+            console.log(response.data)
             setData(response.data);
+        } else if (selectedList === 'inactive_products'){
+            const response = await axios.get(
+                `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/inactive-all`
+              );
+
+              console.log(response.data)
+              setData(response.data);
+        }
           } catch (error) {
             console.error("Error fetching data:", error);
           }
         };
         fetchData();
-      }, []);
+      }, [selectedList]);
+
+    //   console.log(data)
 
       const fetchCategories = async () => {
         try {
             const response = await axios.get('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/all');
             setCategories(response.data);
-            console.log(response);
+            // console.log(response);
         } catch (error) {
             console.error('Error fetching categories:', error);
             // Handle error, show error message to the user, etc.
@@ -272,7 +286,8 @@ const AllProductTable = () => {
       };
 
       console.log(selectedId)
-      console.log(categories)
+    //   console.log(categories)
+      console.log(selectedList)
 
   return (
     <>
@@ -289,22 +304,32 @@ const AllProductTable = () => {
       TopSideButtons2={
         <button
           className={`btn ${
-            selectedId === null ? "btn-disabled" : "btn-error"
+            selectedId === null ? "btn-disabled" : (selectedList === 'active_products' ? 'btn-error' : 'btn-success')
           }`}
           onClick={handleDeleteModal}
         >
-          Delete
+          {selectedList === 'active_products' ? 'Deactivate' : 'Activate'}
         </button>
       }
       TopSideButtons3={
+        <>
         <button
           className={`btn ${
-            selectedId === null ? "btn-disabled" : "btn-success"
+            selectedId === null ? "btn-disabled" : "btn-primary"
           }`}
           onClick={handleUpdate}
         >
           Update
         </button>
+        <select
+        className="px-2 border border-gray-300 rounded-md mr-2"
+        onChange={(e) => setSelectedList(e.target.value)}
+        value={selectedList}
+        >
+            <option value="active_products">Active Products</option>
+            <option value="inactive_products">Inactive Products</option>
+        </select>
+        </>
       }
     
     >
@@ -387,7 +412,7 @@ const AllProductTable = () => {
         <dialog id="delete_modal" className="modal">
           <div className="modal-box ">
             <TitleCard title="CAUSION !!!">
-              <p className="py-4 text-center text-xl">Are you sure you want to delete this Product?</p>
+              <p className="py-4 text-center text-xl">Are you sure you want to {selectedList === 'active_products' ? 'Deactivate' : 'Activate'} this Product?</p>
                 <br/>
               {/* <p className="text-center font-bold text-sm">Note : All Products under this Category will be deleted!</p> */}
               <div className="flex justify-between w-1/2 m-auto mt-10">

@@ -92,9 +92,11 @@ const AllDistributorsTable = () => {
 
     const dispatch = useDispatch()
     const [data, setData] = useState([]);
+    const [selectedList, setSelectedList] = useState('active_distributors')
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
     const [selectedId, setSelectedId] = useState(null);
+    const [thisId, setThisId] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [searchTerm, setSearchTerm] = useState('');
     const [formData, setFormData] = useState({
@@ -120,17 +122,24 @@ const AllDistributorsTable = () => {
       useEffect(() => {
         const fetchData = async () => {
           try {
+            if(selectedList === 'active_distributors') {
             const response = await axios.get(
               "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/all"
             );
             setData(response.data);
+        } else if(selectedList === 'inactive_distributors') {
+            const response = await axios.get(
+              "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/all-inactive"
+            );
+            setData(response.data);
+        }
           } catch (error) {
             console.error("Error fetching data:", error);
           }
         };
     
         fetchData();
-      }, []);
+      }, [selectedList]);
 
       const filteredRecords = data.filter((distributors) => {
         return (
@@ -201,7 +210,7 @@ const AllDistributorsTable = () => {
         try {
            {
             await axios.put(
-              `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributorProfiles/distributorProfile-status?id=${selectedId}`
+              `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/distributor-status?id=${thisId}`
             );
           }
           console.log("selected distributor deleted")
@@ -261,10 +270,11 @@ const AllDistributorsTable = () => {
 
             console.log(formData)
 
-            const handleCheckboxChange = (e, id) => {
+            const handleCheckboxChange = (e, id, id2) => {
                 const isChecked = e.target.checked;
                 if (isChecked) {
                     setSelectedId(id);
+                    setThisId(id2);
                     const foundDistributorProfile = data.find((distributors) => parseInt(distributors.distributorProfile.id) === parseInt(id));
         
                         if (foundDistributorProfile) {
@@ -272,25 +282,41 @@ const AllDistributorsTable = () => {
         
                         }
                 } else {
-                    setFormData([]);
+                    setFormData({});
                     setSelectedId(null);
+                    setThisId(null);
                 }
             }
 
-            console.log(selectedId)
+            console.log(selectedId, thisId)
 
   return (
     <>
-    <TitleCard title="Expenses" topMargin="mt-2"
+    <TitleCard title="All Distributors List" topMargin="mt-2"
     TopSideButtons2={
-        <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-success"}`} onClick={handleUpdate}>
+        <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-primary"}`} onClick={handleUpdate}>
           Update
         </button>
       }
     TopSideButtons3={
-        <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-error"}`} onClick={handleDeleteModal}>
-          Delete
+        <>
+        <button
+          className={`btn ${
+            selectedId === null ? "btn-disabled" : (selectedList === 'active_distributors' ? 'btn-error' : 'btn-success')
+          }`}
+          onClick={handleDeleteModal}
+        >
+          {selectedList === 'active_distributors' ? 'Deactivate' : 'Activate'}
         </button>
+        <select
+        className="px-2 border border-gray-300 rounded-md mr-2"
+        onChange={(e) => setSelectedList(e.target.value)}
+        value={selectedList}
+        >
+            <option value="active_distributors">Active Distributers</option>
+            <option value="inactive_distributors">Inactive Distributers</option>
+        </select>
+        </>
       }
       TopSideButtons1={
         <input
@@ -330,8 +356,8 @@ const AllDistributorsTable = () => {
                       <input
                         type="checkbox"
                         className="checkbox checkbox-primary"
-                        onChange={(e) => handleCheckboxChange(e, record.distributorProfile.id)}
-                        checked={record.distributorProfile.id === selectedId}
+                        onChange={(e) => handleCheckboxChange(e, record.distributorProfile.id, record.id)}
+                        checked={record.distributorProfile.id === selectedId && record.id === thisId}
                       />
                     </label>
                   </td>
@@ -574,7 +600,7 @@ const AllDistributorsTable = () => {
         <dialog id="delete_modal" className="modal">
           <div className="modal-box ">
             <TitleCard title="CAUSION !!!">
-              <p className="py-4 text-center">Are you sure you want to delete this Distributor Profile?</p>
+              <p className="py-4 text-center">Are you sure you want to {selectedList === 'active_distributors' ? 'Deactivate' : 'Activate'} this Distributor Profile?</p>
               <div className="flex justify-between w-1/2 m-auto mt-10">
                 <label
                   htmlFor="delete_modal"

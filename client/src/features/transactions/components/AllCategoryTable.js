@@ -86,6 +86,7 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
 
 const AllCategoryTable = () => {
   const [selectedId, setSelectedId] = useState(null);
+//   const [products,setProducts] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [formData, setFormData] = useState(
     {
@@ -100,6 +101,7 @@ const AllCategoryTable = () => {
     direction: "ascending",
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedList, setSelectedList] = useState('active_categories');
 
   const dispatch = useDispatch();
 
@@ -109,14 +111,30 @@ const AllCategoryTable = () => {
 
   useEffect(() => {
     fetchCategoryData();
-  }, []);
+  }, [selectedList]);
 
   const fetchCategoryData = async () => {
+
+    let products;
+
     try {
+        if(selectedList === 'active_categories') {
       const response = await axios.get(
         "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all"
       );
-      const products = response.data;
+      products = response.data
+    } else if(selectedList === 'inactive_categories') {
+        const response = await axios.get(
+            "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/inactive-all"
+          );
+          const inactiveCategories = response.data.filter(categories => !categories.category.isActive);
+    
+          products = inactiveCategories;
+          
+    }
+    //   const products = response.data;
+
+    console.log(products);
       const categoryCounts = {};
 
       products.forEach((product) => {
@@ -147,6 +165,8 @@ const AllCategoryTable = () => {
       console.error("Error fetching category data:", error);
     }
   };
+
+//   console.log(products)
 
   const handleDeleteModal = async (e) => {
     document.getElementById("delete_modal").showModal();
@@ -266,7 +286,7 @@ const handleSubmit = async (e) => {
     }
   };
 
-  console.log(selectedId);
+//   console.log(selectedId);
 
   return (
     <>
@@ -285,22 +305,32 @@ const handleSubmit = async (e) => {
         TopSideButtons2={
           <button
             className={`btn ${
-              selectedId === null ? "btn-disabled" : "btn-error"
+              selectedId === null ? "btn-disabled" : (selectedList === 'active_categories' ? 'btn-error' : 'btn-success')
             }`}
             onClick={handleDeleteModal}
           >
-            Delete
+            {selectedList === 'active_categories' ? 'Deactivate' : 'Activate'}
           </button>
         }
         TopSideButtons3={
+            <>
             <button
               className={`btn ${
-                selectedId === null ? "btn-disabled" : "btn-success"
+                selectedId === null ? "btn-disabled" : "btn-primary"
               }`}
               onClick={handleUpdate}
             >
               Update
             </button>
+            <select
+        className="px-2 border border-gray-300 rounded-md mr-2"
+        onChange={(e) => setSelectedList(e.target.value)}
+        value={selectedList}
+        >
+            <option value="active_categories">Active Categories</option>
+            <option value="inactive_categories">Inactive Categories</option>
+        </select>
+            </>
           }
         
       >
@@ -371,9 +401,9 @@ const handleSubmit = async (e) => {
         <dialog id="delete_modal" className="modal">
           <div className="modal-box ">
             <TitleCard title="CAUSION !!!">
-              <p className="py-4 text-center text-xl">Are you sure you want to delete this Category?</p>
+              <p className="py-4 text-center text-xl">Are you sure you want to {selectedList === 'active_categories' ? 'Deactivate' : 'Activate'} this Category?</p>
                 <br/>
-              <p className="text-center font-bold text-sm">Note : All Products under this Category will be deleted!</p>
+              <p className="text-center font-bold text-sm">Note : All Products under this Category will be {selectedList === 'active_categories' ? 'Deactivated' : 'Activated'}!</p>
               <div className="flex justify-between w-1/2 m-auto mt-10">
                 <label
                   htmlFor="delete_modal"
