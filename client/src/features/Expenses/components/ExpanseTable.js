@@ -95,10 +95,11 @@ const ExpanseTable = () => {
     const dispatch = useDispatch()
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage] = useState(5);
+    const [recordsPerPage] = useState(10);
     const [selectedId, setSelectedId] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [searchTerm, setSearchTerm] = useState('');
+    const [salespersonNames, setSalespersonNames] = useState([]);
     const [formData, setFormData] = useState(
         {
             salary: 0,
@@ -119,6 +120,11 @@ const ExpanseTable = () => {
               "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/all"
             );
             setData(response.data);
+
+            const names = response.data.map((sales) => sales.salesperson.name);
+            setSalespersonNames([...new Set(names)]);
+
+
           } catch (error) {
             console.error("Error fetching data:", error);
           }
@@ -126,6 +132,8 @@ const ExpanseTable = () => {
     
         fetchData();
       }, []);
+
+      console.log(salespersonNames)
 
       const handleCheckboxChange = (e, id) => {
         const isChecked = e.target.checked;
@@ -280,6 +288,7 @@ const ExpanseTable = () => {
         </button>
       }
       TopSideButtons1={
+        <>
         <input
           type="text"
           className="input input-bordered w-full max-w-xs"
@@ -287,6 +296,14 @@ const ExpanseTable = () => {
           value={searchTerm}
           onChange={handleSearchChange}
            />
+           <select className="input input-bordered w-full max-w-xs" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm}>
+            <option value="">Select Salesperson</option>
+            {salespersonNames.map((salesperson) => (
+              <option key={salesperson} value={salesperson}> {salesperson} </option>
+            ))}
+          </select>
+            
+           </>
       }
     >
    <div className="overflow-x-auto w-full">

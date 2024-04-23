@@ -94,6 +94,7 @@ const AllDistributorSalesTable = () => {
     const [recordsPerPage] = useState(10);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [searchTerm, setSearchTerm] = useState('');
+    const [valueType, setValueType] = useState('true');
     
     const endDate = moment().format('YYYY-MM-DD');
     const oldYear = (moment().year() - 2).toString();
@@ -104,7 +105,7 @@ const AllDistributorSalesTable = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/total-sales-by-distributors?fromDate=${startDate}&toDate=${endDate}`
+                    `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/total-sales-by-distributors?fromDate=${startDate}&toDate=${endDate}&status=${valueType}`
                 );
                 setData(response.data);
                 console.log(response.data);
@@ -113,7 +114,7 @@ const AllDistributorSalesTable = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [valueType]);
 
     
 
@@ -178,6 +179,16 @@ const AllDistributorSalesTable = () => {
                       value={searchTerm}
                       onChange={handleSearchChange}
                        />
+                  }
+                  TopSideButtons2={
+                    <select
+                    onChange={(e) => setValueType(e.target.value) }
+                    value={valueType}
+                    className="px-2 border border-gray-300 rounded-md mr-2"
+                    >
+                      <option value="true">Active Distributors</option>
+                      <option value="false">Inactive Distributors</option>
+                    </select>
                   }
                 >
                 <div className="overflow-x-auto w-full">

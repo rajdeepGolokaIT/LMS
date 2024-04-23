@@ -92,9 +92,11 @@ const LeastCategory = () => {
             if (selectedInterval === "Weekly") {
               fromDate = moment().startOf("week").format("YYYY-MM-DD");
               toDate = moment().endOf("week").format("YYYY-MM-DD");
+              setSelectedDateRange({startDate: fromDate, endDate: toDate});
             } else if (selectedInterval === "Daily") {
               fromDate = moment().startOf("day").format("YYYY-MM-DD");
               toDate = moment().endOf("day").format("YYYY-MM-DD");
+              setSelectedDateRange({startDate: fromDate, endDate: toDate});
             }
           }
           apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/least-selling-products-by-category?${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&interval=${intervalParam}`;
@@ -176,7 +178,7 @@ const LeastCategory = () => {
   
     const handleIntervalChange = (event) => {
       setSelectedInterval(event.target.value);
-      setSelectedDateRange({ startDate: null, endDate: null });
+      setSelectedDateRange(null);
     };
   
     const handleYearChange = (event) => {

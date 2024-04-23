@@ -144,7 +144,7 @@ const AllDistributorsTable = () => {
       const filteredRecords = data.filter((distributors) => {
         return (
             String(distributors.distributorProfile.agencyName).toLowerCase().includes(searchTerm.toLowerCase()) ||
-            String(distributors.distributorProfile.contactPerson).toLowerCase().includes(searchTerm.toLowerCase()) ||
+            // String(distributors.distributorProfile.contactPerson).toLowerCase().includes(searchTerm.toLowerCase()) ||
             String(distributors.distributorProfile.gstNo).toLowerCase().includes(searchTerm.toLowerCase()) ||
             String(distributors.distributorProfile.panNo).toLowerCase().includes(searchTerm.toLowerCase()) ||
             String(distributors.distributorProfile.city).toLowerCase().includes(searchTerm.toLowerCase()) ||

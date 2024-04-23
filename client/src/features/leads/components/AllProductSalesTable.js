@@ -100,12 +100,14 @@ const AllProductSalesTable = () => {
   const oldYear = (moment().year() - 2).toString();
   const ddMM = moment().format("MM-DD");
   const startDate = `${oldYear}-${ddMM}`;
+  const [valueType, setValueType] = useState('true');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+
         const response = await axios.get(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/top-selling?customFromDate=${startDate}&customToDate=${endDate}`
+          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/top-selling?customFromDate=${startDate}&customToDate=${endDate}&status=${valueType}`
         );
         setData(response.data);
       } catch (error) {
@@ -113,7 +115,9 @@ const AllProductSalesTable = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [valueType]);
+
+  console.log(data)
 
   const filteredRecords = data.filter(products => {
     return (
@@ -172,6 +176,16 @@ const AllProductSalesTable = () => {
           value={searchTerm}
           onChange={handleSearchChange}
            />
+      }
+      TopSideButtons2={
+        <select
+        onChange={(e) => setValueType(e.target.value) }
+        value={valueType}
+        className="px-2 border border-gray-300 rounded-md mr-2"
+        >
+          <option value="true">Active Products</option>
+          <option value="false">Inactive Products</option>
+        </select>
       }
       >
         <div className="overflow-x-auto w-full">

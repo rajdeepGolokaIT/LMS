@@ -330,8 +330,9 @@ function InvoicesForm() {
                 <input
                   type="number"
                   min="0"
+                  disabled={ selectedDiscountType === "" ? true : false }
                   placeholder="Discount Value"
-                  className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className={`w-full input  input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                   id="discount"
                   value={discountValue}
                   onChange={(e) => {
@@ -394,8 +395,8 @@ function InvoicesForm() {
                 </label>
                 <input
                   type="text"
-                  pattern="[A-Z]{2}[0-9]{2}[A-Z]{1}[0-9]{4}"
-                  placeholder="Vehicle No (Eg. AA11A1111)"
+                  pattern="[A-Z]{2}[0-9]{2}[A-Z]{1-2}[0-9]{4}"
+                  placeholder="Vehicle No (Eg. AA11A1111 or AA11AA1111)"
                   className="w-full input input-bordered input-primary"
                   id="vechicleNo"
                   value={formData.vehicleNo}

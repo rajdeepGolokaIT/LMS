@@ -94,6 +94,7 @@ const AllCategorySalesTable = () => {
     const [recordsPerPage] = useState(10);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [searchTerm, setSearchTerm] = useState('');
+    const [valueType, setValueType] = useState('true');
     
     const endDate = moment().format('YYYY-MM-DD');
     const oldYear = (moment().year() - 2).toString();
@@ -104,7 +105,7 @@ const AllCategorySalesTable = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/top-selling-categories?fromDate=${startDate}&toDate=${endDate}`
+                    `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/top-selling-categories?fromDate=${startDate}&toDate=${endDate}&status=${valueType}`
                 );
                 setData(response.data);
                 console.log(response.data);
@@ -113,7 +114,7 @@ const AllCategorySalesTable = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [valueType]);
 
     
 
@@ -179,6 +180,16 @@ const AllCategorySalesTable = () => {
               onChange={handleSearchChange}
                />
         }
+        TopSideButtons2={
+            <select
+            onChange={(e) => setValueType(e.target.value) }
+            value={valueType}
+            className="px-2 border border-gray-300 rounded-md mr-2"
+            >
+              <option value="true">Active Categoriess</option>
+              <option value="false">Inactive Categories</option>
+            </select>
+          }
         >
         <div className="overflow-x-auto w-full">
             <table className="table table-lg w-full">

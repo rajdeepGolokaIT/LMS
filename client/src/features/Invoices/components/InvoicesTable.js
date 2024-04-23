@@ -682,6 +682,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
             <div className="modal-box">
                 <TitleCard title="Invoice Product Table">
                     <div className="overflow-x-auto w-full">
+                      {invoiceProducts.length > 0 ? (
                     <table className="table w-full">
                         <thead>
                             <tr>
@@ -701,6 +702,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                         </tbody>
 
                         </table>
+                      ) : (<p className="text-center">No Products Found!!!</p>)}
                     </div>
                 </TitleCard>
 

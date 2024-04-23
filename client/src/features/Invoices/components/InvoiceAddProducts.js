@@ -57,9 +57,11 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
     setProductForms(updatedForms);
   };
 
-  const handleHsnSacChange = (index, value) => {
+  const handleHsnSacChange = (index, value, id) => {
     const updatedForms = [...productForms];
-    updatedForms[index].hsnSac = value;
+    updatedForms[index].hsnSac = isNaN(value)  ? (products.find(
+        (product) => product.id.toString() === id
+      )?.hsnsac) : value ;
     setProductForms(updatedForms);
   };
 
@@ -205,7 +207,9 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
             totalAmountWithoutTax: amountWithoutTaxAndDiscount,
             totalAmountWithoutTaxDiscount: totalAmountWithoutTaxDiscount,
             totalAmountWithTax: totalAmountWithTax,
-            hsnSac: parseInt(form.hsnSac),
+            hsnSac: form.hsnSac === "" ? parseInt(products.find(
+                (product) => product.id.toString() === form.productId
+              )?.hsnsac) : parseInt(form.hsnSac),
           };
         }
       });
@@ -227,7 +231,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
       onSubmitSuccess();
 
       setProductForms([
-        { productId: "", quantity: "", taxType: "", taxValue: 0, discountType: "", discountValue: 0, hsnSac: 0, },
+        { productId: "", quantity: "", taxType: "", taxValue: 0, discountType: "", discountValue: 0, hsnSac: "", },
       ]);
     } catch (error) {
       console.error("Error adding products to invoice:", error);
@@ -392,7 +396,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                         </option>
                       ))}
                     </select>
-                    <p>
+                    <p className="label label-text text-base">
                       Single Unit Price:{" "}
                       {products.find(
                         (product) => product.id.toString() === form.productId
@@ -520,11 +524,11 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                       id={`hsnsac-${index}`}
                       value={form.hsnSac}
                       onChange={(e) =>
-                        handleHsnSacChange(index, e.target.value)
+                        handleHsnSacChange(index, e.target.value, form.productId)
                       }
                     //   required
                     />
-                    <p>Existing HSN/SAC: 
+                    <p className="label label-text text-base">Existing HSN/SAC: 
                     {products.find(
                         (product) => product.id.toString() === form.productId
                       )?.hsnsac}
@@ -536,18 +540,18 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                       Invoice Discount:
                     </label>
                     {discountPercentage > 0 ? (
-                      <p>{discountPercentage}%</p>
+                      <p className="label label-text text-base">{discountPercentage}%</p>
                     ) : discountAmount > 0 ? (
-                      <p>INR {discountAmount}/-</p>
+                      <p className="label label-text text-base">INR {discountAmount}/-</p>
                     ) : (
-                      <p>0</p>
+                      <p className="label label-text text-base">0</p>
                     )}
                   </div>
                   <div>
                     <label className="label label-text text-base">
                       Total Amount Without Tax (Without Discount Applied):
                     </label>
-                    <p>
+                    <p className="label label-text text-base">
                       INR {parseFloat(isNaN(form.price * form.quantity)
                         ? 0
                         : form.price * form.quantity).toFixed(2)}
@@ -558,14 +562,14 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                     <label className="label label-text text-base">
                       Total Amount With Tax:
                     </label>
-                    <p>INR {parseFloat(calculateTotalAmountWithTax(form)).toFixed(2)}/-</p>
+                    <p className="label label-text text-base">INR {parseFloat(calculateTotalAmountWithTax(form)).toFixed(2)}/-</p>
                   </div>
 
                   <div>
                     <label className="label label-text text-base">
                       Total Amount Without Tax And With Discount:
                     </label>
-                    <p>
+                    <p className="label label-text text-base">
                       INR {parseFloat(calculateTotalAmountWithoutTaxWithDiscount(form)).toFixed(2)}/-
                     </p>
                   </div>
@@ -573,7 +577,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                     <label className="label label-text text-base">
                       Tax Amount:
                     </label>
-                    <p>
+                    <p className="label label-text text-base">
                       INR {" "}
                       {parseFloat(isNaN(calculateTotalAmountWithDiscount(form))
                         ? 0

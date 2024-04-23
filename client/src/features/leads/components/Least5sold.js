@@ -64,9 +64,11 @@ export const Least5sold = () => {
             if(selectedInterval === "Weekly"){
                 fromDate = moment().startOf("week").format("YYYY-MM-DD");
                 toDate = moment().endOf("week").format("YYYY-MM-DD");
+                setSelectedDateRange({startDate: fromDate, endDate: toDate});
             } else if(selectedInterval === "Daily"){
                 fromDate = moment().startOf("day").format("YYYY-MM-DD");
                 toDate = moment().endOf("day").format("YYYY-MM-DD");
+                setSelectedDateRange({startDate: fromDate, endDate: toDate});
             }
         //   fromDate = moment().startOf("week").format("YYYY-MM-DD");
         //   toDate = moment().endOf("week").format("YYYY-MM-DD");

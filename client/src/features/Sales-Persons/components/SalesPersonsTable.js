@@ -200,6 +200,7 @@ const handleSubmit = async (e, formData) => {
             "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
           );
           setData(response.data);
+          document.getElementById("update_modal").close();
         dispatch(
             showNotification({
               message: "Sales Person updated to invoice successfully 😁",
@@ -303,7 +304,7 @@ const handleSubmit = async (e, formData) => {
              <div className="modal-box w-11/12 max-w-7xl">
                 <TitleCard title="Update Sales Person">
                     <form onSubmit={(e) => handleSubmit(e, formData)} className="space-y-4">
-                    <button onClick={() => document.getElementById("update_modal").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    <label onClick={() => document.getElementById("update_modal").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
                     <div className="grid grid-cols-3 gap-4">
                     <div>
                 <label
@@ -314,6 +315,7 @@ const handleSubmit = async (e, formData) => {
                 </label>
                 <input
                   type="text"
+                  pattern='^[a-zA-Z ]*$'
                   placeholder="Sales Person Name"
                   className="w-full input input-bordered input-primary"
                   id="name"
@@ -332,8 +334,9 @@ const handleSubmit = async (e, formData) => {
                   Contact Number:
                 </label>
                 <input
-                  type="text"
-                  placeholder="Contact Number"
+                  type="phone"
+                  pattern="[0-9]{10}"
+                  placeholder="Please enter 10 digit number"
                   className="w-full input input-bordered input-primary"
                   id="contactNumber"
                   name="contactNumber"
@@ -350,7 +353,8 @@ const handleSubmit = async (e, formData) => {
                   Email:
                 </label>
                 <input
-                  type="text"
+                  type="email"
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   placeholder="Email"
                   className="w-full input input-bordered input-primary"
                   id="email"

@@ -215,7 +215,9 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                   totalAmountWithoutTax: amountWithoutTaxAndDiscount,
                   totalAmountWithoutTaxDiscount: totalAmountWithoutTaxDiscount,
                   totalAmountWithTax: totalAmountWithTax,
-                  hsnSac: form.hsnSac
+                  hsnSac: form.hsnSac === "" ? parseInt(products.find(
+                    (product) => product.id.toString() === form.productId
+                  )?.hsnsac) : parseInt(form.hsnSac),
                 };
               }
             });
@@ -369,12 +371,16 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                                 <option key={product.id} value={product.id}>{product.productName}</option>
                             ))}
                         </select>
-                        <p>Single Unit Price: {form.price}</p>
+                        <p className="label label-text text-base">{`${(products.find(
+                                (product) => product.id.toString() !== form.productId
+                              )) ? 'This product is deactivated!' : ''}`}</p>
+                        <p className="label label-text text-base">Single Unit Price: {form.price}</p>
                     </div>
                     <div>
                         <label htmlFor={`quantity-${index}`} className="label label-text text-base">Quantity:</label>
                         <input
                             type="number"
+                            min="0"
                             placeholder="Quantity"
                             className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             id={`quantity-${index}`}
@@ -401,6 +407,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                         <label htmlFor={`tax-value-${index}`} className="label label-text text-base">Tax Value:</label>
                         <input
                             type="number"
+                            disabled={ form.taxType === "" ? true : false}
                             placeholder="Tax Value"
                             className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             id={`tax-value-${index}`}
@@ -430,6 +437,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                     <label htmlFor="discountValue" className="label label-text text-base">Discount Value:</label>
                     <input
                         type="number"
+                        min="0"
                         placeholder="Discount Value"
                         className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         id="discountValue"
@@ -443,7 +451,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                       )}
 
                     <div>
-                        <label htmlFor="hsnsac">HSN/SAC:</label>
+                        <label htmlFor="hsnsac" className="label label-text text-base">HSN/SAC:</label>
                         <input
                             type="text"
                             placeholder="HSN/SAC"
@@ -454,7 +462,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                             onChange={(e) => handleHsnSacChange(index, e.target.value)}
                             required
                         />
-                        <p> HSN/SAC : {" "}
+                        <p className="label label-text text-base"> HSN/SAC : {" "}
                         {products.find(
                         (product) => product.id.toString() === form.productId
                       )?.hsnsac || "This product is deactivated!"}
@@ -465,18 +473,18 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                       Invoice Discount:
                     </label>
                     {discountPercentage > 0 ? (
-                      <p>{discountPercentage}%</p>
+                      <p className="label label-text text-base">{discountPercentage}%</p>
                     ) : discountAmount > 0 ? (
-                      <p>INR {discountAmount}/-</p>
+                      <p className="label label-text text-base">INR {discountAmount}/-</p>
                     ) : (
-                      <p>0</p>
+                      <p className="label label-text text-base">0</p>
                     )}
                   </div>
                   <div>
                     <label className="label label-text text-base">
                       Total Amount Without Tax (Without Discount Applied):
                     </label>
-                    <p>
+                    <p className="label label-text text-base">
                       INR {parseFloat(isNaN(form.price * form.quantity)
                         ? 0
                         : form.price * form.quantity).toFixed(2)}
@@ -487,14 +495,14 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                     <label className="label label-text text-base">
                       Total Amount With Tax:
                     </label>
-                    <p>INR {parseFloat(calculateTotalAmountWithTax(form)).toFixed(2)}/-</p>
+                    <p className="label label-text text-base">INR {parseFloat(calculateTotalAmountWithTax(form)).toFixed(2)}/-</p>
                   </div>
 
                   <div>
                     <label className="label label-text text-base">
                       Total Amount Without Tax And With Discount:
                     </label>
-                    <p>
+                    <p className="label label-text text-base">
                       INR {parseFloat(calculateTotalAmountWithoutTaxWithDiscount(form)).toFixed(2)}/-
                     </p>
                   </div>
@@ -502,7 +510,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                     <label className="label label-text text-base">
                       Tax Amount:
                     </label>
-                    <p>
+                    <p className="label label-text text-base">
                       INR {" "}
                       {parseFloat(isNaN(calculateTotalAmountWithDiscount(form))
                         ? 0
