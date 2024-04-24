@@ -3,6 +3,7 @@ import TitleCard from '../../../components/Cards/TitleCard';
 import moment from 'moment';
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
+import axios from 'axios';
 
 const SalesPersonExpenseTable = () => {
 
@@ -17,6 +18,7 @@ const SalesPersonExpenseTable = () => {
       direction: "ascending",
     });
     const [searchTerm, setSearchTerm] = useState('');
+    const [salespersonNames, setSalespersonNames] = useState([]);
 
 
     useEffect(() => {
@@ -36,16 +38,41 @@ const SalesPersonExpenseTable = () => {
 
             setTableData(data);
 
+          //   const response2 = await fetch(
+          //     "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+          // );
+          //   const data2 = await response2.json();
+          //   setSalespersonNames(data2);
+          //   console.log(data2);
+          //   console.log(salespersonNames);
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
+    useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const response = await axios.get(
+                  "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+              );
+              
+              setSalespersonNames(response.data);
+          } catch (error) {
+              console.error('Error fetching data:', error);
+          }
+      };
+
+      fetchData();
+  }, []);
+
     console.log(tableData);
+    console.log(salespersonNames)
 
     const filteredRecords = tableData.filter(expenses => {
         return (
-          String(expenses.salespersonName).toLowerCase().includes(searchTerm.toLowerCase())
+          String(salespersonNames.find((salesperson) => parseInt(salesperson.id) === parseInt(expenses.salespersonName))?.name).toLowerCase().includes(searchTerm.toLowerCase())
         )
       });
 
@@ -55,6 +82,11 @@ const SalesPersonExpenseTable = () => {
 
       const sortedData = filteredRecords.slice().sort((a, b) => {
         if (sortConfig.key !== null) {
+          if (sortConfig.key === 'salespersonName') {
+            const aName = salespersonNames.find((person) => person.id === a.salespersonName)?.name || '';
+            const bName = salespersonNames.find((person) => person.id === b.salespersonName)?.name || '';
+            return sortConfig.direction === 'ascending' ? aName.localeCompare(bName) : bName.localeCompare(aName);
+        } else {
           const keys = sortConfig.key.split(".");
           let aValue = a;
           let bValue = b;
@@ -71,6 +103,7 @@ const SalesPersonExpenseTable = () => {
             return sortConfig.direction === "ascending" ? 1 : -1;
           }
         }
+      }
         return 0;
       });
 
@@ -135,6 +168,7 @@ const SalesPersonExpenseTable = () => {
     }
     topMargin="mt-2"
     TopSideButtons1={
+      <>
         <input
         type="text"
         className="input input-bordered w-full h-7 max-w-xs"
@@ -142,6 +176,13 @@ const SalesPersonExpenseTable = () => {
         value={searchTerm}
         onChange={handleSearchChange}
          />
+         <select className="input input-bordered w-full h-7 max-w-xs" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm}>
+            <option value="">Select Salesperson</option>
+            {salespersonNames.map((salesperson) => (
+              <option key={salesperson.name} value={salesperson.name}> {salesperson.name} </option>
+            ))}
+          </select>
+      </>
     }
     >
          <div className="overflow-x-auto w-full">
@@ -164,7 +205,7 @@ const SalesPersonExpenseTable = () => {
               {currentRecords.map((item, index) => (
                 <tr className="table-row" key={index}>
                   <td className="table-cell">{index + 1}</td>
-                  <td className="table-cell">{item.salespersonName}</td>
+                  <td className="table-cell">{salespersonNames.find(salesperson => salesperson.id === item.salespersonName)?.name || 'NOT ASSIGNED'}</td>
                   <td className="table-cell">INR {parseFloat(item.TotalAmount).toFixed(2)} </td>
                   <td className="table-cell">INR {parseFloat(item.Salary == null ? 0 : item.Salary) + parseFloat(item.incentives == null ? 0 : item.incentives) + parseFloat(item.mis == null ? 0 : item.mis)} </td>
                 </tr>

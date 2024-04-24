@@ -119,10 +119,13 @@ const ExpanseTable = () => {
             const response = await axios.get(
               "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/all"
             );
+            const response2 = await axios.get(
+                "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+            );
+
             setData(response.data);
 
-            const names = response.data.map((sales) => sales.salesperson.name);
-            setSalespersonNames([...new Set(names)]);
+            setSalespersonNames(response2.data)
 
 
           } catch (error) {
@@ -153,7 +156,7 @@ const ExpanseTable = () => {
 
     const filteredRecords = data.filter(expenses => {
         return (
-          String(expenses.salesperson.name).toLowerCase().includes(searchTerm.toLowerCase())
+          String(salespersonNames.find((salesperson) => parseInt(salesperson.id) === parseInt(expenses.salesperson))?.name).toLowerCase().includes(searchTerm.toLowerCase())
         )
       });
 
@@ -163,6 +166,11 @@ const ExpanseTable = () => {
 
     const sortedData = filteredRecords.slice().sort((a, b) => {
         if (sortConfig.key !== null) {
+          if (sortConfig.key === 'salesperson') {
+            const aName = salespersonNames.find((person) => person.id === a.salesperson)?.name || '';
+            const bName = salespersonNames.find((person) => person.id === b.salesperson)?.name || '';
+            return sortConfig.direction === 'ascending' ? aName.localeCompare(bName) : bName.localeCompare(aName);
+        } else {
           const keys = sortConfig.key.split(".");
           let aValue = a;
           let bValue = b;
@@ -179,6 +187,7 @@ const ExpanseTable = () => {
             return sortConfig.direction === "ascending" ? 1 : -1;
           }
         }
+      }
         return 0;
       });
 
@@ -193,7 +202,7 @@ const ExpanseTable = () => {
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
     const currentRecords = sortedData.slice(indexOfFirstRecord, indexOfLastRecord);
-    const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
+    // const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
 
     
     console.log(data.slice().sort((a,b) => {
@@ -299,7 +308,7 @@ const ExpanseTable = () => {
            <select className="input input-bordered w-full max-w-xs" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm}>
             <option value="">Select Salesperson</option>
             {salespersonNames.map((salesperson) => (
-              <option key={salesperson} value={salesperson}> {salesperson} </option>
+              <option key={salesperson.name} value={salesperson.name}> {salesperson.name} </option>
             ))}
           </select>
             
@@ -312,7 +321,7 @@ const ExpanseTable = () => {
             <tr>
                 <th>Select</th>
                 {/* <th className=' table-cell cursor-pointer' onClick={() => requestSort('name')}>Sales Person Name {sortConfig.key === 'name' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th> */}
-                <th className="table-cell cursor-pointer" onClick={() => requestSort('salesperson.name')}>Salesperson Name {sortConfig.key === 'salesperson.name' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>} </th>
+                <th className="table-cell cursor-pointer" onClick={() => requestSort('salesperson')}>Salesperson Name {sortConfig.key === 'salesperson' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>} </th>
                 <th className=' table-cell cursor-pointer' onClick={() => requestSort('createDate')}>Date {sortConfig.key === 'createDate' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
                 <th className=' table-cell cursor-pointer' onClick={() => requestSort('salary')}>Salary {sortConfig.key === 'salary' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
                 <th className="table-cell cursor-pointer" onClick={() => requestSort('incentive')}>Incentive {sortConfig.key === 'incentive' && sortConfig.direction === 'ascending' ? <SortIcon1 className='h-5 w-5 inline'/> : <SortIcon2 className='h-5 w-5 inline'/>}</th>
@@ -333,7 +342,7 @@ const ExpanseTable = () => {
                       />
                     </label>
                   </td>
-                    <td>{record.salesperson.name}</td>
+                    <td>{salespersonNames.find((salesperson) => salesperson.id === record.salesperson).name}</td>
                     <td>{record.createDate.trim().slice(0, 10)}</td>
                     <td>INR {record.salary} </td>
                     <td>INR {record.incentive} </td>
