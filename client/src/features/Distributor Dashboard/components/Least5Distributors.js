@@ -43,8 +43,10 @@ const Least5Distributors = () => {
           // Filter out unique locations
           const uniqueLocations = new Set();
           allLocations.forEach(location => {
+            if (location !== null) {
               // Trim the location before adding it to the set
               uniqueLocations.add(location.trim());
+            }
           });
   
           // Convert the set back to an array
@@ -56,7 +58,6 @@ const Least5Distributors = () => {
           console.error("Error fetching locations:", error);
       }
   };
-  
     
   
     const fetchTopSellingProducts = async () => {

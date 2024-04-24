@@ -122,7 +122,7 @@ function DistributorProfileForm() {
                             <label htmlFor="state" className="label label-text text-base">State:</label>
                             <input
                                 type="text"
-                                pattern="[A-Za-z]+"
+                                pattern="[A-Za-z\s]+"
                                 placeholder="State"
                                 className="w-full input input-bordered input-primary"
                                 id="state"
@@ -148,7 +148,7 @@ function DistributorProfileForm() {
                             <label htmlFor="contactPerson" className="label label-text text-base">Contact Person:</label>
                             <input
                                 type="text"
-                                pattern="[A-Za-z]+"
+                                pattern="[A-Za-z\s]+"
                                 
                                 placeholder="Contact Person"
                                 className="w-full input input-bordered input-primary"

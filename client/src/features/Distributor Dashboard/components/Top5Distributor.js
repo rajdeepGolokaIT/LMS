@@ -43,8 +43,10 @@ const Top5Distributor = () => {
           // Filter out unique locations
           const uniqueLocations = new Set();
           allLocations.forEach(location => {
+            if (location !== null) {
               // Trim the location before adding it to the set
               uniqueLocations.add(location.trim());
+            }
           });
   
           // Convert the set back to an array

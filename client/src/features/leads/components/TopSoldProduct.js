@@ -11,7 +11,7 @@ const TopSoldProducts = () => {
   const [selectedMonth, setSelectedMonth] = useState(moment().format("MMMM"));
   const [selectedLocation, setSelectedLocation] = useState("South");
   const [selectedInterval, setSelectedInterval] = useState("Yearly");
-  const [selectedCategory, setSelectedCategory] = useState("zone");
+  const [selectedCategory, setSelectedCategory] = useState("Zone");
 //   const [yearlyOptions, setYearlyOptions] = useState([]);
 //   const [monthlyOptions, setMonthlyOptions] = useState([]);
   const [selectedDateRange, setSelectedDateRange] = useState({
@@ -42,8 +42,10 @@ const TopSoldProducts = () => {
         // Filter out unique locations
         const uniqueLocations = new Set();
         allLocations.forEach(location => {
+          if (location !== null) {
             // Trim the location before adding it to the set
             uniqueLocations.add(location.trim());
+          }
         });
 
         // Convert the set back to an array
@@ -194,7 +196,7 @@ const TopSoldProducts = () => {
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
-    setSelectedLocation("")
+    setSelectedLocation("South");
   };
 
   const handleLocationChange = (value) => {
@@ -219,7 +221,7 @@ const TopSoldProducts = () => {
     setSelectedMonth(moment().format("MMMM"));
     setSelectedLocation("South");
     setSelectedInterval("Yearly");
-    setSelectedCategory("zone");
+    setSelectedCategory("Zone");
     setSelectedDateRange({ startDate: null, endDate: null });
   };
 
