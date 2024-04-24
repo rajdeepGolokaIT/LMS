@@ -21,7 +21,7 @@ const SalesPersonGraph = () => {
     const [interval, setInterval] = useState('annually');
     const [selectedYear, setSelectedYear] = useState(moment().year());
     const [selectedMonth, setSelectedMonth] = useState(moment().format('MMMM').toLowerCase());
-    const [selectedSalesperson, setSelectedSalesperson] = useState('');
+    const [selectedSalesperson, setSelectedSalesperson] = useState(null);
     const [salespersons, setSalespersons] = useState([]);
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const SalesPersonGraph = () => {
             const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all');
             const data = await response.json();
             setSalespersons(data);
-            setSelectedSalesperson(data[0].name);
+            setSelectedSalesperson(data[0].id);
         } catch (error) {
             console.error('Error fetching salespersons:', error);
         }
@@ -65,10 +65,12 @@ const SalesPersonGraph = () => {
     
             const totalExpenses = data.length === 0 ? 0 : (data[0].Salary + data[0].incentive + data[0].mis);
             const totalSales = data.length === 0 ? 0 : data[0].TotalAmount;
-
+            const labels = data[0].salespersonName
+            console.log(labels);
+            console.log(selectedSalesperson)
     
             setChartData({
-                labels: [selectedSalesperson],
+                labels: [labels],
                 datasets: [
                     {
                         label: 'Total Sales',
@@ -147,7 +149,7 @@ const SalesPersonGraph = () => {
                 value={selectedSalesperson} onChange={(e) => setSelectedSalesperson(e.target.value)}>
                 {/* <option value={null}>All Salespersons</option> */}
                 {salespersons.map((salesperson) => (
-                    <option key={salesperson.id} value={salesperson.name}>
+                    <option key={salesperson.id} value={salesperson.id}>
                         {salesperson.name.toUpperCase()}
                     </option>
                 ))}

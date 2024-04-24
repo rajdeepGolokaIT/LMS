@@ -91,11 +91,13 @@ const TableComponent = () => {
   const [invoiceProducts, setInvoiceProducts] = useState([]);
   const [ewayTableData, setEwayTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [salesPersons, setSalesPersons] = useState([]);
 
 
   useEffect(() => {
     // Fetch distributors and products when component mounts
     fetchDistributors();
+    fetchSalesPersons();
     // fetchProducts(); // Uncomment this line if you need products
 }, []);
 
@@ -108,6 +110,18 @@ const TableComponent = () => {
         console.error('Error fetching distributors:', error);
         // Handle error, show error message to the user, etc.
     }
+};
+
+const fetchSalesPersons = async () => {
+  try {
+    const response = await axios.get(
+      "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+    );
+    setSalesPersons(response.data);
+  } catch (error) {
+    console.error("Error fetching distributors:", error);
+    // Handle error, show error message to the user, etc.
+  }
 };
 
 
@@ -186,6 +200,7 @@ const TableComponent = () => {
       for (const key in selectedInvoice) {
         params.append(key, selectedInvoice[key]);
       }
+      console.log(params.toString());
       await axios.put(
         `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/update-invoice/${selectedInvoices[0]}`,
         params.toString(),
@@ -212,7 +227,7 @@ const TableComponent = () => {
   };
 
  
-  console.log(data)
+  console.log(selectedInvoice);
 
   const invoiceProduct = async () => {
     try {
@@ -365,11 +380,11 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
         {/* <td className="table-cell">{invoice.discountPercentage}%</td> */}
         <td className="table-cell">INR {parseFloat(invoice.discountPrice).toFixed(2)} </td>
         <td className="table-cell">INR {parseFloat(invoice.totalAmount).toFixed(2)} </td>
-        <td className="table-cell">INR {invoice.igst} </td>
-        <td className="table-cell">INR {invoice.cgst} </td>
-        <td className="table-cell">INR {invoice.sgst} </td>
+        <td className="table-cell">INR {parseFloat(invoice.igst).toFixed(2)} </td>
+        <td className="table-cell">INR {parseFloat(invoice.cgst).toFixed(2)} </td>
+        <td className="table-cell">INR {parseFloat(invoice.sgst).toFixed(2)} </td>
         <td className="table-cell">INR {parseFloat(invoice.amount).toFixed(2)} </td>
-        <td className="table-cell">{invoice.salesperson}</td>
+        <td className="table-cell">{salesPersons.find((salesPerson) => salesPerson.id === invoice.salespersonId)?.name || "NOT ASSIGNED"}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.city}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.region}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.zone}</td>
@@ -513,6 +528,34 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
 
             <div>
               <label
+                htmlFor="salespersonId"
+                className="label label-text text-base"
+              >
+                Salesperson Name:
+              </label>
+              <select
+                className="w-full select select-bordered select-primary"
+                id="salespersonId"
+                value={selectedInvoice.salespersonId}
+                onChange={(e) => {
+                  // Handle changes to input field and update selectedInvoice
+                  setSelectedInvoice({
+                    ...selectedInvoice,
+                    salespersonId: parseInt(e.target.value),
+                  });
+                }}
+              >
+                <option value="">Select Salesperson Name</option>
+                {salesPersons.map((salesperson) => (
+                  <option key={salesperson.id} value={salesperson.id}>
+                    {salesperson.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label
                 htmlFor="destination"
                 className="label label-text text-base"
               >
@@ -613,7 +656,8 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 </label>
                 <input
                   type="text"
-                  placeholder="Vehicle No"
+                  pattern="[A-Z]{2}[0-9]{2}[A-Z]{1-2}[0-9]{4}"
+                  placeholder="Vehicle No (Eg. AA11AA1111 or AA11A1111"
                   className="w-full input input-bordered input-primary"
                   id="vehicleNo"
                   value={selectedInvoice.vehicleNo}
@@ -637,7 +681,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 <select
                   id="distributorId"
                   className="w-full input input-bordered input-primary"
-                  value={selectedInvoice.distributorId}
+                  value={selectedInvoice.distributor?.id}
                   onChange={(e) => {
                     // Handle changes to input field and update selectedInvoice
                     setSelectedInvoice({

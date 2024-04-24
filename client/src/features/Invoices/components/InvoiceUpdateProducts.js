@@ -460,7 +460,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                             id="hsnsac"
                             value={form.hsnSac}
                             onChange={(e) => handleHsnSacChange(index, e.target.value)}
-                            required
+                            // required
                         />
                         <p className="label label-text text-base"> HSN/SAC : {" "}
                         {products.find(
