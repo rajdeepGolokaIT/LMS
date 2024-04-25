@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TitleCard from "../../../components/Cards/TitleCard";
+import DatePicker from "react-tailwindcss-datepicker";
 import InvoiceUpdateProducts from "./InvoiceUpdateProducts";
 
 const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
@@ -584,17 +585,17 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 >
                   Delivery Date:
                 </label>
-                <input
-                  type="date"
-                  placeholder="Delivery Date"
-                  className="w-full input input-bordered input-primary"
-                  id="deliveryDate"
-                  value={selectedInvoice.deliveryDate}
-                  onChange={(e) => {
+                <DatePicker
+              inputClassName="w-full input input-bordered input-primary"
+              useRange={false}
+              asSingle={true}
+              displayFormat={"DD/MM/YYYY"}
+              value={{startDate: selectedInvoice.deliveryDate, endDate: selectedInvoice.deliveryDate}}
+                  onChange={(date) => {
                     // Handle changes to input field and update selectedInvoice
                     setSelectedInvoice({
                       ...selectedInvoice,
-                      deliveryDate: e.target.value,
+                      deliveryDate: date.startDate,
                     });
                   }}
                 />
@@ -656,8 +657,9 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                 </label>
                 <input
                   type="text"
-                  pattern="[A-Z]{2}[0-9]{2}[A-Z]{1-2}[0-9]{4}"
-                  placeholder="Vehicle No (Eg. AA11AA1111 or AA11A1111"
+                  pattern="^[A-Za-z]{2}\d{2}[A-Za-z]{1,2}\d{4}$"
+                  title="Vehicle No Format: AA11A1111 or AA11AA1111"
+                  placeholder="Vehicle No (Eg. AA11A1111 or AA11AA1111)"
                   className="w-full input input-bordered input-primary"
                   id="vehicleNo"
                   value={selectedInvoice.vehicleNo}
@@ -665,7 +667,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                     // Handle changes to input field and update selectedInvoice
                     setSelectedInvoice({
                       ...selectedInvoice,
-                      vehicleNo: e.target.value,
+                      vehicleNo: e.target.value.toUpperCase(),
                     });
                   }}
                 />

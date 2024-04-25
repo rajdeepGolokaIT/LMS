@@ -58,16 +58,14 @@ const SalesPersonGraph = () => {
             const response = await fetch(url);
             const data = await response.json();
 
-            console.log(data);
+            // console.log(data);
             // console.log(data[0].TotalAmount);
             // console.log(data[0].Salary + data[0].incentive + data[0].mis)
-            console.log(url);
+            // console.log(url);
     
             const totalExpenses = data.length === 0 ? 0 : (data[0].Salary + data[0].incentive + data[0].mis);
             const totalSales = data.length === 0 ? 0 : data[0].TotalAmount;
-            const labels = data[0].salespersonName
-            console.log(labels);
-            console.log(selectedSalesperson)
+            const labels = data.length === 0 ? salespersons?.find(salesperson => parseInt(salesperson.id) === parseInt(selectedSalesperson))?.name.toString() : data[0].salespersonName;
     
             setChartData({
                 labels: [labels],

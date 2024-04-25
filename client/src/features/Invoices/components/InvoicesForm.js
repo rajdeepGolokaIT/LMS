@@ -126,8 +126,8 @@ function InvoicesForm() {
         totalQuantityNos: 0,
         totalQuantityDoz: 0,
         destination: "",
-        invoiceNumber: null,
-        irn: null,
+        invoiceNumber: 0,
+        irn: 0,
         ackNo: 0,
         amount: 0,
         dispatchedThrough: "",
@@ -456,9 +456,9 @@ function InvoicesForm() {
                 </label>
                 <input
                   type="text"
-                  pattern="[A-Z]{2}\s[0-9]{2}[A-Z]{1,2}\s[0-9]{4}"
-                  title="Vehicle No Format: AA 11A 1111 or AA 11AA 1111"
-                  placeholder="Vehicle No (Eg. AA 11A 1111 or AA 11AA 1111)"
+                  pattern="^[A-Za-z]{2}\d{2}[A-Za-z]{1,2}\d{4}$"
+                  title="Vehicle No Format: AA11A1111 or AA11AA1111"
+                  placeholder="Vehicle No (Eg. AA11A1111 or AA11AA1111)"
                   className="w-full input input-bordered input-primary"
                   id="vechicleNo"
                   value={formData.vehicleNo}
