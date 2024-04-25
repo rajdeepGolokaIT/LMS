@@ -1,5 +1,7 @@
 import TitleCard from "../../../components/Cards/TitleCard";
 import React, { useState, useEffect } from "react";
+import moment from "moment";
+import DatePicker from "react-tailwindcss-datepicker";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../common/headerSlice";
 import axios from "axios";
@@ -15,7 +17,7 @@ function InvoicesForm() {
     igst: 0,
     totalAmount: 0,
     purchaseNumber: "",
-    deliveryDate: "",
+    deliveryDate: '',
     supplierName: "",
     discountPercentage: 0,
     discountPrice: 0,
@@ -23,8 +25,8 @@ function InvoicesForm() {
     totalQuantityNos: 0,
     totalQuantityDoz: 0,
     destination: "",
-    invoiceNumber: 0,
-    irn: 0,
+    invoiceNumber: null,
+    irn: null,
     // hsnsac: 0,
     ackNo: 0,
     amount: 0,
@@ -42,11 +44,17 @@ function InvoicesForm() {
   const [price, setPrice] = useState(0);
   const [allowEditing, setAllowEditing] = useState(false); // State to manage whether editing is allowed
   const [productsAdded, setProductsAdded] = useState(false);
+  const [fetchInvoiceNo, setFetchInvoiceNo] = useState([]);
+  const [fetchIrnNo, setFetchIrnNo] = useState([]);
+  const [invoiceExists, setInvoiceExists] = useState(false);
+  const [irnExists, setIrnExists] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     fetchDistributors();
     fetchSalesPersons();
+    fetchInvoiceNumber();
+    fetchIrn();
   }, []);
 
   const fetchSalesPersons = async () => {
@@ -82,7 +90,7 @@ function InvoicesForm() {
         params.append(key, formData[key]);
       }
       params.append("isActive", true);
-      console.log(params.toString());
+      console.log(params.toString().split(" ")[0]);
       const response = await axios.post(
         "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/createInvoice",
         params.toString(),
@@ -118,9 +126,8 @@ function InvoicesForm() {
         totalQuantityNos: 0,
         totalQuantityDoz: 0,
         destination: "",
-        invoiceNumber: 0,
-        irn: 0,
-        // hsnsac: 0,
+        invoiceNumber: null,
+        irn: null,
         ackNo: 0,
         amount: 0,
         dispatchedThrough: "",
@@ -141,8 +148,55 @@ function InvoicesForm() {
     // setProductsAdded(!productsAdded);
   };
 
-  console.log(discountValue);
+  // console.log(discountValue);
   console.log(formData);
+
+  const handleDateChange = (date) => {
+    // const formattedDate = moment(date.startDate).format("DD-MM-YYYY");
+    setFormData({ ...formData, deliveryDate: date.startDate});
+  };
+  
+ 
+  
+  const fetchInvoiceNumber = async () => {
+    try {
+      const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/invoiceNumbers`);
+      
+      setFetchInvoiceNo(response.data)
+    } catch (error) {
+      console.error('Error fetching invoice number:', error);
+    }
+  };
+
+  const fetchIrn = async () => {
+    try {
+      const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/irns`);
+      setFetchIrnNo(response.data)
+    } catch (error) {
+      console.error('Error fetching IRN:', error);
+    }
+  };
+
+ console.log(fetchIrnNo)
+
+  const handleInvoiceNumberChange = (e) => {
+    setFormData({
+      ...formData,
+      invoiceNumber: e.target.value
+    });
+    const check = fetchInvoiceNo.includes(e.target.value)
+    setInvoiceExists(check)
+  };
+  
+  const handleIrnChange = (e) => {
+    setFormData({
+      ...formData,
+      irn: e.target.value
+    });
+    const check = fetchIrnNo.includes(e.target.value)
+    setIrnExists(check)
+  };
+
 
   return (
     <>
@@ -164,14 +218,10 @@ function InvoicesForm() {
                   className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="invoiceNumber"
                   value={formData.invoiceNumber}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      invoiceNumber: parseInt(e.target.value),
-                    })
-                  }
+                  onChange={handleInvoiceNumberChange}
                   required
                 />
+                {invoiceExists && <p className="label label-text text-base">This invoice number exists.</p>}
               </div>
               <div>
                 <label htmlFor="irn" className="label label-text text-base">
@@ -184,11 +234,10 @@ function InvoicesForm() {
                   className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="irn"
                   value={formData.irn}
-                  onChange={(e) =>
-                    setFormData({ ...formData, irn: parseInt(e.target.value) })
-                  }
+                  onChange={handleIrnChange}
                   required
                 />
+                {irnExists && <p className="label label-text text-base">This IRN exists.</p>}  
               </div>
               <div>
                 <label
@@ -268,8 +317,11 @@ function InvoicesForm() {
                 >
                   Delivery Date:
                 </label>
-                <input
+                {/* <input
                   type="date"
+                  data-date=''
+                  data-date-format="DD-MM-YYYY"
+                  max='31-12-2030'
                   placeholder="Delivery Date"
                   className="w-full input input-bordered input-primary"
                   id="deliveryDate"
@@ -278,7 +330,16 @@ function InvoicesForm() {
                     setFormData({ ...formData, deliveryDate: e.target.value })
                   }
                   required
-                />
+                /> */}
+                 <DatePicker
+              inputClassName="w-full input input-bordered input-primary"
+              useRange={false}
+              asSingle={true}
+              displayFormat={"DD/MM/YYYY"}
+              value={{startDate: formData.deliveryDate, endDate: formData.deliveryDate}}
+              onChange={handleDateChange}
+              required
+            />
               </div>
             
               <div>
@@ -395,13 +456,14 @@ function InvoicesForm() {
                 </label>
                 <input
                   type="text"
-                  pattern="[A-Z]{2}[0-9]{2}[A-Z]{1-2}[0-9]{4}"
-                  placeholder="Vehicle No (Eg. AA11A1111 or AA11AA1111)"
+                  pattern="[A-Z]{2}\s[0-9]{2}[A-Z]{1,2}\s[0-9]{4}"
+                  title="Vehicle No Format: AA 11A 1111 or AA 11AA 1111"
+                  placeholder="Vehicle No (Eg. AA 11A 1111 or AA 11AA 1111)"
                   className="w-full input input-bordered input-primary"
                   id="vechicleNo"
                   value={formData.vehicleNo}
                   onChange={(e) =>
-                    setFormData({ ...formData, vehicleNo: e.target.value })
+                    setFormData({ ...formData, vehicleNo: e.target.value.toUpperCase() })
                   }
                   required
                 />
@@ -502,9 +564,36 @@ function InvoicesForm() {
             />
           </div>
           {allowEditing == false && productsAdded == true &&
-          <button className="btn btn-primary items-center btn-sm" onClick={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")}>Done</button> }
+          <button className="btn btn-primary items-center btn-sm" onClick={() => document.getElementById("confirm_modal").showModal()}>Done</button> }
           </div>
           {allowEditing == true ? <EwayForm invoiceID={invoiceId} onSubmitSuccess={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")} /> : null}
+          <dialog id="confirm_modal" className="modal">
+          <div className="modal-box ">
+            <TitleCard title="CAUSION !!!">
+              <p className="py-4 text-center text-xl">Are you sure you want to proceed without Eway Bill?</p>
+                <br/>
+              <div className="flex justify-between w-1/2 m-auto mt-10">
+                <label
+                  htmlFor="confirm_modal"
+                  className="btn btn-error px-8"
+                  onClick={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")}
+                >
+                  Yes
+                </label>
+                <label
+                  htmlFor="delete_modal"
+                  className="btn btn-ghost px-8"
+                  onClick={() =>
+                    document.getElementById("confirm_modal").close()
+                  }
+                >
+                  No
+                </label>
+              </div>
+            </TitleCard>
+          </div>
+        </dialog>
+
         </>
       )}
     </>

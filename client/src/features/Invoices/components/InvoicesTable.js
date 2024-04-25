@@ -131,7 +131,7 @@ const fetchSalesPersons = async () => {
         const response = await axios.get(
           "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
         );
-        setData(response.data);
+        setData(response.data.reverse());
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -154,7 +154,7 @@ const fetchSalesPersons = async () => {
       const response = await axios.get(
         "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
       );
-      setData(response.data);
+      setData(response.data.reverse());
     } catch (error) {
       console.error("Error deleting invoice:", error);
     }
@@ -220,7 +220,7 @@ const fetchSalesPersons = async () => {
       const response = await axios.get(
         "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
       );
-      setData(response.data);
+      setData(response.data.reverse());
     } catch (error) {
       console.error("Error updating invoice:", error);
     }
@@ -275,7 +275,7 @@ const filteredRecords = data.filter(invoice => {
   return (
     String(invoice.invoiceNumber).toLowerCase().includes(searchTerm.toLowerCase()) ||
     String(invoice.distributor.distributorProfile.agencyName).toLowerCase().includes(searchTerm.toLowerCase()) ||
-    // String(invoice.salesperson).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(salesPersons.find((salesPerson) => salesPerson.id === invoice.salespersonId)?.name).toLowerCase().includes(searchTerm.toLowerCase()) ||
     String(invoice.distributor.distributorProfile.city).toLowerCase().includes(searchTerm.toLowerCase()) ||
     // String(invoice.distributor.distributorProfile.state).toLowerCase().includes(searchTerm.toLowerCase()) ||
     String(invoice.distributor.distributorProfile.region).toLowerCase().includes(searchTerm.toLowerCase()) ||

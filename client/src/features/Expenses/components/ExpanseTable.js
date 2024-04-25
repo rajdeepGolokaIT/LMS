@@ -99,6 +99,7 @@ const ExpanseTable = () => {
     const [selectedId, setSelectedId] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectTerm, setSelectTerm] = useState('');
     const [salespersonNames, setSalespersonNames] = useState([]);
     const [formData, setFormData] = useState(
         {
@@ -156,7 +157,8 @@ const ExpanseTable = () => {
 
     const filteredRecords = data.filter(expenses => {
         return (
-          String(salespersonNames.find((salesperson) => parseInt(salesperson.id) === parseInt(expenses.salesperson))?.name).toLowerCase().includes(searchTerm.toLowerCase())
+          String(salespersonNames.find((salesperson) => parseInt(salesperson.id) === parseInt(expenses.salesperson))?.name).toLowerCase().includes(searchTerm.toLowerCase()) &&
+          String(salespersonNames.find((salesperson) => parseInt(salesperson.id) === parseInt(expenses.salesperson))?.name).toLowerCase().includes(selectTerm.toLowerCase())
         )
       });
 
@@ -305,7 +307,7 @@ const ExpanseTable = () => {
           value={searchTerm}
           onChange={handleSearchChange}
            />
-           <select className="input input-bordered w-full max-w-xs" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm}>
+           <select className="input input-bordered w-full max-w-xs" onChange={(e) => setSelectTerm(e.target.value)} value={selectTerm}>
             <option value="">Select Salesperson</option>
             {salespersonNames.map((salesperson) => (
               <option key={salesperson.name} value={salesperson.name}> {salesperson.name} </option>

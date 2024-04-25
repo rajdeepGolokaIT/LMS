@@ -45,7 +45,7 @@ const SalesPersonGraph = () => {
 
     const fetchData = async () => {
         try {
-            let url = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/totalInvoiceAmountAndExpenses?interval=${interval}&year=${selectedYear}`;
+            let url = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/totalInvoiceAmountAndExpenses?interval=${interval}&year=${selectedYear}&status=true`;
     
             if (interval === 'monthly') {
                 url += `&monthName=${selectedMonth}`;

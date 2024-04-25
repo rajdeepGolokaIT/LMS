@@ -197,7 +197,7 @@ function LineChart() {
       <TitleCard title={"Total Sales Graph"} 
       TopSideButtons1={
         <div>
-        <select value={selectedRange} onChange={handleRangeChange}>
+        <select value={selectedRange} onChange={handleRangeChange} className="select select-bordered select-sm">
           <option value="month">Monthly</option>
           <option value="financial-year">Yearly</option>
           <option value="custom">Custom</option>

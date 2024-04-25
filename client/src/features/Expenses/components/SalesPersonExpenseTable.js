@@ -18,6 +18,7 @@ const SalesPersonExpenseTable = () => {
       direction: "ascending",
     });
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectTerm, setSelectTerm] = useState('');
     const [salespersonNames, setSalespersonNames] = useState([]);
 
 
@@ -27,7 +28,7 @@ const SalesPersonExpenseTable = () => {
 
     const fetchData = async () => {
         try {
-            let url = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/totalInvoiceAmountAndExpenses?interval=${interval}&year=${selectedYear}`;
+            let url = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/totalInvoiceAmountAndExpenses?interval=${interval}&year=${selectedYear}&status=true`;
     
             if (interval === 'monthly') {
                 url += `&monthName=${selectedMonth}`;
@@ -72,7 +73,8 @@ const SalesPersonExpenseTable = () => {
 
     const filteredRecords = tableData.filter(expenses => {
         return (
-          String(expenses.salespersonName).toLowerCase().includes(searchTerm.toLowerCase())
+          String(expenses.salespersonName).toLowerCase().includes(searchTerm.toLowerCase()) &&
+          String(expenses.salespersonName).toLowerCase().includes(selectTerm.toLowerCase())
         )
       });
 
@@ -176,7 +178,7 @@ const SalesPersonExpenseTable = () => {
         value={searchTerm}
         onChange={handleSearchChange}
          />
-         <select className="input input-bordered w-full h-7 max-w-xs" onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm}>
+         <select className="input input-bordered w-full h-7 max-w-xs" onChange={(e) => setSelectTerm(e.target.value)} value={selectTerm}>
             <option value="">Select Salesperson</option>
             {salespersonNames.map((salesperson) => (
               <option key={salesperson.name} value={salesperson.name}> {salesperson.name} </option>

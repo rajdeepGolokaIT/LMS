@@ -102,14 +102,22 @@ const SalesPersonsTable = () => {
         email: ''
       }]);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+    const [selectedList, setSelectedList] = useState('active_salespersons');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+              if (selectedList === 'active_salespersons') {
                 const response = await axios.get(
                     `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all`
                 );
                 setData(response.data);
+              } else if (selectedList === 'inactive_salespersons') {
+                const response = await axios.get(
+                    `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all-inactive`
+                );
+                setData(response.data);
+              }
                 // console.log(response.data);
 
                 // const foundSalespersons = data.find((salesperson) => parseInt(salesperson.id) === parseInt(selectedId));
@@ -128,7 +136,7 @@ const SalesPersonsTable = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [selectedList]);
 
     // console.log(selectedProfile)
     // console.log(formData)
@@ -203,7 +211,7 @@ const handleSubmit = async (e, formData) => {
           document.getElementById("update_modal").close();
         dispatch(
             showNotification({
-              message: "Sales Person updated to invoice successfully 😁",
+              message: "Sales Person updated successfully 😁",
               status: 1,
             })
           );
@@ -226,8 +234,8 @@ const handleSubmit = async (e, formData) => {
         const handleDelete = async () => {
             try {
                {
-                await axios.delete(
-                  `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/delete-salesperson?id=${selectedId}`
+                await axios.put(
+                  `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/salesperson-status?id=${selectedId}`
                 );
               }
               setSelectedId([]);
@@ -236,9 +244,17 @@ const handleSubmit = async (e, formData) => {
                 "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
               );
               setData(response.data);
+              document.getElementById("delete_modal").close();
+              setSelectedId(null)
+              dispatch(showNotification({message : `Sales Person ${selectedList === 'active_salespersons' ? 'deactivated' : 'activated'}! 😁`, status : 1}))
             } catch (error) {
               console.error("Error deleting salesperson:", error);
+              dispatch(showNotification({message : `Error ${selectedList === 'active_salespersons' ? 'deactivating' : 'activating'} Sales Person! 😵`, status : 0}))
             }
+          };
+
+          const handleDeleteModal = async (e) => {
+            document.getElementById("delete_modal").showModal();
           };
 
 
@@ -247,14 +263,29 @@ const handleSubmit = async (e, formData) => {
     <TitleCard
         title="All Sales Persons Table"
         topMargin="mt-2"
-        TopSideButtons1={
-            <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-success"}`} onClick={handleUpdate}>
-              Update
-            </button>
-          }
         TopSideButtons2={
-            <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-error"}`} onClick={handleDelete}>
-              Delete
+          <>
+          <button
+          className={`btn ${
+            selectedId === null ? "btn-disabled" : (selectedList === 'active_salespersons' ? 'btn-error' : 'btn-success')
+          }`}
+          onClick={handleDeleteModal}
+        >
+          {selectedList === 'active_salespersons' ? 'Deactivate' : 'Activate'}
+        </button>
+        <select
+        className="px-2 border border-gray-300 rounded-md mr-2"
+        onChange={(e) => setSelectedList(e.target.value)}
+        value={selectedList}
+        >
+            <option value="active_salespersons">Active Sales Persons</option>
+            <option value="inactive_salespersons">Inactive Sales Persons</option>
+        </select>
+        </>
+          }
+        TopSideButtons1={
+            <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-primary"}`} onClick={handleUpdate}>
+              Update
             </button>
           }
         >
@@ -297,6 +328,36 @@ const handleSubmit = async (e, formData) => {
         setCurrentPage={setCurrentPage}
     />
     </TitleCard>
+
+    {selectedId !== null && (
+        <dialog id="delete_modal" className="modal">
+          <div className="modal-box ">
+            <TitleCard title="CAUSION !!!">
+              <p className="py-4 text-center text-xl">Are you sure you want to {selectedList === 'active_salespersons' ? 'Deactivate' : 'Activate'} this Sales Person?</p>
+                <br/>
+              {/* <p className="text-center font-bold text-sm">Note : All Products under this Category will be deleted!</p> */}
+              <div className="flex justify-between w-1/2 m-auto mt-10">
+                <label
+                  htmlFor="delete_modal"
+                  className="btn btn-error px-8"
+                  onClick={handleDelete}
+                >
+                  Yes
+                </label>
+                <label
+                  htmlFor="delete_modal"
+                  className="btn btn-ghost px-8"
+                  onClick={() =>
+                    document.getElementById("delete_modal").close()
+                  }
+                >
+                  No
+                </label>
+              </div>
+            </TitleCard>
+          </div>
+        </dialog>
+      )}
 
     {/*modal for update*/}
     {selectedId && (
