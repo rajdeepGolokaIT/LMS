@@ -133,7 +133,7 @@ const fetchSalesPersons = async () => {
         const response = await axios.get(
           "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
         );
-        setData(response.data.reverse());
+        setData(response.data.invoices.reverse());
       } catch (error) {
         console.error("Error fetching data:", error);
       }

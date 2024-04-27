@@ -235,16 +235,19 @@ const AllDistributorSalesTable = () => {
           <select
             onChange={(e) => setValueType(e.target.value)}
             value={valueType}
-            className="px-2 border border-gray-300 rounded-md mr-2"
+            className="select select-bordered w-full max-w-xs"
           >
             <option value="true">Active Distributors</option>
             <option value="false">Inactive Distributors</option>
           </select>
         }
-      >
-        <button className="btn btn-primary mb-4" onClick={downloadPDF}>
+        TopSideButtons3={
+          <button className="btn btn-primary mb-4" onClick={downloadPDF}>
           Download PDF
         </button>
+        }
+      >
+       
         <div className="overflow-x-auto w-full">
           <table className="table table-lg w-full">
             <thead>

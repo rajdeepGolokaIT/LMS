@@ -15,7 +15,7 @@ import { showNotification } from "../common/headerSlice";
 function Calendar() {
   const dispatch = useDispatch();
   const [events, setEvents] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false); // State to manage modal visibility
+//   const [modalOpen, setModalOpen] = useState(false); // State to manage modal visibility
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -32,15 +32,16 @@ function Calendar() {
         "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/notes/all"
       );
       setEvents(response.data);
+      
     } catch (error) {
       console.error("Error fetching notes:", error);
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData({ ...formData, [name]: value });
+//   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
