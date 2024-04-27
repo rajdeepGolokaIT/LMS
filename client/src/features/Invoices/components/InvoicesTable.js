@@ -86,7 +86,7 @@ const TableComponent = () => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [selectedInvoices, setSelectedInvoices] = useState([]);
   const [distributors, setDistributors] = useState([]);
@@ -376,7 +376,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
         </td>
         <td className="table-cell">{invoice.id}</td>
         <td className="table-cell">{invoice.invoiceNumber}</td>
-        <td className="table-cell">{moment(invoice.createDate.trim().slice(0, 10)).format("DD/MM/YYYY")}</td>
+        <td className="table-cell">{moment(invoice.createDate).format("DD/MM/YYYY")}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.agencyName}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.gstNo}</td>
         {/* <td className="table-cell">{invoice.discountPercentage}%</td> */}
@@ -394,8 +394,8 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
         <td className="table-cell">{invoice.irn === null ? "Pending..." : invoice.irn}</td>
         <td className="table-cell">{invoice.ackNo === null ? "Pending..." : invoice.ackNo}</td>
         <td className="table-cell">{invoice.dispatchedThrough === null ? "Pending..." : invoice.dispatchedThrough}</td>
-        <td className="table-cell">{invoice.createDate.trim().slice(0, 10)}</td>
-        <td className="table-cell">{invoice.updateDate.trim().slice(0, 10)}</td>
+        <td className="table-cell">{moment(invoice.createDate).format("DD/MM/YYYY")}</td>
+        <td className="table-cell">{moment(invoice.updateDate).format("DD/MM/YYYY")}</td>
       </tr>
     ))}
   </tbody>
@@ -406,7 +406,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
           nPages={nPages}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
-          loading={loading}
+          // loading={loading}
         />
       </TitleCard>
 
@@ -597,6 +597,28 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
                     setSelectedInvoice({
                       ...selectedInvoice,
                       deliveryDate: date.startDate,
+                    });
+                  }}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="invoiceDate"
+                  className="label label-text text-base"
+                >
+                  Invoice Date:
+                </label>
+                <DatePicker
+              inputClassName="w-full input input-bordered input-primary"
+              useRange={false}
+              asSingle={true}
+              displayFormat={"DD/MM/YYYY"}
+              value={{startDate: selectedInvoice.invoiceDate, endDate: selectedInvoice.invoiceDate}}
+                  onChange={(date) => {
+                    // Handle changes to input field and update selectedInvoice
+                    setSelectedInvoice({
+                      ...selectedInvoice,
+                      invoiceDate: date.startDate,
                     });
                   }}
                 />

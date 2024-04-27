@@ -18,7 +18,7 @@ function Calendar() {
   const [modalOpen, setModalOpen] = useState(false); // State to manage modal visibility
   const [formData, setFormData] = useState({
     title: "",
-    context: "",
+    content: "",
     theme: "",
     date: "", // Default to current date
   });
@@ -56,7 +56,7 @@ function Calendar() {
       setFormData(
         {
           title: "",
-          context: "",
+          content: "",
           theme: "",
           date: "",
         }
@@ -84,7 +84,7 @@ function Calendar() {
     // let randomEvent = INITIAL_EVENTS[Math.floor(Math.random() * 10)]
     let newEventObj = {
       title: formData.title,
-      context: formData.context,
+      content: formData.content,
       theme: formData.theme,
       startTime: moment(date).startOf("day"),
       endTime: moment(date).endOf("day"),
@@ -147,15 +147,15 @@ function Calendar() {
               </div>
               <div>
                 <label htmlFor="context" className="label label-text text-base">
-                  Context
+                  Content
                 </label>
                 <input
                   type="text"
-                  id="context"
-                  name="context"
-                  value={formData.context}
+                  id="content"
+                  name="content"
+                  value={formData.content}
                   onChange={(e) =>
-                    setFormData({ ...formData, context: e.target.value })
+                    setFormData({ ...formData, content: e.target.value })
                   }
                   className="w-full input input-bordered input-primary"
                   required

@@ -33,6 +33,7 @@ function InvoicesForm() {
     dispatchedThrough: "",
     termsOfDelivery: "",
     salespersonId: 0,
+    invoiceDate: "",
   });
 
   const [discountValue, setDiscountValue] = useState(0);
@@ -133,6 +134,7 @@ function InvoicesForm() {
         dispatchedThrough: "",
         termsOfDelivery: "",
         salespersonId: 0,
+        invoiceDate: "",
       });
     } catch (error) {
       console.error("Error adding invoice:", error);
@@ -266,6 +268,26 @@ function InvoicesForm() {
                   ))}
                 </select>
               </div>
+
+              <div>
+                <label
+                  htmlFor="invoiceDate"
+                  className="label label-text text-base"
+                >
+                  Invoice Date:
+                </label>
+                
+                 <DatePicker
+              inputClassName="w-full input input-bordered input-primary"
+              useRange={false}
+              asSingle={true}
+              displayFormat={"DD/MM/YYYY"}
+              value={{startDate: formData.invoiceDate, endDate: formData.invoiceDate}}
+              onChange={(date) => setFormData({ ...formData, invoiceDate: date.startDate })}
+              required
+            />
+              </div>
+
               <div>
                 <label
                   htmlFor="termsOfDelivery"
@@ -567,6 +589,10 @@ function InvoicesForm() {
           <button className="btn btn-primary items-center btn-sm" onClick={() => document.getElementById("confirm_modal").showModal()}>Done</button> }
           </div>
           {allowEditing == true ? <EwayForm invoiceID={invoiceId} onSubmitSuccess={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")} /> : null}
+          
+          
+          {/* confirmation without eway modal */}
+
           <dialog id="confirm_modal" className="modal">
           <div className="modal-box ">
             <TitleCard title="CAUSION !!!">

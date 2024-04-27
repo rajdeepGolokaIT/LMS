@@ -21,7 +21,7 @@ const SalesPersonGraph = () => {
     const [interval, setInterval] = useState('annually');
     const [selectedYear, setSelectedYear] = useState(moment().year());
     const [selectedMonth, setSelectedMonth] = useState(moment().format('MMMM').toLowerCase());
-    const [selectedSalesperson, setSelectedSalesperson] = useState(null);
+    const [selectedSalesperson, setSelectedSalesperson] = useState('');
     const [salespersons, setSalespersons] = useState([]);
 
     useEffect(() => {
