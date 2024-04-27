@@ -25,8 +25,8 @@ function InvoicesForm() {
     totalQuantityNos: 0,
     totalQuantityDoz: 0,
     destination: "",
-    invoiceNumber: null,
-    irn: null,
+    invoiceNumber: "",
+    irn: "",
     // hsnsac: 0,
     ackNo: 0,
     amount: 0,
@@ -126,8 +126,8 @@ function InvoicesForm() {
         totalQuantityNos: 0,
         totalQuantityDoz: 0,
         destination: "",
-        invoiceNumber: 0,
-        irn: 0,
+        invoiceNumber: "",
+        irn: "",
         ackNo: 0,
         amount: 0,
         dispatchedThrough: "",
@@ -212,8 +212,8 @@ function InvoicesForm() {
                   Invoice Number:
                 </label>
                 <input
-                  type="number"
-                  min="0"
+                  type="text"
+                  pattern="^[0-9]+$"
                   placeholder="Invoice Number"
                   className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="invoiceNumber"
@@ -228,8 +228,8 @@ function InvoicesForm() {
                   IRN:
                 </label>
                 <input
-                  type="number"
-                  min="0"
+                  type="text"
+                  pattern="^[0-9]+$"
                   placeholder="IRN"
                   className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   id="irn"

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
 import { useDispatch } from 'react-redux'
 import { showNotification, setPageTitle } from "../../common/headerSlice";
@@ -345,7 +346,7 @@ const ExpanseTable = () => {
                     </label>
                   </td>
                     <td>{salespersonNames.find((salesperson) => salesperson.id === record.salesperson).name}</td>
-                    <td>{record.createDate.trim().slice(0, 10)}</td>
+                    <td>{moment(record.createDate.trim().slice(0, 10)).format("DD/MM/YYYY")}</td>
                     <td>INR {record.salary} </td>
                     <td>INR {record.incentive} </td>
                     <td>INR {record.miscellaneous} </td>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
 import DatePicker from "react-tailwindcss-datepicker";
 import InvoiceUpdateProducts from "./InvoiceUpdateProducts";
@@ -375,7 +376,7 @@ const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
         </td>
         <td className="table-cell">{invoice.id}</td>
         <td className="table-cell">{invoice.invoiceNumber}</td>
-        <td className="table-cell">{invoice.createDate.trim().slice(0, 10)}</td>
+        <td className="table-cell">{moment(invoice.createDate.trim().slice(0, 10)).format("DD/MM/YYYY")}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.agencyName}</td>
         <td className="table-cell">{invoice.distributor.distributorProfile.gstNo}</td>
         {/* <td className="table-cell">{invoice.discountPercentage}%</td> */}

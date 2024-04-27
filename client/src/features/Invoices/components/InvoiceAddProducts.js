@@ -218,7 +218,8 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
 
       const response = await axios.post(
         `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/${invoiceId}/add-products`,
-        productsData
+        productsData,
+       
       );
 
       console.log("Products added to invoice:", response.data);

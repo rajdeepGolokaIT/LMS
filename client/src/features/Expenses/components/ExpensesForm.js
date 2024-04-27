@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { showNotification, setPageTitle } from "../../common/headerSlice";
 import axios from "axios";
+import DatePicker from 'react-tailwindcss-datepicker';
+import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
 
 const ExpensesForm = () => {
@@ -18,6 +20,7 @@ const ExpensesForm = () => {
       salary: 0,
       incentive: 0,
       miscellaneous: 0,
+      expenseDate: "",
     }
   ]);
 
@@ -52,6 +55,7 @@ const ExpensesForm = () => {
           salary: formData.salary,
           incentive: formData.incentive,
           miscellaneous: formData.miscellaneous,
+          expenseDate: formData.expenseDate.startDate,
         },
         {
           headers: {
@@ -67,6 +71,7 @@ const ExpensesForm = () => {
         salary: 0,
         incentive: 0,
         miscellaneous: 0,
+        expenseDate: "",
       });
       dispatch(
         showNotification({
@@ -94,6 +99,11 @@ const ExpensesForm = () => {
     // Convert the value to a number using parseFloat or parseInt
     const numericValue = parseFloat(value); // or parseInt(value, 10) for integers
     setFormData({ ...formData, [name]: numericValue });
+  };
+
+  const handleDateChange = (date) => {
+    // const formattedDate = moment(date.startDate).format("DD-MM-YYYY");
+    setFormData({ ...formData, expenseDate: date.startDate});
   };
 
   return (
@@ -159,9 +169,21 @@ const ExpensesForm = () => {
                     />
                     </div>
                     <div>
-                    <button type="submit" className="btn btn-primary btn-sm">Submit</button>
+                    <label htmlFor="expenseDate" className="label label-text text-base">Expense Date:</label>
+                    <DatePicker
+              inputClassName="w-full input input-bordered input-primary"
+              useRange={false}
+              asSingle={true}
+              displayFormat={"DD/MM/YYYY"}
+              value={{startDate: formData.expenseDate, endDate: formData.expenseDate}}
+              onChange={handleDateChange}
+              required
+            />
                     </div>
           </div>
+                    <div>
+                    <button type="submit" className="btn btn-primary ">Submit</button>
+                    </div>
         </form>
       </div>
     </TitleCard>

@@ -42,17 +42,17 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}){
     }
 
     const getEventsForCurrentDate = (date) => {
-        let filteredEvents = events.filter((e) => {return moment(date).isSame(moment(e.startTime), 'day') } )
-        if(filteredEvents.length > 2){
+        let filteredEvents = events.filter((e) => {return moment(date).isSame(moment(e.date), 'day') } )
+        if(filteredEvents.length > 0){
             let originalLength = filteredEvents.length
-            filteredEvents = filteredEvents.slice(0, 2)
-            filteredEvents.push({title : `${originalLength - 2} more`, theme : "MORE"})
+            // filteredEvents = filteredEvents.slice(0, 2)
+            filteredEvents.push({title : `view`, theme : "MORE"})
         }
         return filteredEvents
     }
 
     const openAllEventsDetail = (date, theme) => {
-        if(theme != "MORE")return 1
+        // if(theme != "MORE")return 1
         let filteredEvents = events.filter((e) => {return moment(date).isSame(moment(e.startTime), 'day') } ).map((e) => {return {title : e.title, theme : e.theme}})
         openDayDetail({filteredEvents, title : moment(date).format("D MMM YYYY")})
     }
@@ -89,7 +89,7 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}){
         <div className="flex items-center justify-between">
           <div className="flex  justify-normal gap-2 sm:gap-4">
           <p className="font-semibold text-xl w-48">
-                    {moment(firstDayOfMonth).format("MMMM yyyy").toString()}<span className="text-xs ml-2 ">Beta</span>
+                    {moment(firstDayOfMonth).format("MMMM yyyy").toString()}
                 </p>
 
                     <button className="btn  btn-square btn-sm btn-ghost"  onClick={getPrevMonth}><ChevronLeftIcon
