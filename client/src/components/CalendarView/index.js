@@ -86,7 +86,7 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}){
  
     return(
         <>
-      <div className="w-full  bg-base-100 p-4 rounded-lg">
+      <div className="w-full bg-base-100 p-4 rounded-xl shadow-lg">
         <div className="flex items-center justify-between">
           <div className="flex  justify-normal gap-2 sm:gap-4">
           <p className="font-semibold text-xl w-48">

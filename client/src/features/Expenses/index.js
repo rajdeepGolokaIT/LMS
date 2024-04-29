@@ -7,8 +7,10 @@ const Expenses = () => {
   return (
     <>
     {/* <ExpensesTable/> */}
+    <div className="grid mt-10 grid-cols-1 gap-6">
     <SalesPersonGraph/>
     <SalesPersonExpenseTable/>
+    </div>
     </>
   )
 }

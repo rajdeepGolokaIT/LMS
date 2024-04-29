@@ -15,12 +15,13 @@ function Leads() {
         <Top5sold/>
     <Least5sold/>
     </div>
-    
+    <div className="grid mt-10 grid-cols-1 gap-6">
     <TopSoldProduct/>
     <LeastSoldProduct/>
     <CurrentVsPrevProduct/>
 
     <AllProductSalesTable/>
+    </div>
 
     {/* <AllProductTable/> */}
     </>

@@ -113,11 +113,13 @@ function Calendar() {
 
   return (
     <>
+    <div className="grid mt-5 grid-cols-1 gap-6">
       <CalendarView
         calendarEvents={events}
         addNewEvent={openModal}
         openDayDetail={openDayDetail}
       />
+      </div>
       <dialog id="note_modal" className="modal">
         <div className="modal-box w-11/12 max-w-4xl ">
           <TitleCard title="Add Event" topMargin="mt-2">
