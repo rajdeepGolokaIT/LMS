@@ -3,87 +3,13 @@ import TitleCard from '../../../components/Cards/TitleCard';
 import moment from 'moment';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import Pagination from "../../../components/Input/Pagination";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 import axios from 'axios';
 
 
-const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
-  const pageNumbers = [...Array(nPages + 1).keys()].slice(1);
 
-  const goToNextPage = () => {
-    if (currentPage !== nPages) setCurrentPage(currentPage + 1);
-  };
-  
-  const goToPrevPage = () => {
-    if (currentPage !== 1) setCurrentPage(currentPage - 1);
-  };
-
-  const goToPage = (pageNumber) => {
-  //   if (pageNumber >= 1 && pageNumber <= nPages)
-    setCurrentPage(pageNumber);
-  };
-
-  return (
-    <nav className="flex justify-start my-4">
-      <ul className="flex ">
-        <li className="page-item">
-          <button
-            className="btn btn-ghost"
-            onClick={goToPrevPage}
-          >
-            Previous
-          </button>
-        </li>
-        {pageNumbers.map((pgNumber, index) => {
-          if (
-            index <= 2 ||
-            index >= nPages - 2 ||
-            (index >= currentPage - 1 && index <= currentPage + 1)
-          ) {
-            return (
-              <li key={pgNumber} className={`page-item ${currentPage === pgNumber ? 'active' : ''}`}>
-                <button
-                  className={`btn btn-ghost ${currentPage === pgNumber ? 'btn-active' : ''}`}
-                  onClick={() => setCurrentPage(pgNumber)}
-                >
-                  {pgNumber}
-                </button>
-              </li>
-            );
-          } else if (
-            (index === 3 && currentPage > 5) ||
-            (index === nPages - 3 && currentPage < nPages - 4)
-          ) {
-            return (
-              <li key={pgNumber} className="page-item disabled">
-                <span className="btn btn-ghost">...</span>
-              </li>
-            );
-          } else {
-            return null;
-          }
-        })}
-        <li className="page-item">
-          <button
-            className="btn btn-ghost"
-            onClick={goToNextPage}
-          >
-            Next
-          </button>
-        </li>
-        <li className="page-item">
-          <input
-            type="number"
-            className="input input-bordered w-20 mx-2 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            value={currentPage}
-            onChange={(e) => goToPage(parseInt(e.target.value))}
-          />
-        </li>
-      </ul>
-    </nav>
-  );
-};
 
 
 const SalesPersonExpenseTable = () => {
@@ -367,14 +293,14 @@ const SalesPersonExpenseTable = () => {
               ))}
             </tbody>
           </table>
-        </div>
-    
-</TitleCard>
 <Pagination
         nPages={Math.ceil(filteredRecords.length / recordsPerPage)}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
+        </div>
+    
+</TitleCard>
 </>
   )
 }

@@ -4,86 +4,10 @@ import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
 import DatePicker from "react-tailwindcss-datepicker";
 import InvoiceUpdateProducts from "./InvoiceUpdateProducts";
+import Pagination from "../../../components/Input/Pagination";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
-  const pageNumbers = [...Array(nPages + 1).keys()].slice(1);
-
-  const goToNextPage = () => {
-    if (currentPage !== nPages) setCurrentPage(currentPage + 1);
-  };
-
-  const goToPrevPage = () => {
-    if (currentPage !== 1) setCurrentPage(currentPage - 1);
-  };
-
-  const goToPage = (pageNumber) => {
-    // if (pageNumber >= 1 && pageNumber <= nPages)
-    setCurrentPage(pageNumber);
-  };
-
-  return (
-    <nav className="flex justify-start my-4">
-      <ul className="flex ">
-        <li className="page-item">
-          <button className="btn btn-ghost" onClick={goToPrevPage}>
-            Previous
-          </button>
-        </li>
-        {pageNumbers.map((pgNumber, index) => {
-          if (
-            index <= 2 ||
-            index >= nPages - 2 ||
-            (index >= currentPage - 1 && index <= currentPage + 1)
-          ) {
-            return (
-              <li
-                key={pgNumber}
-                className={`page-item ${
-                  currentPage === pgNumber ? "active" : ""
-                }`}
-              >
-                <button
-                  className={`btn btn-ghost ${
-                    currentPage === pgNumber ? "btn-active" : ""
-                  }`}
-                  onClick={() => setCurrentPage(pgNumber)}
-                >
-                  {pgNumber}
-                </button>
-              </li>
-            );
-          } else if (
-            (index === 3 && currentPage > 5) ||
-            (index === nPages - 3 && currentPage < nPages - 4)
-          ) {
-            return (
-              <li key={pgNumber} className="page-item disabled">
-                <span className="btn btn-ghost">...</span>
-              </li>
-            );
-          } else {
-            return null;
-          }
-        })}
-        <li className="page-item">
-          <button className="btn btn-ghost" onClick={goToNextPage}>
-            Next
-          </button>
-        </li>
-        <li className="page-item">
-          <input
-            type="number"
-            className="input input-bordered w-20 mx-2 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            value={currentPage}
-            onChange={(e) => goToPage(parseInt(e.target.value))}
-          />
-        </li>
-      </ul>
-    </nav>
-  );
-};
 
 const TableComponent = () => {
   const [data, setData] = useState([]);
@@ -97,11 +21,17 @@ const TableComponent = () => {
   const [ewayTableData, setEwayTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [salesPersons, setSalesPersons] = useState([]);
+  const [fetchInvoiceNo, setFetchInvoiceNo] = useState([]);
+  const [fetchIrnNo, setFetchIrnNo] = useState([]);
+  const [invoiceExists, setInvoiceExists] = useState(false);
+  const [irnExists, setIrnExists] = useState(false);
 
   useEffect(() => {
     // Fetch distributors and products when component mounts
     fetchDistributors();
     fetchSalesPersons();
+    fetchInvoiceNumber();
+    fetchIrn();
     // fetchProducts(); // Uncomment this line if you need products
   }, []);
 
@@ -314,6 +244,44 @@ const TableComponent = () => {
     indexOfLastRecord
   );
   const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
+
+  const fetchInvoiceNumber = async () => {
+    try {
+      const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/invoiceNumbers`);
+      
+      setFetchInvoiceNo(response.data)
+    } catch (error) {
+      console.error('Error fetching invoice number:', error);
+    }
+  };
+
+  const fetchIrn = async () => {
+    try {
+      const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/irns`);
+      setFetchIrnNo(response.data)
+    } catch (error) {
+      console.error('Error fetching IRN:', error);
+    }
+  };
+
+//  console.log(fetchIrnNo)
+
+  const handleInvoiceNumberChange = (e) => {
+    setSelectedInvoice({
+      ...selectedInvoice,
+      invoiceNumber: parseInt(e.target.value)
+    });
+    const check = fetchInvoiceNo.includes(e.target.value)
+    setInvoiceExists(check)
+  };
+  
+  const handleIrnChange = (e) => {
+    setSelectedInvoice({
+      ...selectedInvoice,
+      irn: parseInt(e.target.value)});
+    const check = fetchIrnNo.includes(e.target.value)
+    setIrnExists(check)
+  };
 
 const downloadPDF = () => {
   const pdf = new jsPDF('l', 'mm', 'a4');
@@ -579,13 +547,13 @@ const downloadPDF = () => {
               ))}
             </tbody>
           </table>
-        </div>
         <Pagination
           nPages={nPages}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           // loading={loading}
         />
+        </div>
       </TitleCard>
 
       {/* Modal for update */}
@@ -609,14 +577,9 @@ const downloadPDF = () => {
                     className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     id="invoiceNumber"
                     value={selectedInvoice.invoiceNumber}
-                    onChange={(e) => {
-                      // Handle changes to input field and update selectedInvoice
-                      setSelectedInvoice({
-                        ...selectedInvoice,
-                        invoiceNumber: parseInt(e.target.value),
-                      });
-                    }}
+                    onChange={handleInvoiceNumberChange}
                   />
+                   {invoiceExists && <p className="label label-text text-base">This invoice number exists.</p>}
                 </div>
 
                 <div>
@@ -630,14 +593,9 @@ const downloadPDF = () => {
                     className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     id="irn"
                     value={selectedInvoice.irn}
-                    onChange={(e) => {
-                      // Handle changes to input field and update selectedInvoice
-                      setSelectedInvoice({
-                        ...selectedInvoice,
-                        irn: parseInt(e.target.value),
-                      });
-                    }}
+                    onChange={handleIrnChange}
                   />
+                   {irnExists && <p className="label label-text text-base">This IRN exists.</p>} 
                 </div>
 
                 <div>
