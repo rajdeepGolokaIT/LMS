@@ -494,7 +494,7 @@ const downloadPDF = () => {
                 <th className="table-cell">IRN</th>
                 <th className="table-cell">Ack No.</th>
                 <th className="table-cell">Dispatched Through</th>
-                <th className="table-cell">Create Date</th>
+                {/* <th className="table-cell">Create Date</th> */}
                 <th className="table-cell">Update Date</th>
               </tr>
             </thead>
@@ -514,7 +514,7 @@ const downloadPDF = () => {
                   <td className="table-cell">{invoice.id}</td>
                   <td className="table-cell">{invoice.invoiceNumber}</td>
                   <td className="table-cell">
-                    {moment(invoice.createDate).format("DD/MM/YYYY")}
+                    {moment(invoice.invoiceDate).format("DD/MM/YYYY")}
                   </td>
                   <td className="table-cell">
                     {invoice.distributor.distributorProfile.agencyName}
@@ -569,9 +569,9 @@ const downloadPDF = () => {
                       ? "Pending..."
                       : invoice.dispatchedThrough}
                   </td>
-                  <td className="table-cell">
+                  {/* <td className="table-cell">
                     {moment(invoice.createDate).format("DD/MM/YYYY")}
-                  </td>
+                  </td> */}
                   <td className="table-cell">
                     {moment(invoice.updateDate).format("DD/MM/YYYY")}
                   </td>

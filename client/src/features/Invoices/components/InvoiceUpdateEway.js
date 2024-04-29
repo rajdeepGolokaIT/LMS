@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../common/headerSlice";
 import axios from "axios";
+import DatePicker from "react-tailwindcss-datepicker";
 import TitleCard from "../../../components/Cards/TitleCard";
 
 const InvoiceUpdateEway = ({ invoiceID }) => {
@@ -194,6 +195,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[0-9]+$"
                   placeholder="Eway Doc Number"
                   className="w-full input input-bordered input-primary"
                   id="ewayDocNumber"
@@ -212,6 +214,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[0-9]+$"
                   placeholder="Eway Bill No"
                   className="w-full input input-bordered input-primary"
                   id="eWayBillNo"
@@ -232,6 +235,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[A-Za-z]+$"
                   placeholder="Eway Mode"
                   className="w-full input input-bordered input-primary"
                   id="eWayMode"
@@ -250,6 +254,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[0-9A-Za-z]+$"
                   placeholder="Eway Approx Distance"
                   className="w-full input input-bordered input-primary"
                   id="eWayApproxDistance"
@@ -268,16 +273,15 @@ console.log(formData)
                 >
                   Eway Valid Upto:
                 </label>
-                <input
-                  type="text"
-                  placeholder="Eway Valid Upto"
-                  className="w-full input input-bordered input-primary"
-                  id="eWayValidUpto"
-                  name="eWayValidUpto"
-                  value={formData.eWayValidUpto}
-                  onChange={handleChange}
-                  required
-                />
+                <DatePicker
+              inputClassName="w-full input input-bordered input-primary"
+              useRange={false}
+              asSingle={true}
+              displayFormat={"DD/MM/YYYY"}
+              value={{startDate: formData.eWayValidUpto, endDate: formData.eWayValidUpto}}
+              onChange={(date) => setFormData({ ...formData, eWayValidUpto: date.startDate })}
+              required
+            />
               </div>
               <div>
                 <label
@@ -288,6 +292,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[A-Za-z]+$"
                   placeholder="Eway Supply Type"
                   className="w-full input input-bordered input-primary"
                   id="eWaySupplyType"
@@ -308,6 +313,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[A-Za-z]+$"
                   placeholder="Eway Transaction Type"
                   className="w-full input input-bordered input-primary"
                   id="eWayTransactionType"
@@ -326,6 +332,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[0-9A-Za-z]+$"
                   placeholder="Eway Transaction Id"
                   className="w-full input input-bordered input-primary"
                   id="eWayTransactionId"
@@ -346,6 +353,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9A-Z]{1}"
                   placeholder="Eway GSTIN"
                   className="w-full input input-bordered input-primary"
                   id="eWayGSTIN"
@@ -364,6 +372,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[A-Za-z\s]+$"
                   placeholder="Eway from"
                   className="w-full input input-bordered input-primary"
                   id="eWayfrom"
@@ -381,6 +390,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[A-Za-z\s]+$"
                   placeholder="Eway to"
                   className="w-full input input-bordered input-primary"
                   id="eWayTo"
@@ -399,6 +409,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[A-Za-z\s]+$"
                   placeholder="Eway Distpatch From"
                   className="w-full input input-bordered input-primary"
                   id="eWayDistpatchFrom"
@@ -419,6 +430,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[A-Za-z\s]+$"
                   placeholder="Eway Ship To"
                   className="w-full input input-bordered input-primary"
                   id="eWayShipTo"
@@ -438,6 +450,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[0-9]+$"
                   placeholder="Eway Tax Amount"
                   className="w-full input input-bordered input-primary"
                   id="ewaytaxAmount"
@@ -458,6 +471,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[0-9]+$"
                   placeholder="Eway Tax Rate"
                   className="w-full input input-bordered input-primary"
                   id="ewaytaxRate"
@@ -476,6 +490,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[0-9]+$"
                   placeholder="Eway Transportation ID"
                   className="w-full input input-bordered input-primary"
                   id="ewayTransportationID"
@@ -496,6 +511,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[A-Za-z]{2}\d{2}[A-Za-z]{1,2}\d{4}$"
                   placeholder="Eway Vehicle No"
                   className="w-full input input-bordered input-primary"
                   id="ewayVechileNo"
@@ -514,6 +530,7 @@ console.log(formData)
                 </label>
                 <input
                   type="text"
+                  pattern="^[A-Za-z\s]+$"
                   placeholder="Eway Vehicle From"
                   className="w-full input input-bordered input-primary"
                   id="ewayVehicleFrom"

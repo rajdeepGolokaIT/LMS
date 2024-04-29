@@ -335,7 +335,7 @@ const AllDistributorsTable = () => {
       "Serial No.",
       "Distributor Name",
       "GSTIN",
-      "PAN",
+      "Contact Person",
       "Contact Number",
       "Address",
     ];
@@ -344,7 +344,7 @@ const AllDistributorsTable = () => {
       index + 1,
       record.distributorProfile.agencyName,
       record.distributorProfile.gstNo,
-      record.distributorProfile.panNo,
+      record.distributorProfile.contactPerson,
       record.distributorProfile.contactNumber,
       record.distributorProfile.address +
         ", " +
