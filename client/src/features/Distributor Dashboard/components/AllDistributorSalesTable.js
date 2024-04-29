@@ -243,11 +243,10 @@ const AllDistributorSalesTable = () => {
         }
         TopSideButtons3={
           <button className="btn btn-primary mb-4" onClick={downloadPDF}>
-          Download PDF
-        </button>
+            Download PDF
+          </button>
         }
       >
-       
         <div className="overflow-x-auto w-full">
           <table className="table table-lg w-full">
             <thead>

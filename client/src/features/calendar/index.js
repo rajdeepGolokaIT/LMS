@@ -4,8 +4,7 @@ import CalendarView from "../../components/CalendarView";
 import moment from "moment";
 import axios from "axios";
 import DatePicker from "react-tailwindcss-datepicker";
-// import { CALENDAR_INITIAL_EVENTS } from '../../utils/dummyData'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openRightDrawer } from "../common/rightDrawerSlice";
 import { RIGHT_DRAWER_TYPES } from "../../utils/globalConstantUtil";
 import { showNotification } from "../common/headerSlice";
@@ -14,6 +13,7 @@ import { showNotification } from "../common/headerSlice";
 
 function Calendar() {
   const dispatch = useDispatch();
+  const {isOpen} = useSelector(state => state.rightDrawer)
   const [events, setEvents] = useState([]);
 //   const [modalOpen, setModalOpen] = useState(false); // State to manage modal visibility
   const [formData, setFormData] = useState({
@@ -25,7 +25,10 @@ function Calendar() {
 
   useEffect(() => {
     fetchNotes();
-  }, []);
+    if (!isOpen) {
+        fetchNotes();
+      }
+  }, [isOpen]);
   const fetchNotes = async () => {
     try {
       const response = await axios.get(
@@ -38,10 +41,8 @@ function Calendar() {
     }
   };
 
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({ ...formData, [name]: value });
-//   };
+  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

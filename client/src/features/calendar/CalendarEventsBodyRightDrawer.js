@@ -20,15 +20,26 @@ function CalendarEventsBodyRightDrawer({ filteredEvents }) {
     theme: '',
     date: '',
   });
-
+  const [selectedData, setSelectedData] = useState([]);
 
 console.log(formData)
 console.log(selectedId)
 console.log(filteredEvents)
 
 
+useEffect(() => {
+    getData();
+}, []);
 
-
+const getData = async () => {
+    try {
+        const date = filteredEvents[0].date
+        const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/notes/findByDate?date=${date}`);
+        setSelectedData(response.data);
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+};
 
 // useEffect(() => {
 //     setFormData({
@@ -41,7 +52,7 @@ console.log(filteredEvents)
 
     const updateModal = (id) => {
         setSelectedId(id);
-        setFormData(filteredEvents.filter(e => e.id === id)[0]);
+        setFormData(selectedData.filter(e => e.id === id)[0]);
         console.log(formData);
         document.getElementById('update_modal').showModal();
     }
@@ -56,6 +67,7 @@ console.log(filteredEvents)
         try {
             const response = await axios.delete(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/notes/delete/${selectedId}`);
             document.getElementById("delete_modal").close();
+            getData();
             dispatch(showNotification({ message: " Event Deleted!", status: 1 }));
             
         } catch (error) {
@@ -72,6 +84,7 @@ console.log(filteredEvents)
         try {
             const response = await axios.put(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/notes/update/${selectedId}`, formData);
             document.getElementById("update_modal").close();
+            getData()
             dispatch(showNotification({ message: " Event Updated!", status: 1 }));
             setFormData(
             {
@@ -90,7 +103,7 @@ console.log(filteredEvents)
 
   return (
     <>
-      {filteredEvents.map((e, k) => {
+      {selectedData.map((e, k) => {
         return (
           <div
             key={k}

@@ -6,6 +6,9 @@ import TitleCard from "../../../components/Cards/TitleCard";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
 const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
   const pageNumbers = [...Array(nPages + 1).keys()].slice(1);
 
@@ -86,14 +89,12 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
 
 const AllCategoryTable = () => {
   const [selectedId, setSelectedId] = useState(null);
-//   const [products,setProducts] = useState([]);
+  //   const [products,setProducts] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
-  const [formData, setFormData] = useState(
-    {
-        categoryName: '',
-        isActive: true
-    }
-);
+  const [formData, setFormData] = useState({
+    categoryName: "",
+    isActive: true,
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
   const [sortConfig, setSortConfig] = useState({
@@ -101,7 +102,7 @@ const AllCategoryTable = () => {
     direction: "ascending",
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedList, setSelectedList] = useState('active_categories');
+  const [selectedList, setSelectedList] = useState("active_categories");
 
   const dispatch = useDispatch();
 
@@ -114,27 +115,27 @@ const AllCategoryTable = () => {
   }, [selectedList]);
 
   const fetchCategoryData = async () => {
-
     let products;
 
     try {
-        if(selectedList === 'active_categories') {
-      const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all"
-      );
-      products = response.data
-    } else if(selectedList === 'inactive_categories') {
+      if (selectedList === "active_categories") {
         const response = await axios.get(
-            "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/inactive-all"
-          );
-          const inactiveCategories = response.data.filter(categories => !categories.category.isActive);
-    
-          products = inactiveCategories;
-          
-    }
-    //   const products = response.data;
+          "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all"
+        );
+        products = response.data;
+      } else if (selectedList === "inactive_categories") {
+        const response = await axios.get(
+          "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/inactive-all"
+        );
+        const inactiveCategories = response.data.filter(
+          (categories) => !categories.category.isActive
+        );
 
-    console.log(products);
+        products = inactiveCategories;
+      }
+      //   const products = response.data;
+
+      console.log(products);
       const categoryCounts = {};
 
       products.forEach((product) => {
@@ -166,7 +167,7 @@ const AllCategoryTable = () => {
     }
   };
 
-//   console.log(products)
+  //   console.log(products)
 
   const handleDeleteModal = async (e) => {
     document.getElementById("delete_modal").showModal();
@@ -190,39 +191,39 @@ const AllCategoryTable = () => {
 
   const handleUpdate = async (e) => {
     document.getElementById("update_modal").showModal();
-}
+  };
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        
-        await axios.put(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/update-category/${selectedId}`, formData,
+      await axios.put(
+        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/update-category/${selectedId}`,
+        formData
         // {
         //     headers: {
         //         "Content-Type": "application/x-www-form-urlencoded",
         //     },
         // }
-        );
-        console.log("Category updated successfully");
-        fetchCategoryData();
-        dispatch(
-            showNotification({
-              message: "Category updated to invoice successfully 😁",
-              status: 1,
-            })
-          );
-          document.getElementById("update_modal").close()
-
-        } catch (error) {
-            console.error("Error updating Category:", error);
-            dispatch(
-              showNotification({
-                message: "Error updating Category! 😵",
-                status: 0,
-              })
-            );
-          }
-        };
+      );
+      console.log("Category updated successfully");
+      fetchCategoryData();
+      dispatch(
+        showNotification({
+          message: "Category updated to invoice successfully 😁",
+          status: 1,
+        })
+      );
+      document.getElementById("update_modal").close();
+    } catch (error) {
+      console.error("Error updating Category:", error);
+      dispatch(
+        showNotification({
+          message: "Error updating Category! 😵",
+          status: 0,
+        })
+      );
+    }
+  };
 
   const filteredRecords = categoryData.filter((categories) => {
     return String(categories.categoryName)
@@ -274,19 +275,64 @@ const handleSubmit = async (e) => {
     const isChecked = e.target.checked;
     if (isChecked) {
       setSelectedId(id);
-      const foundCategories = categoryData.find((category) => parseInt(category.categoryId) === parseInt(id));
+      const foundCategories = categoryData.find(
+        (category) => parseInt(category.categoryId) === parseInt(id)
+      );
 
       if (foundCategories) {
         setFormData(foundCategories);
       }
-      
     } else {
       setFormData([]);
       setSelectedId(null);
     }
   };
 
-//   console.log(selectedId);
+  const downloadPDF = () => {
+    const pdf = new jsPDF();
+
+    // Add Logo
+    const logoImg = new Image();
+    logoImg.src = "/c.png";
+    const imageWidth = 10;
+    const imageHeight = 10;
+    const imageX = (pdf.internal.pageSize.width - imageWidth) / 2;
+    const imageY = 10;
+    pdf.addImage(logoImg, "PNG", imageX, imageY, imageWidth, imageHeight);
+
+    // Add Title
+    const title = "All Categories List";
+    const fontSize = 14;
+    const textWidth =
+      (pdf.getStringUnitWidth(title) * fontSize) / pdf.internal.scaleFactor;
+    const textX = (pdf.internal.pageSize.width - textWidth) / 2;
+    const textY = imageY + imageHeight + 10;
+    pdf.setFontSize(fontSize);
+    pdf.text(title, textX, textY);
+    pdf.setFontSize(fontSize);
+
+    // Add Table
+    const columns = ["Serial No.", "Category Name", "Total Products Count"];
+
+    const rows = sortedData.map((category, index) => [
+      index + 1,
+      category.categoryName,
+      category.totalCount,
+    ]);
+
+    const textHeight = fontSize / pdf.internal.scaleFactor;
+    const tableStartY = textY + textHeight + 10;
+
+    pdf.autoTable({
+      head: [columns],
+      body: rows,
+      startY: tableStartY,
+    });
+
+    pdf.save("all_categories_list.pdf");
+  };
+
+  //   console.log(selectedId);
 
   return (
     <>
@@ -305,15 +351,19 @@ const handleSubmit = async (e) => {
         TopSideButtons2={
           <button
             className={`btn ${
-              selectedId === null ? "btn-disabled" : (selectedList === 'active_categories' ? 'btn-error' : 'btn-success')
+              selectedId === null
+                ? "btn-disabled"
+                : selectedList === "active_categories"
+                ? "btn-error"
+                : "btn-success"
             }`}
             onClick={handleDeleteModal}
           >
-            {selectedList === 'active_categories' ? 'Deactivate' : 'Activate'}
+            {selectedList === "active_categories" ? "Deactivate" : "Activate"}
           </button>
         }
         TopSideButtons3={
-            <>
+          <>
             <button
               className={`btn ${
                 selectedId === null ? "btn-disabled" : "btn-primary"
@@ -323,16 +373,20 @@ const handleSubmit = async (e) => {
               Update
             </button>
             <select
-        className="px-2 border border-gray-300 rounded-md mr-2"
-        onChange={(e) => setSelectedList(e.target.value)}
-        value={selectedList}
-        >
-            <option value="active_categories">Active Categories</option>
-            <option value="inactive_categories">Inactive Categories</option>
-        </select>
-            </>
-          }
-        
+              className="px-2 border border-gray-300 rounded-md mr-2"
+              onChange={(e) => setSelectedList(e.target.value)}
+              value={selectedList}
+            >
+              <option value="active_categories">Active Categories</option>
+              <option value="inactive_categories">Inactive Categories</option>
+            </select>
+          </>
+        }
+        TopSideButtons4={
+          <button className="btn btn-primary " onClick={downloadPDF}>
+            Download PDF
+          </button>
+        }
       >
         <div className="overflow-x-auto w-full">
           <table className="table table-lg w-full">
@@ -401,9 +455,21 @@ const handleSubmit = async (e) => {
         <dialog id="delete_modal" className="modal">
           <div className="modal-box ">
             <TitleCard title="CAUSION !!!">
-              <p className="py-4 text-center text-xl">Are you sure you want to {selectedList === 'active_categories' ? 'Deactivate' : 'Activate'} this Category?</p>
-                <br/>
-              <p className="text-center font-bold text-sm">Note : All Products under this Category will be {selectedList === 'active_categories' ? 'Deactivated' : 'Activated'}!</p>
+              <p className="py-4 text-center text-xl">
+                Are you sure you want to{" "}
+                {selectedList === "active_categories"
+                  ? "Deactivate"
+                  : "Activate"}{" "}
+                this Category?
+              </p>
+              <br />
+              <p className="text-center font-bold text-sm">
+                Note : All Products under this Category will be{" "}
+                {selectedList === "active_categories"
+                  ? "Deactivated"
+                  : "Activated"}
+                !
+              </p>
               <div className="flex justify-between w-1/2 m-auto mt-10">
                 <label
                   htmlFor="delete_modal"
@@ -427,34 +493,50 @@ const handleSubmit = async (e) => {
         </dialog>
       )}
       {/*modal for update*/}
-{selectedId && (
-        <dialog id='update_modal' className='modal'>
-             <div className="modal-box">
-                <TitleCard title="Update Category">
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                    <label onClick={() => document.getElementById("update_modal").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
-                    
-                    <div>
-                    <label htmlFor="categoryName" className="label label-text text-base">Category Name:</label>
-                <input
-                  type="text"
-                  pattern="[A-Za-z0-9\s]+"
-                  placeholder="Category Name (letters and numbers only)"
-                  className="w-full input input-bordered input-primary"
-                  id="productName"
-                  value={formData.categoryName}
-                  onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="modal-action">
-                        <button type="submit" className="btn btn-primary">Update</button>
-                    </div>
+      {selectedId && (
+        <dialog id="update_modal" className="modal">
+          <div className="modal-box">
+            <TitleCard title="Update Category">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <label
+                  onClick={() =>
+                    document.getElementById("update_modal").close()
+                  }
+                  className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                >
+                  ✕
+                </label>
+
+                <div>
+                  <label
+                    htmlFor="categoryName"
+                    className="label label-text text-base"
+                  >
+                    Category Name:
+                  </label>
+                  <input
+                    type="text"
+                    pattern="[A-Za-z0-9\s]+"
+                    placeholder="Category Name (letters and numbers only)"
+                    className="w-full input input-bordered input-primary"
+                    id="productName"
+                    value={formData.categoryName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, categoryName: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="modal-action">
+                  <button type="submit" className="btn btn-primary">
+                    Update
+                  </button>
+                </div>
               </form>
-              </TitleCard>
-              </div>
-              </dialog>
-              )}
+            </TitleCard>
+          </div>
+        </dialog>
+      )}
     </>
   );
 };

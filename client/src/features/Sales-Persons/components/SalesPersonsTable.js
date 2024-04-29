@@ -279,6 +279,41 @@ const SalesPersonsTable = () => {
   const handleDeleteModal = async (e) => {
     document.getElementById("delete_modal").showModal();
   };
+  const downloadPDF = () => {
+    const pdf = new jsPDF();
+    const logoImg = new Image();
+    logoImg.src = "/c.png";
+    const imageWidth = 10;
+    const imageHeight = 10;
+    const imageX = (pdf.internal.pageSize.width - imageWidth) / 2;
+    const imageY = 10;
+    pdf.addImage(logoImg, "PNG", imageX, imageY, imageWidth, imageHeight);
+
+    const title = "Salesperson List";
+    const fontSize = 14;
+    const textWidth =
+      (pdf.getStringUnitWidth(title) * fontSize) / pdf.internal.scaleFactor;
+    const textX = (pdf.internal.pageSize.width - textWidth) / 2;
+    const textY = imageY + imageHeight + 10;
+    pdf.setFontSize(fontSize);
+    pdf.text(title, textX, textY);
+    pdf.setFontSize(fontSize);
+
+    const columns = ["Sales Person Name", "Contact Number", "Email"];
+
+    const rows = currentRecords.map((salesperson) => [
+      salesperson.name,
+      salesperson.contactNumber,
+      salesperson.email,
+    ]);
+
+    const textHeight = fontSize / pdf.internal.scaleFactor;
+    const tableStartY = textY + textHeight + 10;
+
+    pdf.autoTable({ startY: tableStartY, head: [columns], body: rows });
+
+    pdf.save("sales_persons.pdf");
+  };
 
   return (
     <>
@@ -321,6 +356,11 @@ const SalesPersonsTable = () => {
             onClick={handleUpdate}
           >
             Update
+          </button>
+        }
+        TopSideButtons3={
+          <button className="btn btn-primary " onClick={downloadPDF}>
+            Download PDF
           </button>
         }
       >

@@ -165,6 +165,7 @@ const AllProductSalesTable = () => {
     indexOfFirstRecord,
     indexOfLastRecord
   );
+
   const downloadPDF = () => {
     const pdf = new jsPDF();
 
@@ -238,11 +239,12 @@ const AllProductSalesTable = () => {
             <option value="false">Inactive Products</option>
           </select>
         }
-        TopSideButtons3={<button className="btn btn-primary mb-4" onClick={downloadPDF}>
-        Download PDF
-      </button>}
+        TopSideButtons3={
+          <button className="btn btn-primary mb-4" onClick={downloadPDF}>
+            Download PDF
+          </button>
+        }
       >
-        
         <div className="overflow-x-auto w-full">
           <table className="table table-lg w-full">
             <thead>
