@@ -144,8 +144,9 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
     );
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    // e.preventDefault();
+
 
     try {
       const productsData = {};
@@ -229,6 +230,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
           status: 1,
         })
       );
+      document.getElementById("confirm2_modal").close();
       onSubmitSuccess();
 
       setProductForms([
@@ -417,11 +419,17 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
       : price * quantity - discountValue;
   };
 
+  const handleConfirm = (e) => {
+    e.preventDefault();
+    document.getElementById('confirm2_modal').showModal();
+  };
+
+
   return (
     <>
       <TitleCard title="Add Products to Invoice" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleConfirm} className="space-y-4">
             {productForms.map((form, index) => (
               <>
                 <div key={index} >
@@ -485,6 +493,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                     </label>
                     <input
                       type="number"
+                      min="0"
                       placeholder="Quantity"
                       className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       id={`quantity-${index}`}
@@ -525,6 +534,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                     </label>
                     <input
                       type="number"
+                      min="0"
                       placeholder="Tax Value"
                       className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       id={`tax-value-${index}`}
@@ -565,6 +575,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                         </label>
                         <input
                           type="number"
+                          min="0"
                           placeholder="Discount Value"
                           className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           id={`discount-value-${index}`}
@@ -677,6 +688,77 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
           </form>
         </div>
       </TitleCard>
+
+      <dialog id="confirm2_modal" className="modal">
+        <div className="modal-box w-11/12 max-w-4xl">
+          <h3 className="font-bold text-2xl text-center">Confirmation!!</h3>
+          <p className="py-4 text-center">Are you sure you want to add these products to invoice?</p>
+          <div className="grid grid-cols-1 gap-4">
+          {productForms.map((form, index) => (
+              <>
+                <div key={index} className=" relative w-full p-6 m-auto bg-base-200 rounded-lg shadow-lg">
+                  <button
+                    type="button"
+                    onClick={() => removeProductForm(index)}
+                    className="btn btn-error btn-sm float-right mb-2 btn-circle absolute top-0 right-0 m-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                  <table className="table table-compact w-full">
+                  <tr><th>Product Name:</th><td>{products.find((product) => parseInt(product.id) === parseInt(form.productId))?.productName}</td></tr>
+                  <tr><th>Quantity:</th><td>{form.quantity}</td></tr>
+                  <tr><th>Tax Type:</th><td>{form.taxType}</td></tr>
+                  <tr><th>Tax Percentage:</th><td>{form.taxPercentage}</td></tr>
+                  {discountAmount <= 0 && discountPercentage <= 0 ? (
+                    <>
+                  <tr><th>Discount Type:</th><td>{form.discountType}</td></tr>
+                  <tr><th>Discount Percentage:</th><td>{form.discountValue}</td></tr>
+                  </>
+                  ) : null}
+                  <tr><th>HSN/SAC:</th><td>{form.hsnSac}</td></tr>
+                  <tr><th>Invoice Discount:</th><td>{discountPercentage > 0 ? (
+                      <p className="label label-text text-base">{discountPercentage}%</p>
+                    ) : discountAmount > 0 ? (
+                      <p className="label label-text text-base">INR {discountAmount}/-</p>
+                    ) : (
+                      <p className="label label-text text-base">0</p>
+                    )}</td></tr>
+                    <tr><th>Total Amount Without Tax (Without Discount Applied):</th><td> {`INR ${parseFloat(isNaN(form.price * form.quantity)
+                        ? 0
+                        : form.price * form.quantity).toFixed(2)}
+                      /-`}</td></tr>
+                      <tr><th>Total Amount With Tax:</th><td>{`INR ${parseFloat(calculateTotalAmountWithTax(form)).toFixed(2)}/-`}</td></tr>
+                      <tr><th>Total Amount Without Tax And With Discount:</th><td>{`INR ${parseFloat(calculateTotalAmountWithoutTaxWithDiscount(form)).toFixed(2)}/-`}</td></tr>
+                      <tr><th>Tax Amount:</th><td>{`INR ${parseFloat(isNaN(calculateTotalAmountWithDiscount(form))
+                        ? 0
+                        : calculateTotalAmountWithDiscount(form)).toFixed(2)}/-`}</td></tr>
+
+
+                    </table>
+                </div>
+              </>
+            ))}
+            </div>
+          <div className="modal-action">
+            <button className="btn btn-primary" onClick={handleSubmit}>Confirm</button>
+            <button className="btn" onClick={() => document.getElementById("confirm2_modal").close()}>No</button>
+          </div>
+        </div>
+      </dialog>
+
     </>
   );
 }

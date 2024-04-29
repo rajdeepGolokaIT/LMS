@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import TitleCard from "../../../components/Cards/TitleCard";
+import DatePicker from 'react-tailwindcss-datepicker';
 import { useDispatch } from 'react-redux'
 import { showNotification, setPageTitle } from "../../common/headerSlice";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
@@ -107,6 +110,7 @@ const ExpanseTable = () => {
             salary: 0,
             incentive: 0,
             miscellaneous: 0,
+            expenseDate: "",
         }
     );
 
@@ -284,6 +288,82 @@ const ExpanseTable = () => {
 
             console.log(formData)
 
+            const downloadPDF = () => {
+              const pdf = new jsPDF('p', 'mm', 'a4');
+            
+              const logoImg = new Image();
+              logoImg.src = "/c.png";
+              const imageWidth = 10;
+              const imageHeight = 10;
+              const imageX = (pdf.internal.pageSize.width - imageWidth) / 2;
+              const imageY = 10;
+              pdf.addImage(logoImg, "PNG", imageX, imageY, imageWidth, imageHeight);
+            
+              const title = "Expenses Report";
+              const fontSize = 14;
+              const textWidth =
+                (pdf.getStringUnitWidth(title) * fontSize) / pdf.internal.scaleFactor;
+              const textX = (pdf.internal.pageSize.width - textWidth) / 2;
+              const textY = imageY + imageHeight + 10;
+              pdf.setFontSize(fontSize);
+              pdf.text(title, textX, textY);
+              pdf.setFontSize(fontSize);
+            
+              const rows = data.map((data, index) => [
+                index + 1,
+                salespersonNames.find((salesperson) => salesperson.id === data.salesperson).name,
+                moment(data.createDate.trim().slice(0, 10)).format("DD/MM/YYYY"),
+                `INR ${data.salary}`,
+                `INR ${data.incentive}`,
+                `INR ${data.miscellaneous} `,
+                
+              ]);
+            
+              const textHeight = fontSize / pdf.internal.scaleFactor;
+            
+              const tableStartY = textY + textHeight + 10;
+            
+              pdf.autoTable({
+                styles: {
+                  cellPadding: 0.5,
+                  fontSize: 12,
+                },
+                headStyles: {
+                  fillColor: '#3f51b5',
+                  textColor: '#fff',
+                  halign: 'center'
+                },
+                bodyStyles: {
+                  halign: 'center',
+                  valign: 'middle',
+            
+                },
+                margin: {
+                  left: 5,
+                  right: 5
+                },
+                tableLineWidth: 1,
+                head: [
+                  [
+                    "Serial No.",
+                    "Salesperson Name",
+                    "Date",
+                    "Salary",
+                    "Incentive",
+                    "Miscellaneous",
+                  ],
+                ],
+                body: rows,
+                startY: tableStartY,
+              });
+            
+              pdf.save("Invoices_report.pdf");
+            };
+
+            const handleDateChange = (date) => {
+              // const formattedDate = moment(date.startDate).format("DD-MM-YYYY");
+              setFormData({ ...formData, expenseDate: date.startDate});
+            };
             
 
   return (
@@ -295,9 +375,14 @@ const ExpanseTable = () => {
         </button>
       }
     TopSideButtons3={
+      <>
         <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-error"}`} onClick={handleDeleteModal}>
           Delete
         </button>
+        <button className="btn btn-primary mb-4" onClick={downloadPDF}>
+          Download PDF
+        </button>
+        </>
       }
       TopSideButtons1={
         <>
@@ -368,7 +453,7 @@ const ExpanseTable = () => {
                 <TitleCard title="Update Expense">
                     <form onSubmit={handleSubmit} className="space-y-4">
                     <label onClick={() => document.getElementById("update_modal").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                     <div>
                 <label
                   htmlFor="name"
@@ -427,6 +512,18 @@ const ExpanseTable = () => {
                   required
                 />
               </div>
+              <div>
+                    <label htmlFor="expenseDate" className="label label-text text-base">Expense Date:</label>
+                    <DatePicker
+              inputClassName="w-full input input-bordered input-primary"
+              useRange={false}
+              asSingle={true}
+              displayFormat={"DD/MM/YYYY"}
+              value={{startDate: formData.expenseDate, endDate: formData.expenseDate}}
+              onChange={handleDateChange}
+              required
+            />
+                    </div>
                     </div>
                     <div className="modal-action">
                         <button type="submit" className="btn btn-primary">Update</button>

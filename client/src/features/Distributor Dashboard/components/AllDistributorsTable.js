@@ -340,7 +340,7 @@ const AllDistributorsTable = () => {
       "Address",
     ];
 
-    const rows = currentRecords.map((record, index) => [
+    const rows = data.map((record, index) => [
       index + 1,
       record.distributorProfile.agencyName,
       record.distributorProfile.gstNo,

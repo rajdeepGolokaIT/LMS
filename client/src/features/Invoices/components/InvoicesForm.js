@@ -82,8 +82,8 @@ function InvoicesForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    // e.preventDefault();
 
     try {
       const params = new URLSearchParams();
@@ -102,6 +102,7 @@ function InvoicesForm() {
         }
       );
       console.log("Invoice added:", response.data);
+      document.getElementById("confirm_modal").close()
       setInvoiceId(response.data.id);
       setPercentage(response.data.discountPercentage);
       setPrice(response.data.discountPrice);
@@ -151,14 +152,14 @@ function InvoicesForm() {
   };
 
   // console.log(discountValue);
-  console.log(formData);
+  // console.log(formData);
 
   const handleDateChange = (date) => {
     // const formattedDate = moment(date.startDate).format("DD-MM-YYYY");
     setFormData({ ...formData, deliveryDate: date.startDate});
   };
   
- 
+ console.log.apply(formData.deliveryDate)
   
   const fetchInvoiceNumber = async () => {
     try {
@@ -179,7 +180,7 @@ function InvoicesForm() {
     }
   };
 
- console.log(fetchIrnNo)
+//  console.log(fetchIrnNo)
 
   const handleInvoiceNumberChange = (e) => {
     setFormData({
@@ -199,12 +200,17 @@ function InvoicesForm() {
     setIrnExists(check)
   };
 
+  const handleConfirm = (e) => {
+    e.preventDefault();
+    document.getElementById('confirm_modal').showModal();
+  };
+
 
   return (
     <>
       <TitleCard title="Add An Invoice" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg ">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleConfirm} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
@@ -560,6 +566,38 @@ function InvoicesForm() {
           </form>
         </div>
       </TitleCard>
+      
+      <dialog id="confirm_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-2xl text-center">Confirmation!!</h3>
+          <p className="py-4 text-center">Are you sure you want to add invoice?</p>
+          <div>
+          <table>
+            <tr><th>Invoice No:</th><td>{formData.invoiceNumber}</td></tr>
+            <tr><th>IRN:</th><td>{formData.irn}</td></tr>
+            <tr><th>Sales Person Name:</th><td>{salesPersons.find((sp) => sp.id === formData.salespersonId)?.name}</td></tr>
+            <tr><th>Invoice Date:</th><td>{formData.invoiceDate}</td></tr>
+            <tr><th>Terms Of Delivery:</th><td>{formData.termsOfDelivery}</td></tr>
+            <tr><th>Purchase Number:</th><td>{formData.purchaseNumber}</td></tr>
+            <tr><th>Delivery Date:</th><td>{formData.deliveryDate}</td></tr>
+            <tr><th>Supplier Name:</th><td>{formData.supplierName}</td></tr>
+            <tr><th>Discount Percentage:</th><td>{formData.discountPercentage}</td></tr>
+            <tr><th>Discount Amount:</th><td>{formData.discountPrice}</td></tr>
+            <tr><th>Distributer Name:</th><td>{distributors.find((d) => d.id === formData.distributorId)?.distributorProfile.agencyName}</td></tr>
+            <tr><th>Vehicle No:</th><td>{formData.vehicleNo}</td></tr>
+            <tr><th>Ack No:</th><td>{formData.ackNo}</td></tr>
+            <tr><th>Dispatched Through:</th><td>{formData.dispatchedThrough}</td></tr>
+            <tr><th>Destination:</th><td>{formData.destination}</td></tr>
+          </table>
+          </div>
+          <div className="modal-action">
+            <button className="btn btn-primary" onClick={handleSubmit}>Confirm</button>
+            <button className="btn" onClick={() => document.getElementById("confirm_modal").close()}>No</button>
+          </div>
+        </div>
+      </dialog>
+
+
       {invoiceId != null && (
           <>
           <AddProductsForm

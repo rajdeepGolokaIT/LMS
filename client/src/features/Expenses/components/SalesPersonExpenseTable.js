@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import TitleCard from '../../../components/Cards/TitleCard';
 import moment from 'moment';
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 import axios from 'axios';
@@ -204,14 +206,82 @@ const SalesPersonExpenseTable = () => {
         indexOfLastRecord
       );
 
+      const downloadPDF = () => {
+        const pdf = new jsPDF('p', 'mm', 'a4');
+      
+        const logoImg = new Image();
+        logoImg.src = "/c.png";
+        const imageWidth = 10;
+        const imageHeight = 10;
+        const imageX = (pdf.internal.pageSize.width - imageWidth) / 2;
+        const imageY = 10;
+        pdf.addImage(logoImg, "PNG", imageX, imageY, imageWidth, imageHeight);
+      
+        const title = "Sales Person Expenses Report";
+        const fontSize = 14;
+        const textWidth =
+          (pdf.getStringUnitWidth(title) * fontSize) / pdf.internal.scaleFactor;
+        const textX = (pdf.internal.pageSize.width - textWidth) / 2;
+        const textY = imageY + imageHeight + 10;
+        pdf.setFontSize(fontSize);
+        pdf.text(title, textX, textY);
+      
+        const rows = tableData.map((data, index) => [
+          index + 1,
+          data.salespersonName,
+          `INR ${parseFloat(data.TotalAmount).toFixed(2)}`,
+          `INR ${parseFloat(data.Salary == null ? 0 : data.Salary) + parseFloat(data.incentives == null ? 0 : data.incentives) + parseFloat(data.mis == null ? 0 : data.mis)}`,
+           
+          
+        ]);
+      
+        const textHeight = fontSize / pdf.internal.scaleFactor;
+      
+        const tableStartY = textY + textHeight + 10;
+      
+        pdf.autoTable({
+          styles: {
+            cellPadding: 0.5,
+            fontSize: 12,
+          },
+          headStyles: {
+            fillColor: '#3f51b5',
+            textColor: '#fff',
+            halign: 'center'
+          },
+          bodyStyles: {
+            halign: 'center',
+            valign: 'middle',
+      
+          },
+          margin: {
+            left: 5,
+            right: 5
+          },
+          tableLineWidth: 1,
+          head: [
+            [
+              "Serial No.",
+              "Salesperson Name",
+              "Total Sales",
+              "Total Expense",
+            ],
+          ],
+          body: rows,
+          startY: tableStartY,
+        });
+      
+        pdf.save("Invoices_report.pdf");
+      };
+
 
   return (
     <>
     <TitleCard title={"Sales Person Expense Table"} 
     TopSideButtons2={
-        <div className="flex">
+        <div className="flex gap-4">
             <select 
-            className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+            className="select select-bordered select-sm h-7 max-w-xs"
             value={interval} onChange={(e) => setInterval(e.target.value)}>
                 <option value="monthly">Monthly</option>
                 <option value="annually">Annually</option>
@@ -220,7 +290,7 @@ const SalesPersonExpenseTable = () => {
             {interval === 'monthly' && (
                 
                     <select 
-                    className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+                    className="select select-bordered select-sm h-7 max-w-xs"
                     value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
                         <option value="january">January</option>
                         <option value="february">February</option>
@@ -239,7 +309,7 @@ const SalesPersonExpenseTable = () => {
             )}
 
             <select 
-            className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+            className="select select-bordered select-sm h-7 max-w-xs"
             value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
                 {/* Options for current year and previous two financial years */}
                 <option value={moment().year()}>{moment().year()}</option>
@@ -251,14 +321,17 @@ const SalesPersonExpenseTable = () => {
     topMargin="mt-2"
     TopSideButtons1={
       <>
+       <button className="btn btn-primary mb-4 btn-sm" onClick={downloadPDF}>
+          Download PDF
+        </button>
         <input
         type="text"
-        className="input input-bordered w-full h-7 max-w-xs"
+        className="input input-bordered input-sm h-7 max-w-xs"
         placeholder="Search..."
         value={searchTerm}
         onChange={handleSearchChange}
          />
-         <select className="input input-bordered w-full h-7 max-w-xs" onChange={(e) => setSelectTerm(e.target.value)} value={selectTerm}>
+         <select className="select select-bordered select-sm h-7 max-w-xs" onChange={(e) => setSelectTerm(e.target.value)} value={selectTerm}>
             <option value="">Select Salesperson</option>
             {salespersonNames.map((salesperson) => (
               <option key={salesperson.name} value={salesperson.name}> {salesperson.name} </option>

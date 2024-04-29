@@ -28,8 +28,8 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
     ewayVehicleFrom: "",
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    // e.preventDefault();
     try {
       
         const params = new URLSearchParams();
@@ -52,6 +52,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
           status: 1,
         })
       );
+      document.getElementById("confirm3_modal").close();
 
       setFormData({
         invoiceId: "",
@@ -91,6 +92,11 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleConfirm = (e) => {
+    e.preventDefault();
+    document.getElementById('confirm3_modal').showModal();
+  };
+
   
 
   return (
@@ -98,7 +104,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
     
       <TitleCard title="Eway Bill" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleConfirm} className="space-y-4">
              
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -446,6 +452,41 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
           </form>
         </div>
       </TitleCard>
+
+      <dialog id="confirm3_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-2xl text-center">Confirmation!!</h3>
+          <p className="py-4 text-center">Are you sure you want to add eway bill to invoice?</p>
+          <div>
+          <table className="table w-full">
+            <tr><th>Eway Doc No:</th><td>{formData.ewayDocNumber}</td></tr>
+            <tr><th>Eway Bill No:</th><td>{formData.eWayBillNo}</td></tr>
+            <tr><th>Eway Mode:</th><td>{formData.eWayMode}</td></tr>
+            <tr><th>Eway Approx Distance:</th><td>{formData.eWayApproxDistance}</td></tr>
+            <tr><th>Eway Valid Upto:</th><td>{formData.eWayValidUpto}</td></tr>
+            <tr><th>Eway Supply Type:</th><td>{formData.eWaySupplyType}</td></tr>
+            <tr><th>Eway Transaction Type:</th><td>{formData.eWayTransactionType}</td></tr>
+            <tr><th>Eway Transaction ID:</th><td>{formData.eWayTransactionId}</td></tr>
+            <tr><th>Eway GSTIN:</th><td>{formData.eWayGSTIN}</td></tr>
+            <tr><th>Eway From:</th><td>{formData.eWayfrom}</td></tr>
+            <tr><th>Eway To:</th><td>{formData.eWayTo}</td></tr>
+            <tr><th>Eway Dispatch From:</th><td>{formData.eWayDistpatchFrom}</td></tr>
+            <tr><th>Eway Ship To:</th><td>{formData.eWayShipTo}</td></tr>
+            <tr><th>Eway Tax Amount:</th><td>{formData.ewaytaxAmount}</td></tr>
+            <tr><th>Eway Tax Rate:</th><td>{formData.ewaytaxRate}</td></tr>
+            <tr><th>Eway Transportation ID:</th><td>{formData.ewayTransportationID}</td></tr>
+            <tr><th>Eway Vehicle No:</th><td>{formData.ewayVechileNo}</td></tr>
+            <tr><th>Eway Vehicle From:</th><td>{formData.ewayVehicleFrom}</td></tr>
+            
+          </table>
+          </div>
+          <div className="modal-action">
+            <button className="btn btn-primary" onClick={handleSubmit}>Confirm</button>
+            <button className="btn" onClick={() => document.getElementById("confirm3_modal").close()}>No</button>
+          </div>
+        </div>
+      </dialog>
+
     </>
   );
 }

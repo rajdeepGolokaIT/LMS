@@ -14,15 +14,15 @@ const ExpensesForm = () => {
 
   const dispatch = useDispatch();
   const [salespersons, setSalespersons] = useState([]);
-  const [formData, setFormData] = useState([
+  const [formData, setFormData] = useState(
     {
-      salespersonId: 0,
-      salary: 0,
-      incentive: 0,
-      miscellaneous: 0,
-      expenseDate: "",
+      salespersonId: null,
+      salary: null,
+      incentive: null,
+      miscellaneous: null,
+      date: "",
     }
-  ]);
+  );
 
   useEffect(() => {
     dispatch(setPageTitle({ title : "Expenses Entry Operations"}))
@@ -49,14 +49,14 @@ const ExpensesForm = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/add",
-        {
-          salespersonId: formData.salespersonId,
-          salary: formData.salary,
-          incentive: formData.incentive,
-          miscellaneous: formData.miscellaneous,
-          expenseDate: formData.expenseDate.startDate,
-        },
+        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/add",formData,
+        // {
+        //   salespersonId: formData.salespersonId,
+        //   salary: formData.salary,
+        //   incentive: formData.incentive,
+        //   miscellaneous: formData.miscellaneous,
+        //   expenseDate: formData.expenseDate.startDate,
+        // },
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -71,7 +71,7 @@ const ExpensesForm = () => {
         salary: 0,
         incentive: 0,
         miscellaneous: 0,
-        expenseDate: "",
+        date: "",
       });
       dispatch(
         showNotification({
@@ -103,7 +103,7 @@ const ExpensesForm = () => {
 
   const handleDateChange = (date) => {
     // const formattedDate = moment(date.startDate).format("DD-MM-YYYY");
-    setFormData({ ...formData, expenseDate: date.startDate});
+    setFormData({ ...formData, date: date.startDate});
   };
 
   return (
@@ -175,7 +175,7 @@ const ExpensesForm = () => {
               useRange={false}
               asSingle={true}
               displayFormat={"DD/MM/YYYY"}
-              value={{startDate: formData.expenseDate, endDate: formData.expenseDate}}
+              value={{startDate: formData.date, endDate: formData.date}}
               onChange={handleDateChange}
               required
             />

@@ -316,7 +316,7 @@ const TableComponent = () => {
   const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
 
 const downloadPDF = () => {
-  const pdf = new jsPDF('l', 'mm', 'a3');
+  const pdf = new jsPDF('l', 'mm', 'a4');
 
   const logoImg = new Image();
   logoImg.src = "/c.png";
@@ -338,7 +338,7 @@ const downloadPDF = () => {
 
   const rows = data.map((data, index) => [
     index + 1,
-    data.id,
+    // data.id,
     data.invoiceNumber,
     moment(data.createDate).format("DD/MM/YYYY"),
     data.distributor.distributorProfile.agencyName,
@@ -350,15 +350,14 @@ const downloadPDF = () => {
     `INR ${parseFloat(data.sgst).toFixed(2)}`,
     `INR ${parseFloat(data.amount).toFixed(2)}`,
     salesPersons.find((salesPerson) => salesPerson.id === data.salespersonId)?.name || "NOT ASSIGNED",
-    data.distributor.distributorProfile.city,
-    data.distributor.distributorProfile.region,
-    data.distributor.distributorProfile.zone,
+    `${data.distributor.distributorProfile.city},${data.distributor.distributorProfile.region},${data.distributor.distributorProfile.zone}`,
+    
     data.eway === null ? "Pending..." : data.eway,
     data.irn === null ? "Pending..." : data.irn,
-    data.ackNo === null ? "Pending..." : data.ackNo,
-    data.dispatchedThrough === null ? "Pending..." : data.dispatchedThrough,
-    moment(data.createDate).format("DD/MM/YYYY"),
-    moment(data.updateDate).format("DD/MM/YYYY")
+    // data.ackNo === null ? "Pending..." : data.ackNo,
+    // data.dispatchedThrough === null ? "Pending..." : data.dispatchedThrough,
+    // moment(data.createDate).format("DD/MM/YYYY"),
+    // moment(data.updateDate).format("DD/MM/YYYY")
     
   ]);
 
@@ -389,7 +388,7 @@ const downloadPDF = () => {
     head: [
       [
         "Serial No.",
-        "ID",
+        // "ID",
         "Invoice No.",
         "Invoice Date",
         "Distributor Name",
@@ -401,15 +400,15 @@ const downloadPDF = () => {
         "SGST",
         "Total Amount",
         "Sales Person Name",
-        "City",
-        "Region/State",
-        "Zone",
+        "City,Region/State,Zone",
+        // "",
+        // "",
         "Ewaybill No.",
         "IRN",
-        "Ack No.",
-        "Dispatched Through",
-        "Create Date",
-        "Update Date",
+        // "Ack No.",
+        // "Dispatched Through",
+        // "Create Date",
+        // "Update Date",
       ],
     ],
     body: rows,
