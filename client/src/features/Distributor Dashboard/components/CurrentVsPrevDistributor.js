@@ -67,12 +67,12 @@ function CurrentVsPrevDistributor() {
           {
             label: `${moment().format("MMMM-YYYY")}`,
             data: currentMonthData,
-            backgroundColor: "rgba(255, 99, 132, 1)",
+            backgroundColor: "rgba(3, 201, 169, 1)",
           },
           {
             label: `${moment().subtract(1, "year").format("MMMM-YYYY")}`,
             data: previousYearMonthData,
-            backgroundColor: "rgba(53, 162, 235, 1)",
+            backgroundColor: "rgba(178, 222, 39, 1)",
           },
         ],
       });

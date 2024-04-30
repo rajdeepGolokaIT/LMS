@@ -73,12 +73,12 @@ const SalesPersonGraph = () => {
                     {
                         label: 'Total Sales',
                         data: [totalSales],
-                        backgroundColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(3, 201, 169, 1)',
                     },
                     {
                         label: 'Total Expenses',
                         data: [totalExpenses],
-                        backgroundColor: 'rgb(54, 162, 235)',
+                        backgroundColor: 'rgba(178, 222, 39, 1)',
                     },
                 ],
             });

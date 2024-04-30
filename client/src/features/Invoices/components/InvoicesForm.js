@@ -624,31 +624,29 @@ function InvoicesForm() {
             />
           </div>
           {allowEditing == false && productsAdded == true &&
-          <button className="btn btn-primary items-center btn-sm" onClick={() => document.getElementById("confirm_modal").showModal()}>Done</button> }
+          <button className="btn btn-primary items-center btn-sm" onClick={() => document.getElementById("done_modal").showModal()}>Done</button> }
           </div>
           {allowEditing == true ? <EwayForm invoiceID={invoiceId} onSubmitSuccess={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")} /> : null}
           
           
           {/* confirmation without eway modal */}
 
-          <dialog id="confirm_modal" className="modal">
+          <dialog id="done_modal" className="modal">
           <div className="modal-box ">
             <TitleCard title="CAUSION !!!">
               <p className="py-4 text-center text-xl">Are you sure you want to proceed without Eway Bill?</p>
                 <br/>
               <div className="flex justify-between w-1/2 m-auto mt-10">
                 <label
-                  htmlFor="confirm_modal"
                   className="btn btn-error px-8"
                   onClick={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")}
                 >
                   Yes
                 </label>
                 <label
-                  htmlFor="delete_modal"
                   className="btn btn-ghost px-8"
                   onClick={() =>
-                    document.getElementById("confirm_modal").close()
+                    document.getElementById("done_modal").close()
                   }
                 >
                   No

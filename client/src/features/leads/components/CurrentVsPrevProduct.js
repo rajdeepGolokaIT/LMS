@@ -40,7 +40,7 @@ function CurrentVsPrevProduct(){
             const dataPreviousYear = await responsePreviousYear.json();
             console.log(dataPreviousYear);
 
-            const labels = dataCurrentYear.map(([product]) => product.productName.length > 20 ? product.productName.substring(0,  20) + '...' : product.productName);
+            const labels = dataCurrentYear.map(([product]) => product.productName.length > 40 ? product.productName.substring(0,  40) + '...' : product.productName);
             const currentMonthData = dataCurrentYear.map(([, totalSold]) =>  totalSold);
             console.log(currentMonthData)
             const previousYearMonthData = dataPreviousYear.length > 0
@@ -54,12 +54,12 @@ function CurrentVsPrevProduct(){
                     {
                         label: `${moment().format('MMMM-YYYY')}`,
                         data: currentMonthData,
-                        backgroundColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(3, 201, 169, 1)',
                     },
                     {
                         label: `${moment().subtract(1, 'year').format('MMMM-YYYY')}`,
                         data: previousYearMonthData,
-                        backgroundColor: 'rgba(53, 162, 235, 1)',
+                        backgroundColor: 'rgba(178, 222, 39, 1)',
                     },
                 ],
             });
