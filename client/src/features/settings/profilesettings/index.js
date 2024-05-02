@@ -17,12 +17,33 @@ function ProfileSettings(){
         address: "",
         password: "",
         mobileNumber: "",
-    })
-
-    useEffect(() => {
-        fetchProfile()
-    }, [])
-
+        userId: null,
+      });
+    
+      const [newUser, setNewUser] = useState({
+        newUsername: null,
+        nameString: null,
+        email: null,
+        address: null,
+        password: null,
+        mobileNumber: null,
+      });
+    
+      useEffect(() => {
+        fetchProfile();
+      }, []);
+    
+      useEffect(() => {
+        // Update newUser when user changes
+        setNewUser({
+          newUsername: user.username,
+        //   nameString: user.nameString,
+        //   email: user.email,
+        //   address: user.address,
+        //   password: user.password,
+        //   mobileNumber: user.mobileNumber,
+        });
+      }, [user, setNewUser]);
     const fetchProfile = async () => {
         try {
             const response = await axios.get("https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/Signup/all")
@@ -38,7 +59,16 @@ function ProfileSettings(){
     const updateProfile = async (e) => {
         e.preventDefault()
         try {
-            const response = await axios.put("https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/Signup/update-user", user)
+            const url = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/Signup/update-user/${user.username}`
+            console.log(url)
+            const response = await axios.put(url, newUser,
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            }
+            )
+            console.log(response.data)
         dispatch(showNotification({message : "Profile Updated", status : 1}))    
         } catch (error) {
             console.error("Error updating profile:", error)
@@ -47,10 +77,11 @@ function ProfileSettings(){
     }
 
     const updateFormValue = ({updateType, value}) => {
-        setUser({...user, [updateType] : value})
+        setNewUser({...newUser, [updateType] : value})
     }
 
     console.log(user)
+    console.log(newUser)
 
     return(
         <>
@@ -60,7 +91,7 @@ function ProfileSettings(){
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <InputText labelTitle="Name" defaultValue={user.nameString} updateType={"nameString"} updateFormValue={updateFormValue}/>
                     <InputText labelTitle="Email Id" defaultValue={user.email} updateType={"email"} updateFormValue={updateFormValue}/>
-                    <InputText labelTitle="Username" defaultValue={user.username} updateType={"username"} updateFormValue={updateFormValue}/>
+                    <InputText labelTitle="Username" defaultValue={user.username} updateType={"newUsername"} updateFormValue={updateFormValue}/>
                     <InputText labelTitle="Address" defaultValue={user.address} updateType={"address"} updateFormValue={updateFormValue}/>
                     <InputText labelTitle="Mobile Number" defaultValue={user.mobileNumber} updateType={"mobileNumber"} updateFormValue={updateFormValue}/>
                     <InputText labelTitle="Password" defaultValue={user.password} updateType={"password"} type={"password"} updateFormValue={updateFormValue}/>
