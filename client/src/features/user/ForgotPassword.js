@@ -4,6 +4,7 @@ import LandingIntro from './LandingIntro'
 import ErrorText from  '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
 import CheckCircleIcon  from '@heroicons/react/24/solid/CheckCircleIcon'
+import axios from 'axios'
 
 function ForgotPassword(){
 
@@ -16,7 +17,7 @@ function ForgotPassword(){
     const [linkSent, setLinkSent] = useState(false)
     const [userObj, setUserObj] = useState(INITIAL_USER_OBJ)
 
-    const submitForm = (e) =>{
+    const submitForm = async (e) =>{
         e.preventDefault()
         setErrorMessage("")
 
@@ -24,12 +25,12 @@ function ForgotPassword(){
         else{
             setLoading(true)
             // Call API to send password reset link
-            const response = fetch(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/auth/password/forgotPassword?email=${userObj.emailId}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",      
+            try {
+            const response = await axios.post(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/auth/password/forgotPassword?email=${userObj.emailId}`)
+            console.log(response.data)
+            } catch (error) {
+                console.log(error)
             }
-            })
             setLoading(false)
             setLinkSent(true)
         }

@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import {Link, useLocation} from 'react-router-dom'
+import axios from 'axios'
 import LandingIntro from './LandingIntro'
 import ErrorText from  '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
@@ -35,7 +36,7 @@ const ResetPassword = () => {
     }, [location.search]);
 
 
-    const submitForm = (e) =>{
+    const submitForm = async (e) =>{
         e.preventDefault()
         setErrorMessage("")
 
@@ -46,12 +47,12 @@ const ResetPassword = () => {
             setLoading(true)
             const url = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/auth/password/resetPassword?newPassword=${userObj2.password}&token=${token}`
             console.log(url)
-            const response = fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",      
-            },
-            })
+            try {
+            const response = await axios.get(url)
+            console.log(response.data)
+            } catch (error) {
+                console.log(error)
+            }
             setLoading(false)
             setLinkSent(true)
         }

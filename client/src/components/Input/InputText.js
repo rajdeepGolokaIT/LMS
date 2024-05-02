@@ -1,9 +1,13 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 
 function InputText({labelTitle, labelStyle, type, containerStyle, defaultValue, placeholder, updateFormValue, updateType}){
 
     const [value, setValue] = useState(defaultValue)
+
+    useEffect(() => {
+        setValue(defaultValue);
+    }, [defaultValue]);
 
     const updateInputValue = (val) => {
         setValue(val)
