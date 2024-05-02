@@ -100,7 +100,7 @@ function Header(){
                         <li className="justify-between">
                         <Link to={'/app/settings-profile'}>
                             Profile Settings
-                            <span className="badge">New</span>
+                            {/* <span className="badge">New</span> */}
                             </Link>
                         </li>
                         {/* <li className=''><Link to={'/app/settings-billing'}>Bill History</Link></li> */}
