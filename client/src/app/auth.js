@@ -4,7 +4,7 @@ const checkAuth = () => {
 /*  Getting token value stored in localstorage, if token is not present we will open login page 
     for all internal dashboard routes  */
     const TOKEN = localStorage.getItem("jwt")
-    const PUBLIC_ROUTES = ["login", "forgot-password", "register", "documentation"]
+    const PUBLIC_ROUTES = ["login", "forgot-password", "register", "reset-password"]
 
     const isPublicPage = PUBLIC_ROUTES.some( r => window.location.href.includes(r))
 

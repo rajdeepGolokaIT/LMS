@@ -24,6 +24,12 @@ function ForgotPassword(){
         else{
             setLoading(true)
             // Call API to send password reset link
+            const response = fetch(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/auth/password/forgotPassword?email=${userObj.emailId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",      
+            }
+            })
             setLoading(false)
             setLinkSent(true)
         }
@@ -33,6 +39,8 @@ function ForgotPassword(){
         setErrorMessage("")
         setUserObj({...userObj, [updateType] : value})
     }
+
+    console.log(userObj)
 
     return(
         <div className="min-h-screen bg-base-200 flex items-center">
