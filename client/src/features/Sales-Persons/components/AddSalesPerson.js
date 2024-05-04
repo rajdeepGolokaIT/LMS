@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { showNotification } from "../../common/headerSlice";
 import axios from "axios";
 import TitleCard from "../../../components/Cards/TitleCard";
+import { BASE_URL } from "../../../Endpoint";
 
 const AddSalesPerson = () => {
     const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const AddSalesPerson = () => {
                 params.append(key, formData[key]);
             }
           const response = await axios.post(
-            "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/add-salesperson",
+            `${BASE_URL}/api/v1/salespersons/add-salesperson`,
             params.toString(),
             {
                 headers: {

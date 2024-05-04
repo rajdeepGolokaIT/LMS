@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
 import DatePicker from "react-tailwindcss-datepicker";
+import { BASE_URL } from "../../../Endpoint";
 
 const Top5sold = () => {
 
@@ -46,12 +47,12 @@ const Top5sold = () => {
             let fromDate, toDate, intervalParam;
     
             if (selectedInterval === "Yearly") {
-                apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=annually&year=${selectedYear}`;
+                apiUrl = `${BASE_URL}/api/v1/invoices/top-selling-products-by-category?interval=annually&year=${selectedYear}`;
             } else if (selectedInterval === "Monthly") {
                 const monthYearArray = (selectedMonth.split(" "));
                 const apiMonth = monthYearArray[0];
                 const apiYear = monthYearArray[1].toString();
-                apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=monthly&year=${apiYear}&month=${apiMonth.toLowerCase()}`;
+                apiUrl = `${BASE_URL}/api/v1/invoices/top-selling-products-by-category?interval=monthly&year=${apiYear}&month=${apiMonth.toLowerCase()}`;
                 console.log(apiUrl); // Log the API URL before making the request
                 const response = await fetch(apiUrl);
                 const data = await response.json();
@@ -77,7 +78,7 @@ const Top5sold = () => {
                     }
                 }
     
-                apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=${intervalParam}&fromDate=${fromDate}&toDate=${toDate}`;
+                apiUrl = `${BASE_URL}/api/v1/invoices/top-selling-products-by-category?interval=${intervalParam}&fromDate=${fromDate}&toDate=${toDate}`;
             }
     
             // If selectedInterval is "Yearly", "Weekly", or "Daily", continue to this point

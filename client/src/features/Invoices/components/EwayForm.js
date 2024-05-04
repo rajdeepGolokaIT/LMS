@@ -4,6 +4,7 @@ import { showNotification } from "../../common/headerSlice";
 import axios from "axios";
 import DatePicker from "react-tailwindcss-datepicker";
 import TitleCard from "../../../components/Cards/TitleCard";
+import { BASE_URL } from "../../../Endpoint";
 
 function EwayForm({ invoiceID, onSubmitSuccess }) {
   const dispatch = useDispatch();
@@ -38,7 +39,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
             params.append(key, formData[key]);
         }
       const response = await axios.post(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/add-eway",
+        `${BASE_URL}/api/v1/eways/add-eway`,
         params.toString(),
         {
             headers: {

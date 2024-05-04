@@ -3,6 +3,7 @@ import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
 import Autocomplete from "../../leads/components/Autocomplete"; // Import Autocomplete component
 import DatePicker from "react-tailwindcss-datepicker";
+import { BASE_URL } from "../../../Endpoint";
 
 const TopCategory = () => {
   const [topProducts, setTopProducts] = useState([]);
@@ -27,38 +28,36 @@ const TopCategory = () => {
 
   const fetchLocations = async () => {
     try {
-      const response = await fetch(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
-      );
-      const data = await response.json();
-      console.log(data);
-      const category = selectedCategory.toLowerCase();
-      console.log(category);
+        const response = await fetch(
+            `${BASE_URL}/api/v1/distributors/all`
+        );
+        const data = await response.json();
+        console.log(data);
+        const category = selectedCategory.toLowerCase();
+        console.log(category);
 
-      // Extract all locations based on the selected category
-      const allLocations = data.map(
-        (item) => item.distributor.distributorProfile[category]
-      );
-      console.log(allLocations);
+        // Extract all locations based on the selected category
+        const allLocations = data.map(item => item.distributorProfile[category]);
+        console.log(allLocations);
 
-      // Filter out unique locations
-      const uniqueLocations = new Set();
-      allLocations.forEach((location) => {
-        if (location !== null) {
-          // Trim the location before adding it to the set
-          uniqueLocations.add(location.trim());
-        }
-      });
+        // Filter out unique locations
+        const uniqueLocations = new Set();
+        allLocations.forEach(location => {
+          if (location !== null) {
+            // Trim the location before adding it to the set
+            uniqueLocations.add(location.trim());
+          }
+        });
 
-      // Convert the set back to an array
-      const uniqueLocationsArray = Array.from(uniqueLocations);
+        // Convert the set back to an array
+        const uniqueLocationsArray = Array.from(uniqueLocations);
 
-      setLocations(uniqueLocationsArray);
-      console.log(uniqueLocationsArray);
+        setLocations(uniqueLocationsArray);
+        console.log(uniqueLocationsArray);
     } catch (error) {
-      console.error("Error fetching locations:", error);
+        console.error("Error fetching locations:", error);
     }
-  };
+};
 
   const fetchTopSellingProducts = async () => {
     try {
@@ -70,14 +69,14 @@ const TopCategory = () => {
       console.log(locationType, locationValue);
 
       if (selectedInterval === "Yearly") {
-        apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&interval=annually`;
+        apiUrl = `${BASE_URL}/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&interval=annually`;
         console.log(apiUrl);
         //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&interval=annually
       } else if (selectedInterval === "Monthly") {
         const monthYearArray = selectedMonth.split(" ");
         const apiMonth = monthYearArray[0].toLowerCase();
         const apiYear = monthYearArray[1].toString();
-        apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${apiYear}&month=${apiMonth}&interval=monthly`;
+        apiUrl = `${BASE_URL}/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${apiYear}&month=${apiMonth}&interval=monthly`;
         console.log(apiUrl);
         //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&month=${monthParam}&interval=monthly
       } else if (
@@ -101,7 +100,7 @@ const TopCategory = () => {
             setSelectedDateRange({ startDate: fromDate, endDate: toDate });
           }
         }
-        apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&interval=${intervalParam}`;
+        apiUrl = `${BASE_URL}/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&interval=${intervalParam}`;
         console.log(apiUrl);
         //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&interval=${intervalParam}
       }

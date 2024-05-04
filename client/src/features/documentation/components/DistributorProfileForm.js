@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../../common/headerSlice';
 import axios from 'axios';
+import { BASE_URL } from "../../../Endpoint";
 
 function DistributorProfileForm() {
 
@@ -25,7 +26,7 @@ function DistributorProfileForm() {
 
         try {
             const response = await axios.post(
-                'https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributorProfiles/add-distributorProfile',
+                `${BASE_URL}/api/v1/distributorProfiles/add-distributorProfile`,
                 {
                     address,
                     zone,

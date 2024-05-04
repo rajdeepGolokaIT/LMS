@@ -4,6 +4,7 @@ import { showNotification } from "../../common/headerSlice";
 import axios from "axios";
 import DatePicker from "react-tailwindcss-datepicker";
 import TitleCard from "../../../components/Cards/TitleCard";
+import { BASE_URL } from "../../../Endpoint";
 
 const InvoiceUpdateEway = ({ invoiceID }) => {
 
@@ -37,7 +38,7 @@ const InvoiceUpdateEway = ({ invoiceID }) => {
     useEffect(() => {
         const fetchEwayBills = async () => {
             try {
-                const response = await axios.get("https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/all");
+                const response = await axios.get(`${BASE_URL}/api/v1/eways/all`);
                 const ewayBills = response.data;
                 console.log(ewayBills.find((eway) => parseInt(eway.invoice.id) === parseInt(invoiceID[0])));
                 console.log(ewayBills.map((eway) => eway.invoice.id));
@@ -129,7 +130,7 @@ console.log(formData)
         for (const key in formData) {
             params.append(key, formData[key]);
         }
-            await axios.put(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/update-eway/${ewayBill.id}`, params.toString(), {
+            await axios.put(`${BASE_URL}/api/v1/eways/update-eway/${ewayBill.id}`, params.toString(), {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
@@ -147,7 +148,7 @@ console.log(formData)
         for (const key in formData) {
             params.append(key, formData[key]);
         }
-            await axios.post("https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/add-eway", params.toString(), {
+            await axios.post(`${BASE_URL}/api/v1/eways/add-eway`, params.toString(), {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }

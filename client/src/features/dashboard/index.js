@@ -11,6 +11,7 @@ import LineChart from './components/LineChart'
 // import BarChart from './components/BarChart'
 import DashboardTopBar from './components/DashboardTopBar'
 import { useDispatch } from 'react-redux'
+import { BASE_URL } from "../../Endpoint";
 import {showNotification} from '../common/headerSlice'
 // import DoughnutChart from './components/DoughnutChart'
 import { useState, useEffect } from 'react'
@@ -36,7 +37,7 @@ function Dashboard(){
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/count-active');
+            const response = await fetch(`${BASE_URL}/api/v1/products/count-active`);
             const data = await response.json();
             setProducts(data);
             console.log(data);
@@ -51,7 +52,7 @@ function Dashboard(){
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/count-active');
+            const response = await fetch(`${BASE_URL}/api/v1/categories/count-active`);
             const data2 = await response.json();
             setCategories(data2);
             console.log(data2);
@@ -66,7 +67,7 @@ function Dashboard(){
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributorProfiles/count');
+            const response = await fetch(`${BASE_URL}/api/v1/distributorProfiles/count`);
             const data3 = await response.json();
             setDistributors(data3);
             console.log(data3);
@@ -81,7 +82,7 @@ function Dashboard(){
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/sales/getTotalAmount');
+            const response = await fetch(`${BASE_URL}/api/v1/sales/getTotalAmount`);
             const data4 = await response.json();
             setSales(data4);
             console.log(data4);

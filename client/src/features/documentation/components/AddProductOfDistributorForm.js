@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../common/headerSlice";
 import axios from "axios";
+import { BASE_URL } from "../../../Endpoint";
 
 function DistributorProductForm() {
   const [distributorProfiles, setDistributorProfiles] = useState([]);
@@ -20,7 +21,7 @@ function DistributorProductForm() {
   const fetchDistributorProfiles = async () => {
     try {
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributorProfiles/all"
+        `${BASE_URL}/api/v1/distributorProfiles/all`
       );
       setDistributorProfiles(response.data);
       console.log(distributorProfiles);
@@ -32,7 +33,7 @@ function DistributorProductForm() {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all"
+        `${BASE_URL}/api/v1/products/all`
       );
       setProducts(response.data);
     } catch (error) {
@@ -55,7 +56,7 @@ function DistributorProductForm() {
 
     try {
       const response = await axios.post(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/${selectedDistributorProfile}/add-products`,
+        `${BASE_URL}/api/v1/distributors/${selectedDistributorProfile}/add-products`,
 
         selectedProducts
 

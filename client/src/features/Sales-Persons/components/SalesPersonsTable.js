@@ -9,6 +9,7 @@ import { showNotification } from "../../common/headerSlice";
 import TitleCard from "../../../components/Cards/TitleCard";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
+import { BASE_URL } from "../../../Endpoint";
 
 
 const SalesPersonsTable = () => {
@@ -35,12 +36,12 @@ const SalesPersonsTable = () => {
       try {
         if (selectedList === "active_salespersons") {
           const response = await axios.get(
-            `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all`
+            `${BASE_URL}/api/v1/salespersons/all`
           );
           setData(response.data);
         } else if (selectedList === "inactive_salespersons") {
           const response = await axios.get(
-            `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all-inactive`
+            `${BASE_URL}/api/v1/salespersons/all-inactive`
           );
           setData(response.data);
         }
@@ -125,7 +126,7 @@ const SalesPersonsTable = () => {
         params.append(key, formData[key]);
       }
       await axios.put(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/update-salesperson/${selectedId}`,
+        `${BASE_URL}/api/v1/salespersons/update-salesperson/${selectedId}`,
         params.toString(),
         {
           headers: {
@@ -135,7 +136,7 @@ const SalesPersonsTable = () => {
       );
       console.log("Sales Person updated successfully");
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+        `${BASE_URL}/api/v1/salespersons/all`
       );
       setData(response.data);
       document.getElementById("update_modal").close();
@@ -164,13 +165,13 @@ const SalesPersonsTable = () => {
     try {
       {
         await axios.put(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/salesperson-status?id=${selectedId}`
+          `${BASE_URL}/api/v1/salespersons/salesperson-status?id=${selectedId}`
         );
       }
       setSelectedId([]);
       // Reload data after deletion
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+        `${BASE_URL}/api/v1/salespersons/all`
       );
       setData(response.data);
       document.getElementById("delete_modal").close();

@@ -6,6 +6,7 @@ import DatePicker from "react-tailwindcss-datepicker";
 import TitleCard from "../../components/Cards/TitleCard";
 import { showNotification } from "../common/headerSlice";
 import { CALENDAR_EVENT_STYLE } from "../../components/CalendarView/util";
+import { BASE_URL } from "../../Endpoint";
 
 const THEME_BG = CALENDAR_EVENT_STYLE;
 
@@ -34,7 +35,7 @@ useEffect(() => {
 const getData = async () => {
     try {
         const date = filteredEvents[0].date
-        const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/notes/findByDate?date=${date}`);
+        const response = await axios.get(`${BASE_URL}/api/v1/notes/findByDate?date=${date}`);
         setSelectedData(response.data);
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -65,7 +66,7 @@ const getData = async () => {
     const deleteNoteCard = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.delete(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/notes/delete/${selectedId}`);
+            const response = await axios.delete(`${BASE_URL}/api/v1/notes/delete/${selectedId}`);
             document.getElementById("delete_modal").close();
             getData();
             dispatch(showNotification({ message: " Event Deleted!", status: 1 }));
@@ -82,7 +83,7 @@ const getData = async () => {
     const updateNoteCard = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/notes/update/${selectedId}`, formData);
+            const response = await axios.put(`${BASE_URL}/api/v1/notes/update/${selectedId}`, formData);
             document.getElementById("update_modal").close();
             getData()
             dispatch(showNotification({ message: " Event Updated!", status: 1 }));

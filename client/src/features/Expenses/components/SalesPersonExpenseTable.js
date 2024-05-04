@@ -7,6 +7,7 @@ import Pagination from "../../../components/Input/Pagination";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 import axios from 'axios';
+import { BASE_URL } from "../../../Endpoint";
 
 
 
@@ -35,7 +36,7 @@ const SalesPersonExpenseTable = () => {
 
     const fetchData = async () => {
         try {
-            let url = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/totalInvoiceAmountAndExpenses?interval=${interval}&year=${selectedYear}&status=true`;
+            let url = `${BASE_URL}/api/v1/invoices/totalInvoiceAmountAndExpenses?interval=${interval}&year=${selectedYear}&status=true`;
     
             if (interval === 'monthly') {
                 url += `&monthName=${selectedMonth}`;
@@ -63,7 +64,7 @@ const SalesPersonExpenseTable = () => {
       const fetchData = async () => {
           try {
               const response = await axios.get(
-                  "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+                  `${BASE_URL}/api/v1/salespersons/all`
               );
               
               setSalespersonNames(response.data);
@@ -200,7 +201,20 @@ const SalesPersonExpenseTable = () => {
         pdf.save("Invoices_report.pdf");
       };
 
+      const percentExpense = (item) => {
+        
+        const totalSales = parseFloat(item.TotalAmount == null ? 0 : item.TotalAmount)
+        const totalExpenses = (parseFloat(item.Salary == null ? 0 : item.Salary) +
+        parseFloat(item.incentives == null ? 0 : item.incentives) +
+         parseFloat(item.mis == null ? 0 : item.mis)).toFixed(2)
+        
+        const total = isNaN(( totalExpenses / totalSales * 100 ).toFixed(2)) ? 0 : ( totalExpenses / totalSales * 100 ).toFixed(2)
 
+          console.log(total)
+          console.log(totalExpenses)
+          console.log(totalSales)
+          return total
+      }
   return (
     <>
     <TitleCard title={"Sales Person Expense Table"} 
@@ -280,6 +294,7 @@ const SalesPersonExpenseTable = () => {
                 )} </th>
                 <th className="table-cell cursor-pointer" onClick={() => requestSort("TotalAmount")}>Total Sales {sortConfig.key === "TotalAmount" && sortConfig.direction === "ascending" ? <SortIcon1 className="h-5 w-5 inline" /> : <SortIcon2 className="h-5 w-5 inline" /> }</th>
                 <th className="table-cell cursor-pointer" >Total Expenses </th>
+                <th className="table-cell cursor-pointer" >Percentage of Expenses </th>
               </tr>
               </thead>
               <tbody>
@@ -289,6 +304,7 @@ const SalesPersonExpenseTable = () => {
                   <td className="table-cell">{item.salespersonName}</td>
                   <td className="table-cell">INR {parseFloat(item.TotalAmount).toFixed(2)} </td>
                   <td className="table-cell">INR {parseFloat(item.Salary == null ? 0 : item.Salary) + parseFloat(item.incentives == null ? 0 : item.incentives) + parseFloat(item.mis == null ? 0 : item.mis)} </td>
+                  <td className="table-cell">{percentExpense(item)}%</td>
                 </tr>
               ))}
             </tbody>

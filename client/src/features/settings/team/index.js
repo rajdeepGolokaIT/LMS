@@ -5,6 +5,7 @@ import { showNotification } from '../../common/headerSlice'
 import TitleCard from "../../../components/Cards/TitleCard"
 import React, { useState } from 'react';
 import axios from 'axios';
+import { BASE_URL } from "../../../Endpoint";
 
 
 
@@ -21,7 +22,7 @@ function Team(){
 
     try {
       const response = await axios.post(
-        'https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/add-category',
+        `${BASE_URL}/api/v1/categories/add-category`,
         {
           categoryName,
           isActive

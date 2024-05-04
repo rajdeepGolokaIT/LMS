@@ -3,6 +3,7 @@ import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
 import Autocomplete from "../../leads/components/Autocomplete"; // Import Autocomplete component
 import DatePicker from "react-tailwindcss-datepicker";
+import { BASE_URL } from "../../../Endpoint";
 
 const Top5Distributor = () => {
 
@@ -29,7 +30,7 @@ const Top5Distributor = () => {
     const fetchLocations = async () => {
       try {
           const response = await fetch(
-              "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
+              `${BASE_URL}/api/v1/distributors/all`
           );
           const data = await response.json();
           console.log(data);
@@ -37,7 +38,7 @@ const Top5Distributor = () => {
           console.log(category);
   
           // Extract all locations based on the selected category
-          const allLocations = data.map(item => item.distributor.distributorProfile[category]);
+          const allLocations = data.map(item => item.distributorProfile[category]);
           console.log(allLocations);
   
           // Filter out unique locations
@@ -71,14 +72,14 @@ const Top5Distributor = () => {
         // console.log(locationType, locationValue);
   
         if (selectedInterval === "Yearly") {
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors?interval=annually&${locationType}=${locationValue}&year=${selectedYear}&type=top`;
+          apiUrl = `${BASE_URL}/api/v1/invoice/top-distributors?interval=annually&${locationType}=${locationValue}&year=${selectedYear}&type=top`;
           console.log(apiUrl);
           //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors?interval=annually&year=2024&type=top
         } else if (selectedInterval === "Monthly") {
             const monthYearArray = (selectedMonth.split(" "));
             const apiMonth = monthYearArray[0];
             const apiYear = monthYearArray[1].toString();
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors?interval=monthly&${locationType}=${locationValue}&year=${apiYear}&month=${apiMonth.toLowerCase()}&type=top`;
+          apiUrl = `${BASE_URL}/api/v1/invoice/top-distributors?interval=monthly&${locationType}=${locationValue}&year=${apiYear}&month=${apiMonth.toLowerCase()}&type=top`;
           console.log(apiUrl);
           //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&month=${monthParam}&interval=monthly
         } else if (
@@ -103,7 +104,7 @@ const Top5Distributor = () => {
               setSelectedDateRange({startDate: fromDate, endDate: toDate});
             }
           }
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors?interval=${intervalParam}&${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&type=top`;
+          apiUrl = `${BASE_URL}/api/v1/invoice/top-distributors?interval=${intervalParam}&${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&type=top`;
           console.log(apiUrl);
           //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&interval=${intervalParam}
         }

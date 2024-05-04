@@ -6,6 +6,7 @@ import Pagination from "../../../components/Input/Pagination";
 import TitleCard from "../../../components/Cards/TitleCard";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
+import { BASE_URL } from "../../../Endpoint";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -43,12 +44,12 @@ const AllCategoryTable = () => {
     try {
       if (selectedList === "active_categories") {
         const response = await axios.get(
-          "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all"
+          `${BASE_URL}/api/v1/products/all`
         );
         products = response.data;
       } else if (selectedList === "inactive_categories") {
         const response = await axios.get(
-          "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/inactive-all"
+          `${BASE_URL}/api/v1/products/inactive-all`
         );
         const inactiveCategories = response.data.filter(
           (categories) => !categories.category.isActive
@@ -100,7 +101,7 @@ const AllCategoryTable = () => {
     try {
       {
         await axios.put(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/category-status?id=${selectedId}`
+          `${BASE_URL}/api/v1/categories/category-status?id=${selectedId}`
         );
       }
       setSelectedId([]);
@@ -120,7 +121,7 @@ const AllCategoryTable = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/update-category/${selectedId}`,
+        `${BASE_URL}/api/v1/categories/update-category/${selectedId}`,
         formData
         // {
         //     headers: {

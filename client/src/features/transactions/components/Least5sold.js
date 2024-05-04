@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
 import DatePicker from "react-tailwindcss-datepicker";
+import { BASE_URL } from "../../../Endpoint";
 
 const Least5sold = () => {
 
@@ -44,12 +45,12 @@ const Least5sold = () => {
         let fromDate, toDate, intervalParam;
         
         if (selectedInterval === "Yearly") {
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-least-products-by-category?interval=annually&year=${selectedYear}`;
+          apiUrl = `${BASE_URL}/api/v1/invoices/top-least-products-by-category?interval=annually&year=${selectedYear}`;
         } else if (selectedInterval === "Monthly") {
             const monthYearArray = (selectedMonth.split(" "));
             const apiMonth = monthYearArray[0];
             const apiYear = monthYearArray[1].toString();
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-least-products-by-category?interval=monthly&year=${apiYear}&month=${apiMonth.toLowerCase()}`;
+          apiUrl = `${BASE_URL}/api/v1/invoices/top-least-products-by-category?interval=monthly&year=${apiYear}&month=${apiMonth.toLowerCase()}`;
         } else if (selectedInterval === "Weekly" || selectedInterval === "Daily") {
           intervalParam = "customdate"; // Set intervalParam
           
@@ -74,7 +75,7 @@ const Least5sold = () => {
           //   console.log(fromDate, toDate);
           }
           
-          apiUrl = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-least-products-by-category?interval=${intervalParam}&fromDate=${fromDate}&toDate=${toDate}`;
+          apiUrl = `${BASE_URL}/api/v1/invoices/top-least-products-by-category?interval=${intervalParam}&fromDate=${fromDate}&toDate=${toDate}`;
         }
         
       //   console.log(fromDate, toDate, intervalParam); 

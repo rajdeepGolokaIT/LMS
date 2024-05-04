@@ -4,14 +4,15 @@ import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
 import DatePicker from "react-tailwindcss-datepicker";
 import InvoiceUpdateProducts from "./InvoiceUpdateProducts";
-import Pagination from "../../../components/Input/Pagination";
+import Pagination from "../../../components/Input/PaginationInvoice";
+import { BASE_URL } from "../../../Endpoint";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 
 const TableComponent = () => {
   const [data, setData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [recordsPerPage] = useState(10);
   // const [loading, setLoading] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -25,6 +26,28 @@ const TableComponent = () => {
   const [fetchIrnNo, setFetchIrnNo] = useState([]);
   const [invoiceExists, setInvoiceExists] = useState(false);
   const [irnExists, setIrnExists] = useState(false);
+  const [Pages, setPages] = useState(null);
+
+
+
+  useEffect(() => {
+    
+    fetchData();
+  }, [currentPage, searchTerm]);
+  
+  const fetchData = async () => {
+    try {
+      const url = `${BASE_URL}/api/v1/invoices/all-pages?page=${currentPage.toString()}&selectQuery=${searchTerm}`
+      console.log(url)
+      const response = await axios.get(url);
+      console.log(response.data)
+      setData(response.data.invoices);
+      // setCurrentPage(response.data.currentPage);
+      setPages(response.data.totalPages);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
     // Fetch distributors and products when component mounts
@@ -38,7 +61,7 @@ const TableComponent = () => {
   const fetchDistributors = async () => {
     try {
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/all"
+        `${BASE_URL}/api/v1/distributors/all`
       );
       setDistributors(response.data);
     } catch (error) {
@@ -50,7 +73,7 @@ const TableComponent = () => {
   const fetchSalesPersons = async () => {
     try {
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+        `${BASE_URL}/api/v1/salespersons/all`
       );
       setSalesPersons(response.data);
     } catch (error) {
@@ -59,36 +82,24 @@ const TableComponent = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
-        );
-        setData(response.data.reverse());
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const handleDelete = async () => {
     try {
       // Iterate over selectedInvoices array and delete each invoice
       for (const id of selectedInvoices) {
         await axios.delete(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/delete-invoice/${id}`
+          `${BASE_URL}/api/v1/invoices/delete-invoice/${id}`
         );
       }
       // Clear selectedInvoices array after successful deletion
       setSelectedInvoices([]);
       // Reload data after deletion
-      const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
-      );
-      setData(response.data.reverse());
+      // const response = await axios.get(
+      //   `${BASE_URL}/api/v1/invoices/all`
+      // );
+      // setData(response.data.reverse());
+      fetchData();
+
     } catch (error) {
       console.error("Error deleting invoice:", error);
     }
@@ -136,7 +147,7 @@ const TableComponent = () => {
       }
       console.log(params.toString());
       await axios.put(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/update-invoice/${selectedInvoices[0]}`,
+        `${BASE_URL}/api/v1/invoices/update-invoice/${selectedInvoices[0]}`,
         params.toString(),
         {
           headers: {
@@ -151,10 +162,13 @@ const TableComponent = () => {
       document.getElementById("update_modal_2").showModal();
 
       // Reload data after updating
-      const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all"
-      );
-      setData(response.data.reverse());
+      // const response = await axios.get(
+      //   `${BASE_URL}/api/v1/invoices/all`
+      // );
+      // setData(response.data.reverse());
+
+      fetchData();
+
     } catch (error) {
       console.error("Error updating invoice:", error);
     }
@@ -165,7 +179,7 @@ const TableComponent = () => {
   const invoiceProduct = async () => {
     try {
       const response = await axios.get(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/get-invoice-products-by-id/${selectedInvoices[0]}`
+        `${BASE_URL}/api/v1/invoices/get-invoice-products-by-id/${selectedInvoices[0]}`
       );
       setInvoiceProducts(response.data);
       console.log("Selected Invoice Products:" + response.data);
@@ -186,7 +200,7 @@ const TableComponent = () => {
     const fetchEwayBills = async () => {
       try {
         const response = await axios.get(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/eways/invoice/${selectedInvoices}`
+          `${BASE_URL}/api/v1/eways/invoice/${selectedInvoices}`
         );
 
         if (response.data != []) {
@@ -205,49 +219,49 @@ const TableComponent = () => {
 
   console.log(ewayTableData);
 
-  const filteredRecords = data.filter((invoice) => {
-    return (
-      String(invoice.invoiceNumber)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      String(invoice.distributor.distributorProfile.agencyName)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      String(
-        salesPersons.find(
-          (salesPerson) => salesPerson.id === invoice.salespersonId
-        )?.name
-      )
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      String(invoice.distributor.distributorProfile.city)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      // String(invoice.distributor.distributorProfile.state).toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(invoice.distributor.distributorProfile.region)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      String(invoice.distributor.distributorProfile.zone)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
-  });
+  // const filteredRecords = data.filter((invoice) => {
+  //   return (
+  //     String(invoice.invoiceNumber)
+  //       .toLowerCase()
+  //       .includes(searchTerm.toLowerCase()) ||
+  //     String(invoice.distributor.distributorProfile.agencyName)
+  //       .toLowerCase()
+  //       .includes(searchTerm.toLowerCase()) ||
+  //     String(
+  //       salesPersons.find(
+  //         (salesPerson) => salesPerson.id === invoice.salespersonId
+  //       )?.name
+  //     )
+  //       .toLowerCase()
+  //       .includes(searchTerm.toLowerCase()) ||
+  //     String(invoice.distributor.distributorProfile.city)
+  //       .toLowerCase()
+  //       .includes(searchTerm.toLowerCase()) ||
+  //     // String(invoice.distributor.distributorProfile.state).toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     String(invoice.distributor.distributorProfile.region)
+  //       .toLowerCase()
+  //       .includes(searchTerm.toLowerCase()) ||
+  //     String(invoice.distributor.distributorProfile.zone)
+  //       .toLowerCase()
+  //       .includes(searchTerm.toLowerCase())
+  //   );
+  // });
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = filteredRecords.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
-  );
-  const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
+  // const indexOfLastRecord = currentPage * recordsPerPage;
+  // const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  // const currentRecords = filteredRecords.slice(
+  //   indexOfFirstRecord,
+  //   indexOfLastRecord
+  // );
+  // const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
 
   const fetchInvoiceNumber = async () => {
     try {
-      const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/invoiceNumbers`);
+      const response = await axios.get(`${BASE_URL}/api/v1/invoices/invoiceNumbers`);
       
       setFetchInvoiceNo(response.data)
     } catch (error) {
@@ -257,7 +271,7 @@ const TableComponent = () => {
 
   const fetchIrn = async () => {
     try {
-      const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/irns`);
+      const response = await axios.get(`${BASE_URL}/api/v1/invoices/irns`);
       setFetchIrnNo(response.data)
     } catch (error) {
       console.error('Error fetching IRN:', error);
@@ -467,7 +481,7 @@ const downloadPDF = () => {
               </tr>
             </thead>
             <tbody>
-              {currentRecords.map((invoice) => (
+              {data.map((invoice) => (
                 <tr key={invoice.id} className="table-row">
                   <td className="table-cell">
                     <label>
@@ -548,7 +562,7 @@ const downloadPDF = () => {
             </tbody>
           </table>
         <Pagination
-          nPages={nPages}
+          nPages={Pages}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           // loading={loading}

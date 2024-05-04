@@ -1,0 +1,1 @@
+export const BASE_URL = "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT"

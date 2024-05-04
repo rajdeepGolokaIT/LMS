@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { openRightDrawer } from "../common/rightDrawerSlice";
 import { RIGHT_DRAWER_TYPES } from "../../utils/globalConstantUtil";
 import { showNotification } from "../common/headerSlice";
+import { BASE_URL } from "../../Endpoint";
 
 // const INITIAL_EVENTS = CALENDAR_INITIAL_EVENTS
 
@@ -32,7 +33,7 @@ function Calendar() {
   const fetchNotes = async () => {
     try {
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/notes/all"
+        `${BASE_URL}/api/v1/notes/all`
       );
       setEvents(response.data);
       
@@ -49,7 +50,7 @@ function Calendar() {
     try {
       // Make POST request to API endpoint
       await axios.post(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/notes/create",
+        `${BASE_URL}/api/v1/notes/create`,
         formData
       );
       dispatch(showNotification({ message: "New Event Added!", status: 1 }));

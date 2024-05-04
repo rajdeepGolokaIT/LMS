@@ -5,6 +5,7 @@ import TitleCard from "../../../components/Cards/TitleCard"
 import { showNotification } from '../../common/headerSlice'
 import InputText from '../../../components/Input/InputText'
 import axios from 'axios'
+import { BASE_URL } from "../../../Endpoint";
 
 function ProfileSettings(){
 
@@ -46,7 +47,7 @@ function ProfileSettings(){
       }, [user, setNewUser]);
     const fetchProfile = async () => {
         try {
-            const response = await axios.get("https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/Signup/all")
+            const response = await axios.get(`${BASE_URL}/Signup/all`)
             const data = response.data[0]
             setUser(data)
 
@@ -59,7 +60,7 @@ function ProfileSettings(){
     const updateProfile = async (e) => {
         e.preventDefault()
         try {
-            const url = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/Signup/update-user/${user.username}`
+            const url = `${BASE_URL}/Signup/update-user/${user.username}`
             console.log(url)
             const response = await axios.put(url, newUser,
             {

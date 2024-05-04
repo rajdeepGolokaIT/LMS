@@ -7,6 +7,7 @@ import "jspdf-autotable";
 import TitleCard from "../../../components/Cards/TitleCard";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
+import { BASE_URL } from "../../../Endpoint";
 
 
 
@@ -30,7 +31,7 @@ const AllCategorySalesTable = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/top-selling-categories?fromDate=${startDate}&toDate=${endDate}&status=${valueType}`
+          `${BASE_URL}/api/v1/categories/top-selling-categories?fromDate=${startDate}&toDate=${endDate}&status=${valueType}`
         );
         setData(response.data);
         console.log(response.data);

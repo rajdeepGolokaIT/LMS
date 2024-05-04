@@ -5,6 +5,7 @@ import ErrorText from  '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
 import CheckCircleIcon  from '@heroicons/react/24/solid/CheckCircleIcon'
 import axios from 'axios'
+import { BASE_URL } from "../../Endpoint";
 
 function ForgotPassword(){
 
@@ -26,7 +27,7 @@ function ForgotPassword(){
             setLoading(true)
             // Call API to send password reset link
             try {
-            const response = await axios.post(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/auth/password/forgotPassword?email=${userObj.emailId}`)
+            const response = await axios.post(`${BASE_URL}/auth/password/forgotPassword?email=${userObj.emailId}`)
             console.log(response.data)
             } catch (error) {
                 console.log(error)

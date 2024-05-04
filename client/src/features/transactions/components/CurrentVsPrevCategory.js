@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import TitleCard from '../../../components/Cards/TitleCard';
 import moment from 'moment';
+import { BASE_URL } from "../../../Endpoint";
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -32,12 +33,12 @@ function CurrentVsPrevCategory(){
             console.log(previousYear);
 
             // Fetch data for the current month of the current year
-            const responseCurrentYear = await fetch(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=monthly&year=${currentYear}&month=${currentMonth}`);
+            const responseCurrentYear = await fetch(`${BASE_URL}/api/v1/invoices/top-selling-products-by-category?interval=monthly&year=${currentYear}&month=${currentMonth}`);
             const dataCurrentYear = await responseCurrentYear.json();
             console.log(dataCurrentYear);
 
             // Fetch data for the same month of the previous year
-            const responsePreviousYear = await fetch(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/top-selling-products-by-category?interval=monthly&year=${previousYear}&month=${currentMonth}`);
+            const responsePreviousYear = await fetch(`${BASE_URL}/api/v1/invoices/top-selling-products-by-category?interval=monthly&year=${previousYear}&month=${currentMonth}`);
             const dataPreviousYear = await responsePreviousYear.json();
             console.log(dataPreviousYear);
 

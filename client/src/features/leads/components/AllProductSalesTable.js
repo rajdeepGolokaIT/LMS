@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-
+import { BASE_URL } from "../../../Endpoint";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import Pagination from "../../../components/Input/Pagination";
@@ -31,7 +31,7 @@ const AllProductSalesTable = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/top-selling?customFromDate=${startDate}&customToDate=${endDate}&status=${valueType}`
+          `${BASE_URL}/api/v1/products/top-selling?customFromDate=${startDate}&customToDate=${endDate}&status=${valueType}`
         );
         setData(response.data);
       } catch (error) {

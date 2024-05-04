@@ -14,6 +14,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { Line } from 'react-chartjs-2';
 import TitleCard from '../../../components/Cards/TitleCard';
+import { BASE_URL } from "../../../Endpoint";
 
 ChartJS.register(
     CategoryScale,
@@ -128,9 +129,9 @@ function LineChart() {
         try {
             let response;
             if (range === 'month' || range === 'financial-year') {
-                response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/total-sum-by-${range}`);
+                response = await axios.get(`${BASE_URL}/api/v1/invoices/total-sum-by-${range}`);
             } else if (range === 'custom') {
-                response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/total-sum-by-month-custom-date?fromDate=${selectedStartYear}-${selectedStartMonth}&toDate=${selectedEndYear}-${selectedEndMonth}`);
+                response = await axios.get(`${BASE_URL}/api/v1/invoices/total-sum-by-month-custom-date?fromDate=${selectedStartYear}-${selectedStartMonth}&toDate=${selectedEndYear}-${selectedEndMonth}`);
             }
             setRangeData(response.data);
         } catch (error) {
@@ -149,6 +150,14 @@ function LineChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: false,
+        tooltip: {
+          callbacks: {
+            title: (context) => {
+              console.log(context[0].label);
+              return context[0].label.replaceAll(","," ");
+            },
+          },
+        },
       },
       scales: {
         x: {
@@ -181,11 +190,16 @@ function LineChart() {
       }
     });
 
+    const newLabels = labels.map(label => {
+      return [`${label.split('-')[0]}`, `${label.split('-')[1]}`];
+    })
+
+    console.log(newLabels)
     
 
 
     const data = {
-      labels,
+      labels: newLabels,
       datasets: [
         {
           fill: true,

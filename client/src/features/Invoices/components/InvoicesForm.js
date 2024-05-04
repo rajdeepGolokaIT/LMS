@@ -7,6 +7,7 @@ import { showNotification } from "../../common/headerSlice";
 import axios from "axios";
 import AddProductsForm from "./InvoiceAddProducts";
 import EwayForm from "./EwayForm";
+import { BASE_URL } from "../../../Endpoint";
 
 function InvoicesForm() {
   const [formData, setFormData] = useState({
@@ -61,7 +62,7 @@ function InvoicesForm() {
   const fetchSalesPersons = async () => {
     try {
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+        `${BASE_URL}/api/v1/salespersons/all`
       );
       setSalesPersons(response.data);
     } catch (error) {
@@ -73,7 +74,7 @@ function InvoicesForm() {
   const fetchDistributors = async () => {
     try {
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/all"
+        `${BASE_URL}/api/v1/distributors/all`
       );
       setDistributors(response.data);
     } catch (error) {
@@ -93,7 +94,7 @@ function InvoicesForm() {
       params.append("isActive", true);
       console.log(params.toString().split(" ")[0]);
       const response = await axios.post(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/createInvoice",
+        `${BASE_URL}/api/v1/invoices/createInvoice`,
         params.toString(),
         {
           headers: {
@@ -163,7 +164,7 @@ function InvoicesForm() {
   
   const fetchInvoiceNumber = async () => {
     try {
-      const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/invoiceNumbers`);
+      const response = await axios.get(`${BASE_URL}/api/v1/invoices/invoiceNumbers`);
       
       setFetchInvoiceNo(response.data)
     } catch (error) {
@@ -173,7 +174,7 @@ function InvoicesForm() {
 
   const fetchIrn = async () => {
     try {
-      const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/irns`);
+      const response = await axios.get(`${BASE_URL}/api/v1/invoices/irns`);
       setFetchIrnNo(response.data)
     } catch (error) {
       console.error('Error fetching IRN:', error);

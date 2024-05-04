@@ -4,6 +4,7 @@ import { showNotification } from '../../common/headerSlice';
 import axios from 'axios';
 import TitleCard from "../../../components/Cards/TitleCard";
 import InvoiceUpdateEway from './InvoiceUpdateEway';
+import { BASE_URL } from "../../../Endpoint";
 
 const InvoiceUpdateProducts = ({ invoiceId }) => {
 
@@ -26,7 +27,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all');
+            const response = await axios.get(`${BASE_URL}/api/v1/products/all`);
             setProducts(response.data);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -36,7 +37,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
 
     const fetchInvoices = async () => {
         try {
-            const response = await axios.get('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all');
+            const response = await axios.get(`${BASE_URL}/api/v1/invoices/all`);
             
             const foundInvoice = response.data.find(invoice => invoice.id === invoiceId[0]);
             
@@ -54,7 +55,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
 
     const fetchInvoiceProducts = async () => {
         try {
-            const response = await axios.get(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/get-invoice-products-by-id/${invoiceId[0]}`);
+            const response = await axios.get(`${BASE_URL}/api/v1/invoices/get-invoice-products-by-id/${invoiceId[0]}`);
             const fetchedProducts = response.data;
     
             // Preprocess fetchedProducts to match the structure of productForms
@@ -64,7 +65,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
     
                 console.log(productInfo.price)
                 console.log(invoiceInfo)
-                console.log(fetchProducts)
+                console.log(fetchedProducts)
 
                 return {
                     productId: productInfo.id,
@@ -85,6 +86,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
         }
     };
     
+    console.log(productForms)
 
     const handleProductChange = (index, value) => {
         // Find the price of the selected product
@@ -227,7 +229,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
             
 
             const response = await axios.put(
-                `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/${invoiceId}/update-products`,
+                `${BASE_URL}/api/v1/invoices/${invoiceId}/update-products`,
                 productsData
                 
             );
@@ -353,6 +355,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
         <form onSubmit={handleSubmit} id='invoice-form' className="space-y-4">
         <label onClick={() => document.getElementById("update_modal_2").close()} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
             {productForms.map((form, index) => (
+              <div className='w-full p-6 bg-base-100 rounded-lg shadow-lg gap-4'>
                 <div key={index} className="grid grid-cols-2 gap-4">
                     <div>
                         <label htmlFor={`product-${index}`} className="label label-text text-base">Product:</label>
@@ -518,6 +521,7 @@ const InvoiceUpdateProducts = ({ invoiceId }) => {
                       /-
                     </p>
                     </div>
+                </div>
                 </div>
             ))}
             <br/>

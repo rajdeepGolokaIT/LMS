@@ -6,6 +6,7 @@ import Pagination from "../../../components/Input/Pagination";
 import { showNotification, setPageTitle } from "../../common/headerSlice";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
+import { BASE_URL } from "../../../Endpoint";
 
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -48,12 +49,12 @@ const AllDistributorsTable = () => {
       try {
         if (selectedList === "active_distributors") {
           const response = await axios.get(
-            "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/all"
+            `${BASE_URL}/api/v1/distributors/all`
           );
           setData(response.data);
         } else if (selectedList === "inactive_distributors") {
           const response = await axios.get(
-            "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/all-inactive"
+            `${BASE_URL}/api/v1/distributors/all-inactive`
           );
           setData(response.data);
         }
@@ -150,14 +151,14 @@ const AllDistributorsTable = () => {
     try {
       {
         await axios.put(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/distributor-status?id=${thisId}`
+          `${BASE_URL}/api/v1/distributors/distributor-status?id=${thisId}`
         );
       }
       console.log("selected distributor deleted");
       setSelectedId(null);
       // Reload data after deletion
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/all"
+        `${BASE_URL}/api/v1/distributors/all`
       );
       setData(response.data);
 
@@ -175,7 +176,7 @@ const AllDistributorsTable = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributorProfiles/update-distributorProfile/${parseInt(
+        `${BASE_URL}/api/v1/distributorProfiles/update-distributorProfile/${parseInt(
           selectedId
         )}`,
         formData
@@ -187,7 +188,7 @@ const AllDistributorsTable = () => {
       );
       console.log("Expense updated successfully");
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/distributors/all"
+        `${BASE_URL}/api/v1/distributors/all`
       );
       setData(response.data);
       dispatch(

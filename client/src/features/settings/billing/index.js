@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../../common/headerSlice';
 import axios from 'axios';
+import { BASE_URL } from "../../../Endpoint";
 
 function Billing(){
 
@@ -22,7 +23,7 @@ function Billing(){
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/all');
+            const response = await axios.get(`${BASE_URL}/api/v1/categories/all`);
             setCategories(response.data);
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -35,7 +36,7 @@ function Billing(){
   
       try {
         const response = await axios.post(
-          'https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/add-product',
+          `${BASE_URL}/api/v1/products/add-product`,
           {
             productName,
             price: parseInt(price), // Ensure price is an integer

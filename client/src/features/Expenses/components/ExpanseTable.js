@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 import { showNotification, setPageTitle } from "../../common/headerSlice";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
+import { BASE_URL } from "../../../Endpoint";
 
 
 
@@ -49,10 +50,10 @@ const ExpanseTable = () => {
         const fetchData = async () => {
           try {
             const response = await axios.get(
-              "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/all"
+              `${BASE_URL}/api/v1/expenses/all`
             );
             const response2 = await axios.get(
-                "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+                `${BASE_URL}/api/v1/salespersons/all`
             );
 
             setData(response.data);
@@ -156,13 +157,13 @@ const ExpanseTable = () => {
         try {
            {
             await axios.delete(
-              `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/delete/${selectedId}`
+              `${BASE_URL}/api/v1/expenses/delete/${selectedId}`
             );
           }
           setSelectedId([]);
           // Reload data after deletion
           const response = await axios.get(
-            "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/all"
+            `${BASE_URL}/api/v1/expenses/all`
           );
           setData(response.data);
 
@@ -181,7 +182,7 @@ const ExpanseTable = () => {
         e.preventDefault();
         try {
             
-            await axios.put(`https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/update/${parseInt(selectedId)}`, formData,
+            await axios.put(`${BASE_URL}/api/v1/expenses/update/${parseInt(selectedId)}`, formData,
             {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -190,7 +191,7 @@ const ExpanseTable = () => {
             );
             console.log("Expense updated successfully");
             const response = await axios.get(
-                "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/all"
+                `${BASE_URL}/api/v1/expenses/all`
               );
               setData(response.data);
             dispatch(

@@ -5,6 +5,7 @@ import axios from "axios";
 import DatePicker from 'react-tailwindcss-datepicker';
 import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
+import { BASE_URL } from "../../../Endpoint";
 
 const ExpensesForm = () => {
 
@@ -31,7 +32,7 @@ const ExpensesForm = () => {
   const fetchSalespersons = async () => {
     try {
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all"
+        `${BASE_URL}/api/v1/salespersons/all`
       );
       console.log("Salespersons fetched:", response.data);
       setSalespersons(response.data);
@@ -49,7 +50,7 @@ const ExpensesForm = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/expenses/add",formData,
+        `${BASE_URL}/api/v1/expenses/add`,formData,
         // {
         //   salespersonId: formData.salespersonId,
         //   salary: formData.salary,

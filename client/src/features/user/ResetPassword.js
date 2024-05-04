@@ -5,6 +5,7 @@ import LandingIntro from './LandingIntro'
 import ErrorText from  '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
 import CheckCircleIcon  from '@heroicons/react/24/solid/CheckCircleIcon'
+import { BASE_URL } from "../../Endpoint";
 
 const ResetPassword = () => {
 
@@ -45,7 +46,7 @@ const ResetPassword = () => {
         else if(token === "")return setErrorMessage("Invalid token!")
         else{
             setLoading(true)
-            const url = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/auth/password/resetPassword?newPassword=${userObj2.password}&token=${token}`
+            const url = `${BASE_URL}/auth/password/resetPassword?newPassword=${userObj2.password}&token=${token}`
             console.log(url)
             try {
             const response = await axios.get(url)

@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import TitleCard from '../../../components/Cards/TitleCard';
 import moment from 'moment';
+import { BASE_URL } from "../../../Endpoint";
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -34,7 +35,7 @@ const SalesPersonGraph = () => {
 
     const fetchSalespersons = async () => {
         try {
-            const response = await fetch('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/salespersons/all');
+            const response = await fetch(`${BASE_URL}/api/v1/salespersons/all`);
             const data = await response.json();
             setSalespersons(data);
             setSelectedSalesperson(data[0].id);
@@ -45,7 +46,7 @@ const SalesPersonGraph = () => {
 
     const fetchData = async () => {
         try {
-            let url = `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/totalInvoiceAmountAndExpenses?interval=${interval}&year=${selectedYear}&status=true`;
+            let url = `${BASE_URL}/api/v1/invoices/totalInvoiceAmountAndExpenses?interval=${interval}&year=${selectedYear}&status=true`;
     
             if (interval === 'monthly') {
                 url += `&monthName=${selectedMonth}`;

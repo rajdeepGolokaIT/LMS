@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import moment from "moment";
+import { BASE_URL } from "../../../Endpoint";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setPageTitle, showNotification } from "../../common/headerSlice";
@@ -45,14 +45,14 @@ const AllProductTable = () => {
       try {
         if (selectedList === "active_products") {
           const response = await axios.get(
-            `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all`
+            `${BASE_URL}/api/v1/products/all`
           );
 
           console.log(response.data);
           setData(response.data);
         } else if (selectedList === "inactive_products") {
           const response = await axios.get(
-            `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/inactive-all`
+            `${BASE_URL}/api/v1/products/inactive-all`
           );
 
           console.log(response.data);
@@ -70,7 +70,7 @@ const AllProductTable = () => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/categories/all"
+        `${BASE_URL}/api/v1/categories/all`
       );
       setCategories(response.data);
       // console.log(response);
@@ -102,14 +102,14 @@ const AllProductTable = () => {
     try {
       {
         await axios.put(
-          `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/product-status?id=${selectedId}`
+          `${BASE_URL}/api/v1/products/product-status?id=${selectedId}`
         );
       }
       setSelectedId([]);
       document.getElementById("delete_modal").close();
       // Reload data after deletion
       const response = await axios.get(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all`
+        `${BASE_URL}/api/v1/products/all`
       );
       setData(response.data);
     } catch (error) {
@@ -161,7 +161,7 @@ const AllProductTable = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/update-product/${selectedId}`,
+        `${BASE_URL}/api/v1/products/update-product/${selectedId}`,
         formData
         // {
         //     headers: {
@@ -171,7 +171,7 @@ const AllProductTable = () => {
       );
       console.log("Product updated successfully");
       const response = await axios.get(
-        "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/products/all"
+        `${BASE_URL}/api/v1/products/all`
       );
       setData(response.data);
       dispatch(

@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import LandingIntro from './LandingIntro'
 import ErrorText from  '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
+import { BASE_URL } from "../../Endpoint";
 // import Cookies from 'js-cookie';
 
 function Login(){
@@ -29,7 +30,7 @@ function Login(){
           setLoading(true);
     
           const response = await fetch(
-            "https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/auth/login",
+            `${BASE_URL}/auth/login`,
             {
               method: "POST",
               headers: {

@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import TitleCard from "../../../components/Cards/TitleCard";
 import moment from "moment";
+import { BASE_URL } from "../../../Endpoint";
 
 ChartJS.register(
   CategoryScale,
@@ -37,14 +38,14 @@ function CurrentVsPrevDistributor() {
 
       // Fetch data for the current month of the current year
       const responseCurrentYear = await fetch(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors?interval=monthly&year=${currentYear}&month=${currentMonth}&type=top`
+        `${BASE_URL}/api/v1/invoice/top-distributors?interval=monthly&year=${currentYear}&month=${currentMonth}&type=top`
       );
       const dataCurrentYear = await responseCurrentYear.json();
       console.log(dataCurrentYear);
 
       // Fetch data for the same month of the previous year
       const responsePreviousYear = await fetch(
-        `https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors?interval=monthly&year=${previousYear}&month=${currentMonth}&type=top`
+        `${BASE_URL}/api/v1/invoice/top-distributors?interval=monthly&year=${previousYear}&month=${currentMonth}&type=top`
       );
       const dataPreviousYear = await responsePreviousYear.json();
       console.log(dataPreviousYear);
