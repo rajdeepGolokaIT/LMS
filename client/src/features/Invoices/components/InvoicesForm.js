@@ -37,6 +37,7 @@ function InvoicesForm() {
     invoiceDate: "",
   });
 
+  const [submitInvoiceData, setSubmitInvoiceData] = useState({});
   const [discountValue, setDiscountValue] = useState(0);
   const [selectedDiscountType, setSelectedDiscountType] = useState("");
   const [distributors, setDistributors] = useState([]);
@@ -103,7 +104,8 @@ function InvoicesForm() {
         }
       );
       console.log("Invoice added:", response.data);
-      document.getElementById("confirm_modal").close()
+      document.getElementById("confirm_modal").close();
+      setSubmitInvoiceData(response.data);
       setInvoiceId(response.data.id);
       setPercentage(response.data.discountPercentage);
       setPrice(response.data.discountPrice);
@@ -206,10 +208,19 @@ function InvoicesForm() {
     document.getElementById('confirm_modal').showModal();
   };
 
-
+// console.log(submitInvoiceData.distributor.distributorProfile.id)
   return (
     <>
-      <TitleCard title="Add An Invoice" topMargin="mt-2">
+<div className="grid grid-cols-1 gap-4">
+<div className="collapse collapse-arrow bg-base-100">
+  <input type="radio" name="my-accordion-2" defaultChecked /> 
+  <div className="collapse-title text-xl font-medium">
+    Step 1 : Add An Invoice
+  </div>
+  <div className="collapse-content"> 
+  {Object.keys(submitInvoiceData).length === 0 ? (
+    <>
+  <TitleCard title="Add An Invoice" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg ">
           <form onSubmit={handleConfirm} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -597,9 +608,39 @@ function InvoicesForm() {
           </div>
         </div>
       </dialog>
-
-
-      {invoiceId != null && (
+    </>
+  ) : (
+    <>
+    <div className="overflow-auto grid grid-cols-1 gap-6">
+    <table className="table table-zebra bg-base-100">
+            <tr><th>Invoice No:</th><td>{submitInvoiceData.invoiceNumber}</td></tr>
+            <tr><th>IRN:</th><td>{submitInvoiceData.irn}</td></tr>
+            <tr><th>Sales Person Name:</th><td>{salesPersons.find((sp) => sp.id === submitInvoiceData.salespersonId)?.name}</td></tr>
+            <tr><th>Invoice Date:</th><td>{submitInvoiceData.invoiceDate}</td></tr>
+            <tr><th>Terms Of Delivery:</th><td>{submitInvoiceData.termsOfDelivery}</td></tr>
+            <tr><th>Purchase Number:</th><td>{submitInvoiceData.purchaseNumber}</td></tr>
+            <tr><th>Delivery Date:</th><td>{submitInvoiceData.deliveryDate}</td></tr>
+            <tr><th>Supplier Name:</th><td>{submitInvoiceData.supplierName}</td></tr>
+            <tr><th>Discount Percentage:</th><td>{submitInvoiceData.discountPercentage}</td></tr>
+            <tr><th>Discount Amount:</th><td>{submitInvoiceData.discountPrice}</td></tr>
+            <tr><th>Distributer Name:</th><td>{distributors.find((d) => d.distributorProfile.id === submitInvoiceData.distributor.distributorProfile.id)?.distributorProfile.agencyName}</td></tr>
+            <tr><th>Vehicle No:</th><td>{submitInvoiceData.vechicleNo}</td></tr>
+            <tr><th>Ack No:</th><td>{submitInvoiceData.ackNo}</td></tr>
+            <tr><th>Dispatched Through:</th><td>{submitInvoiceData.dispatchedThrough}</td></tr>
+            <tr><th>Destination:</th><td>{submitInvoiceData.destination}</td></tr>
+          </table>
+          </div>
+    </>
+  )}
+  </div>
+</div>
+<div className="collapse collapse-arrow bg-base-100">
+  <input type="radio" name="my-accordion-2" /> 
+  <div className="collapse-title text-xl font-medium">
+    Step 2: Add Products to Invoice
+  </div>
+  <div className="collapse-content"> 
+  {invoiceId != null && (
           <>
           <AddProductsForm
             invoiceId={invoiceId}
@@ -607,6 +648,18 @@ function InvoicesForm() {
             discountAmount={price}
             onSubmitSuccess={() => setProductsAdded(true)}
           />
+          </>
+        )}
+  </div>
+</div>
+<div className="collapse collapse-arrow bg-base-100">
+  <input type="radio" name="my-accordion-2" /> 
+  <div className="collapse-title text-xl font-medium">
+    {`Step 3: Add Eway Bill Details (Optional)`}
+  </div>
+  <div className="collapse-content"> 
+  {invoiceId != null && (
+          <>
           {/* Checkbox to allow editing */}
           <div className="flex justify-between items-center w-full mt-5">
           <div className="flex justify-center items-center gap-2">
@@ -624,8 +677,7 @@ function InvoicesForm() {
               onChange={handleCheckboxChange}
             />
           </div>
-          {allowEditing == false && productsAdded == true &&
-          <button className="btn btn-primary items-center btn-sm" onClick={() => document.getElementById("done_modal").showModal()}>Done</button> }
+          
           </div>
           {allowEditing == true ? <EwayForm invoiceID={invoiceId} onSubmitSuccess={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")} /> : null}
           
@@ -659,6 +711,18 @@ function InvoicesForm() {
 
         </>
       )}
+  </div>
+</div>
+  {allowEditing == false && productsAdded == true &&
+          <div>
+          <button className="btn btn-primary items-center float-right btn-sm" onClick={() => document.getElementById("done_modal").showModal()}>Done</button> 
+          </div>}
+
+            </div>
+     
+
+
+      
     </>
   );
 }

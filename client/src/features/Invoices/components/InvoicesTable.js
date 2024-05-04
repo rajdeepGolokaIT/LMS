@@ -410,6 +410,7 @@ const downloadPDF = () => {
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
+              // oninput={() => setPattern(this)}
               placeholder="Search..."
               value={searchTerm}
               onChange={handleSearchChange}

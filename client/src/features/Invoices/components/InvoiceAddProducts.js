@@ -7,6 +7,7 @@ import { BASE_URL } from "../../../Endpoint";
 
 function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubmitSuccess }) {
   const [products, setProducts] = useState([]);
+  const [submitProductData, setSubmitProductData] = useState({});
   //   const [totalWithTax, setTotalWithTax] = useState(0);
   //   const [ totalWoutTaxAndWithDiscount ,setTotalWoutTaxAndWithDiscount] = useState(0)
   const [productForms, setProductForms] = useState([
@@ -231,12 +232,13 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
           status: 1,
         })
       );
+      setSubmitProductData(productForms);
       document.getElementById("confirm2_modal").close();
       onSubmitSuccess();
 
-      setProductForms([
-        { productId: "", quantity: "", taxType: "", taxValue: 0, discountType: "", discountValue: 0, hsnSac: "", },
-      ]);
+      // setProductForms([
+      //   { productId: "", quantity: "", taxType: "", taxValue: 0, discountType: "", discountValue: 0, hsnSac: "", },
+      // ]);
     } catch (error) {
       console.error("Error adding products to invoice:", error);
       dispatch(
@@ -425,9 +427,12 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
     document.getElementById('confirm2_modal').showModal();
   };
 
+  console.log(Object.keys(submitProductData).length)
 
   return (
     <>
+    {Object.keys(submitProductData).length === 0 ? (
+      <>
       <TitleCard title="Add Products to Invoice" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
           <form onSubmit={handleConfirm} className="space-y-4">
@@ -759,6 +764,49 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
           </div>
         </div>
       </dialog>
+      
+      </>
+    ) : (
+      <> 
+      <div className={`grid ${Object.keys(submitProductData).length > 1 ? "grid-cols-2" : "grid-cols-1"}  gap-4`}>
+      {submitProductData.map((form, index) => (
+        <div key={index} className=" relative w-full bg-base-200 rounded-lg shadow-lg">
+           <table className="table table-zebra w-full p-6 bg-base-100 rounded-lg shadow-lg">
+                  <tr><th>Product Name:</th><td>{products.find((product) => parseInt(product.id) === parseInt(form.productId))?.productName}</td></tr>
+                  <tr><th>Quantity:</th><td>{form.quantity}</td></tr>
+                  <tr><th>Tax Type:</th><td>{form.taxType}</td></tr>
+                  <tr><th>Tax Percentage:</th><td>{form.taxPercentage}</td></tr>
+                  {discountAmount <= 0 && discountPercentage <= 0 ? (
+                    <>
+                  <tr><th>Discount Type:</th><td>{form.discountType}</td></tr>
+                  <tr><th>Discount Percentage:</th><td>{form.discountValue}</td></tr>
+                  </>
+                  ) : null}
+                  <tr><th>HSN/SAC:</th><td>{form.hsnSac}</td></tr>
+                  <tr><th>Invoice Discount:</th><td>{discountPercentage > 0 ? (
+                      <p className="label label-text text-base">{discountPercentage}%</p>
+                    ) : discountAmount > 0 ? (
+                      <p className="label label-text text-base">INR {discountAmount}/-</p>
+                    ) : (
+                      <p className="label label-text text-base">0</p>
+                    )}</td></tr>
+                    <tr><th>Total Amount Without Tax (Without Discount Applied):</th><td> {`INR ${parseFloat(isNaN(form.price * form.quantity)
+                        ? 0
+                        : form.price * form.quantity).toFixed(2)}
+                      /-`}</td></tr>
+                      <tr><th>Total Amount With Tax:</th><td>{`INR ${parseFloat(calculateTotalAmountWithTax(form)).toFixed(2)}/-`}</td></tr>
+                      <tr><th>Total Amount Without Tax And With Discount:</th><td>{`INR ${parseFloat(calculateTotalAmountWithoutTaxWithDiscount(form)).toFixed(2)}/-`}</td></tr>
+                      <tr><th>Tax Amount:</th><td>{`INR ${parseFloat(isNaN(calculateTotalAmountWithDiscount(form))
+                        ? 0
+                        : calculateTotalAmountWithDiscount(form)).toFixed(2)}/-`}</td></tr>
+
+
+                    </table>
+        </div>
+      ))}
+      </div>
+      </>
+    )}
 
     </>
   );
