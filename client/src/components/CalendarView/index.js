@@ -87,12 +87,12 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}){
     return(
         <>
       <div className="w-full bg-base-100 p-4 rounded-xl shadow-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex  justify-normal gap-2 sm:gap-4">
-          <p className="font-semibold text-xl w-48">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+          <div className="flex flex-row w-full md:w-1/3 justify-between gap-2 sm:gap-4">
+          <p className="font-semibold text-xl">
                     {moment(firstDayOfMonth).format("MMMM yyyy").toString()}
                 </p>
-
+                  <div className="flex">
                     <button className="btn  btn-square btn-sm btn-ghost"  onClick={getPrevMonth}><ChevronLeftIcon
                     className="w-5 h-5"
                      
@@ -104,9 +104,10 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}){
                     className="w-5 h-5"
                       
                     /></button>
+                  </div>
             </div>
-            <div>
-                <button className="btn  btn-sm btn-ghost btn-outline normal-case" onClick={addNewEvent}>Add New Event</button>
+            <div className="w-full md:w-1/2 flex justify-end px-2 md:px-0">
+                <button className="btn btn-sm btn-ghost btn-outline normal-case" onClick={addNewEvent}>Add New Event</button>
             </div>
             
         </div>

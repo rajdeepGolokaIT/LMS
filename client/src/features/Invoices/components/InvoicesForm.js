@@ -223,7 +223,7 @@ function InvoicesForm() {
   <TitleCard title="Add An Invoice" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg ">
           <form onSubmit={handleConfirm} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
               <div>
                 <label
                   htmlFor="invoiceNumber"

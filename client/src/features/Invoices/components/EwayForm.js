@@ -108,7 +108,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
           <form onSubmit={handleConfirm} className="space-y-4">
              
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
               <div>
                 <label
                   htmlFor="eWayDocNumber"
@@ -147,8 +147,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
                   required
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            
               <div>
                 <label
                   htmlFor="eWayMode"
@@ -187,8 +186,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
                   required
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            
               <div>
                 <label
                   htmlFor="eWayValidUpto"
@@ -225,8 +223,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
                   required
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            
               <div>
                 <label
                   htmlFor="eWayTransactionType"
@@ -265,8 +262,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
                   required
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            
               <div>
                 <label
                   htmlFor="eWayGSTIN"
@@ -305,8 +301,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
                   required
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            
               <div>
                 <label htmlFor="eWayTo" className="label label-text text-base">
                   Eway to:
@@ -342,8 +337,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
                   required
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            
               <div>
                 <label
                   htmlFor="eWayShipTo"
@@ -383,8 +377,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
                   required
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            
               <div>
                 <label
                   htmlFor="ewaytaxRate"
@@ -423,8 +416,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
                   required
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            
               <div>
                 <label
                   htmlFor="ewayVehicleNo"

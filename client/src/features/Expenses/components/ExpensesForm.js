@@ -111,7 +111,7 @@ const ExpensesForm = () => {
     <TitleCard title="Add Expenses" topMargin="mt-2">
       <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          
           <div>
                     <label htmlFor="salespersonId" className="label label-text text-base">Select Salesperson Name:</label>
                     <select
@@ -127,6 +127,7 @@ const ExpensesForm = () => {
                         ))}
                     </select>
                     </div>
+                    <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                     <div>
                     <label htmlFor="salary" className="label label-text text-base">Salary:</label>
                     <input

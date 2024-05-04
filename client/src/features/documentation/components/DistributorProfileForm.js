@@ -79,7 +79,7 @@ function DistributorProfileForm() {
                                 required
                             />
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                         <div>
                             <label htmlFor="zone" className="label label-text text-base">Zone:</label>
                             <input

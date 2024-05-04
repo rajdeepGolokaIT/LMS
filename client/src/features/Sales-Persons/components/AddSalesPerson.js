@@ -64,7 +64,7 @@ const AddSalesPerson = () => {
     <TitleCard title="Add Sales Person" topMargin="mt-2">
     <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg">
       <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
         <div>
         <label
                   htmlFor="name"

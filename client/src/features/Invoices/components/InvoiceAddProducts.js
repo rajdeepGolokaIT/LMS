@@ -459,7 +459,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                       />
                     </svg>
                   </button>
-                  <div className="grid grid-cols-2 gap-4 w-full p-6 m-auto bg-base-200 rounded-lg shadow-lg ">
+                  <div className="grid md:grid-cols-2 grid-cols-1 gap-4 w-full p-6 m-auto bg-base-200 rounded-lg shadow-lg ">
                   <div>
                     <label
                       htmlFor={`product-${index}`}
