@@ -75,7 +75,7 @@ const TopSoldProducts = () => {
       } else if (selectedInterval === "Monthly") {
         const monthYearArray = (selectedMonth.split(" "));
             const apiMonth = monthYearArray[0].toLowerCase();
-            const apiYear = monthYearArray[1].toString();
+            const apiYear = monthYearArray[1];
         apiUrl = `${BASE_URL}/api/v1/invoices/top-selling-products-by-${locationType}?${locationType}=${locationValue}&year=${apiYear}&month=${apiMonth}&interval=monthly`;
         console.log(apiUrl);
       } else if (
@@ -150,19 +150,24 @@ const TopSoldProducts = () => {
 //     // setMonthlyOptions(monthlyOptions);
 //   };
 
-  const generateMonths = () => {
-    const months = [];
-    const fiscalStartMonth = moment().month("April").startOf("month");
-    const currentYear = moment().year();
-    for (let i = 0; months.length < 36; i++) { // 3 years * 12 months
-      const monthYear = fiscalStartMonth.clone().subtract(i, "months");
-      const monthName = monthYear.format("MMMM");
-      const year = monthYear.year(); // Extract the year for the current month
-      const monthYearString = `${monthName} ${year}`; // Combine month and year
-      months.unshift(monthYearString); // Unshift to prepend the month-year string to the beginning of the array
-    }
-    return months;
-  };
+const generateMonths = () => {
+  const months = [];
+  const currentMonth = moment().startOf("month");
+  const currentYear = currentMonth.year();
+  const fiscalStartMonth = moment().month("April").startOf("month");
+  
+  // Determine the start month for the first fiscal year
+  let startMonth = fiscalStartMonth.clone().year(currentYear - 2);
+
+  // Loop through each month for the past three fiscal years
+  for (let i = 0; i < 36; i++) { // 3 years * 12 months
+    const monthYearString = startMonth.format("MMMM YYYY");
+    months.push(monthYearString);
+    startMonth.add(1, "month"); // Move to the next month
+  }
+  
+  return months;
+};
   const months = generateMonths().reverse(); 
 
   useEffect(() => {
@@ -230,10 +235,12 @@ const TopSoldProducts = () => {
       <TitleCard
         title="Top Sold Products"
         topMargin="mt-2"
-        TopSideButtons1={
-          <>
-            <select
-              className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+        TopSideButtons2={
+          <div className="dropdown dropdown-bottom dropdown-end">
+          <div tabIndex={0} role="button" className="btn btn-xs">Filters</div>
+          <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+            <li><select
+              className="select mx-auto my-2 select-xs"
               onChange={handleIntervalChange}
               value={selectedInterval}
             >
@@ -241,13 +248,14 @@ const TopSoldProducts = () => {
               <option value="Monthly">Monthly</option>
               <option value="Weekly">Weekly</option>
               <option value="Daily">Daily</option>
-            </select>
+            </select></li>
+            <li>
             {(selectedInterval === "Yearly" ||
               selectedInterval === "Monthly") && (
               <>
                 {selectedInterval === "Yearly" && (
                   <select
-                    className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+                    className="select mx-auto my-2 select-xs"
                     onChange={handleYearChange}
                     value={selectedYear}
                   >
@@ -260,7 +268,7 @@ const TopSoldProducts = () => {
                 )}
                 {selectedInterval === "Monthly" && (
                   <select
-                    className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+                    className="select mx-auto my-2 select-xs"
                     onChange={handleMonthChange}
                     value={selectedMonth}
                   >
@@ -273,19 +281,12 @@ const TopSoldProducts = () => {
                 )}
               </>
             )}
-            {(selectedInterval === "Weekly" ||
-              selectedInterval === "Daily") && (
-
-              <DatePicker
-                className="border border-gray-300 rounded-md px-2 h-7"
-                range
-                onChange={handleDateRangeChange}
-                value={selectedDateRange}
-                inputClassName="input input-bordered w-72 h-7"
-              />
-            )}
+            
+            </li>
+            
+            <li>
             <select
-              className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+              className="select mx-auto my-2 select-xs"
               onChange={handleCategoryChange}
               value={selectedCategory}
             >
@@ -294,17 +295,39 @@ const TopSoldProducts = () => {
               <option value="Region">Region</option>
               <option value="City">City</option>
             </select>
+            </li>
+            <li>
             <Autocomplete
         items={locations}
         value={selectedLocation}
         onChange={handleLocationChange}
-      />
+      /></li>
+            <li>
             <button
               className="btn btn-ghost btn-xs h-7"
               onClick={resetFilters}
             >
               Reset
             </button>
+            </li>
+
+          </ul>
+        </div>
+        }
+        TopSideButtons1={
+          <>
+           {(selectedInterval === "Weekly" ||
+              selectedInterval === "Daily") && (
+              <DatePicker
+              className="input input-bordered"
+              range
+              // containerClassName="w-72 h-7 "
+              onChange={handleDateRangeChange}
+              value={selectedDateRange}
+              inputClassName="input input-bordered w-56 h-7"
+              toggleClassName="invisible"
+            />
+            )}
           </>
         }
       >

@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 import { showNotification, setPageTitle } from "../../common/headerSlice";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
+import MenuIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 import { BASE_URL } from "../../../Endpoint";
 
 
@@ -297,37 +298,47 @@ const ExpanseTable = () => {
     <>
     <TitleCard title="Expenses" topMargin="mt-2"
     TopSideButtons2={
-        <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-success"}`} onClick={handleUpdate}>
-          Update
-        </button>
-      }
-    TopSideButtons3={
-      <>
-        <button className={`btn ${selectedId === null ? "btn-disabled" : "btn-error"}`} onClick={handleDeleteModal}>
-          Delete
-        </button>
-        <button className="btn btn-primary mb-4" onClick={downloadPDF}>
+      <div className="dropdown dropdown-bottom dropdown-end">
+      <div tabIndex={0} role="button" className="">
+        <MenuIcon className="btn btn-sm btn-circle"/>
+      </div>
+      <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+        <li>
+        <button className="btn btn-primary btn-sm w-full mx-auto my-2" onClick={downloadPDF}>
           Download PDF
         </button>
-        </>
-      }
-      TopSideButtons1={
-        <>
-        <input
-          type="text"
-          className="input input-bordered w-full max-w-xs"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-           />
-           <select className="input input-bordered w-full max-w-xs" onChange={(e) => setSelectTerm(e.target.value)} value={selectTerm}>
+        </li>
+       <li> <button className={`btn btn-sm w-full mx-auto my-2 ${selectedId === null ? "btn-disabled" : "btn-success"}`} onClick={handleUpdate}>
+          Update
+        </button></li>
+        <li>
+          <button className={`btn btn-sm w-full mx-auto my-2 ${selectedId === null ? "btn-disabled" : "btn-error"}`} onClick={handleDeleteModal}>
+          Delete
+        </button></li>
+        <li>
+           <select className="select mx-auto my-2 select-sm" onChange={(e) => setSelectTerm(e.target.value)} value={selectTerm}>
             <option value="">Select Salesperson</option>
             {salespersonNames.map((salesperson) => (
               <option key={salesperson.name} value={salesperson.name}> {salesperson.name} </option>
             ))}
           </select>
+        </li>
+        </ul>
+        </div>
+      }
+   
+      TopSideButtons1={
+        
+        <input
+          type="text"
+          className="input input-bordered input-sm"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+           />
+          
             
-           </>
+           
       }
     >
    <div className="overflow-x-auto w-full">

@@ -50,7 +50,20 @@ function CurrentVsPrevDistributor() {
       const dataPreviousYear = await responsePreviousYear.json();
       console.log(dataPreviousYear);
 
-      const labels = dataCurrentYear.map((product) => product.agencyName);
+      const labels = dataCurrentYear.map((product) => {
+      const { agencyName } = product;
+      const maxLength = 15; // Maximum length before splitting
+      if (agencyName.length > maxLength) {
+        const splitIndex = agencyName.lastIndexOf(" ", maxLength);
+        if (splitIndex !== -1) {
+          return [
+            agencyName.slice(0, splitIndex),
+            agencyName.slice(splitIndex + 1),
+          ];
+        }
+      }
+      return agencyName
+    });
       console.log(labels);
       const currentMonthData = dataCurrentYear.map(
         (totalSold) => totalSold.totalPrice
@@ -100,7 +113,7 @@ function CurrentVsPrevDistributor() {
       topMargin="mt-2"
     >
       {chartData && 
-      <div className="relative w-[100%] h-[50vh] ">
+      <div className="relative w-[100%] min-w-[300px] h-[50vh] ">
       <Bar options={options} data={chartData} />
       </div>
       }

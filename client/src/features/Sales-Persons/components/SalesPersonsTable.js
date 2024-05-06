@@ -9,6 +9,7 @@ import { showNotification } from "../../common/headerSlice";
 import TitleCard from "../../../components/Cards/TitleCard";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
+import MenuIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 import { BASE_URL } from "../../../Endpoint";
 
 
@@ -243,10 +244,20 @@ const SalesPersonsTable = () => {
       <TitleCard
         title="All Sales Persons Table"
         topMargin="mt-2"
-        TopSideButtons2={
-          <>
-            <button
-              className={`btn ${
+        TopSideButtons1={
+          <div className="dropdown dropdown-bottom dropdown-end">
+          <div tabIndex={0} role="button" className="">
+            <MenuIcon className="btn btn-sm btn-circle"/>
+          </div>
+          <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+            <li>
+              <button className="btn btn-primary btn-sm w-full mx-auto my-2" onClick={downloadPDF}>
+            Download PDF
+          </button>
+            </li>
+            <li>
+              <button
+              className={`btn btn-sm w-full mx-auto my-2 ${
                 selectedId === null
                   ? "btn-disabled"
                   : selectedList === "active_salespersons"
@@ -259,8 +270,21 @@ const SalesPersonsTable = () => {
                 ? "Deactivate"
                 : "Activate"}
             </button>
-            <select
-              className="px-2 border border-gray-300 rounded-md mr-2"
+            </li>
+           
+            <li>
+             <button
+            className={`btn btn-sm w-full mx-auto my-2 ${
+              selectedId === null ? "btn-disabled" : "btn-primary"
+            }`}
+            onClick={handleUpdate}
+          >
+            Update
+          </button> 
+            </li>
+             <li>
+              <select
+              className="select select-sm mx-auto my-2 max-w-xs"
               onChange={(e) => setSelectedList(e.target.value)}
               value={selectedList}
             >
@@ -269,23 +293,11 @@ const SalesPersonsTable = () => {
                 Inactive Sales Persons
               </option>
             </select>
-          </>
+            </li>
+            </ul>
+        </div>
         }
-        TopSideButtons1={
-          <button
-            className={`btn ${
-              selectedId === null ? "btn-disabled" : "btn-primary"
-            }`}
-            onClick={handleUpdate}
-          >
-            Update
-          </button>
-        }
-        TopSideButtons3={
-          <button className="btn btn-primary " onClick={downloadPDF}>
-            Download PDF
-          </button>
-        }
+        
       >
         <div className="overflow-x-auto w-full">
           <table className="table table-lg w-full">

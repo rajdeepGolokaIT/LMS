@@ -7,7 +7,7 @@ import { showNotification, setPageTitle } from "../../common/headerSlice";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 import { BASE_URL } from "../../../Endpoint";
-
+import MenuIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -304,20 +304,38 @@ const AllDistributorsTable = () => {
       <TitleCard
         title="All Distributors List"
         topMargin="mt-2"
+        TopSideButtons1={
+          <input
+            type="text"
+            className="input input-sm input-bordered"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        }
         TopSideButtons2={
+          <div className="dropdown dropdown-bottom dropdown-end">
+          <div tabIndex={0} role="button" className="">
+            <MenuIcon className="btn btn-sm btn-circle"/>
+          </div>
+          <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+            <li>
+            <button className="btn btn-primary btn-sm w-full mx-auto my-2" onClick={downloadPDF}>
+            Download PDF
+          </button>
+            </li>
+            <li>
           <button
-            className={`btn ${
+            className={`btn btn-sm w-full mx-auto my-2 ${
               selectedId === null ? "btn-disabled" : "btn-primary"
             }`}
             onClick={handleUpdate}
           >
             Update
-          </button>
-        }
-        TopSideButtons4={
-          <>
-            <button
-              className={`btn ${
+          </button></li>
+          <li>
+          <button
+              className={`btn btn-sm w-full mx-auto my-2 ${
                 selectedId === null
                   ? "btn-disabled"
                   : selectedList === "active_distributors"
@@ -330,8 +348,10 @@ const AllDistributorsTable = () => {
                 ? "Deactivate"
                 : "Activate"}
             </button>
-            <select
-              className="px-2 border border-gray-300 rounded-md mr-2"
+          </li>
+          <li>
+          <select
+              className="select select-sm mx-auto my-2 max-w-xs"
               onChange={(e) => setSelectedList(e.target.value)}
               value={selectedList}
             >
@@ -340,21 +360,9 @@ const AllDistributorsTable = () => {
                 Inactive Distributers
               </option>
             </select>
-          </>
-        }
-        TopSideButtons1={
-          <input
-            type="text"
-            className="input input-bordered w-full max-w-xs"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-        }
-        TopSideButtons3={
-          <button className="btn btn-primary " onClick={downloadPDF}>
-            Download PDF
-          </button>
+          </li>
+          </ul>
+        </div>
         }
       >
         <div

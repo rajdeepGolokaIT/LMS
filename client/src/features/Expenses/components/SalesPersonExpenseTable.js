@@ -6,6 +6,7 @@ import "jspdf-autotable";
 import Pagination from "../../../components/Input/Pagination";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
+import MenuIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 import axios from 'axios';
 import { BASE_URL } from "../../../Endpoint";
 
@@ -219,18 +220,27 @@ const SalesPersonExpenseTable = () => {
     <>
     <TitleCard title={"Sales Person Expense Table"} 
     TopSideButtons2={
-        <div className="flex gap-4">
-            <select 
-            className="select select-bordered select-sm h-7 max-w-xs"
+      <div className="dropdown dropdown-bottom dropdown-end">
+      <div tabIndex={0} role="button" className="">
+        <MenuIcon className="btn btn-sm btn-circle"/>
+      </div>
+      <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+        <li>
+        <button className="btn btn-primary btn-sm w-full mx-auto my-2" onClick={downloadPDF}>
+          Download PDF
+        </button>
+          </li>
+            <li><select 
+            className="select mx-auto my-2 select-xs w-full"
             value={interval} onChange={(e) => setInterval(e.target.value)}>
                 <option value="monthly">Monthly</option>
                 <option value="annually">Annually</option>
-            </select>
+            </select></li>
 
-            {interval === 'monthly' && (
+            <li>{interval === 'monthly' && (
                 
                     <select 
-                    className="select select-bordered select-sm h-7 max-w-xs"
+                    className="select mx-auto my-2 select-xs w-full"
                     value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
                         <option value="january">January</option>
                         <option value="february">February</option>
@@ -246,38 +256,40 @@ const SalesPersonExpenseTable = () => {
                         <option value="december">December</option>
                     </select>
                 
-            )}
+            )}</li>
 
-            <select 
-            className="select select-bordered select-sm h-7 max-w-xs"
+            <li><select 
+            className="select mx-auto my-2 select-xs w-full"
             value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
                 {/* Options for current year and previous two financial years */}
                 <option value={moment().year()}>{moment().year()}</option>
                 <option value={moment().year() - 1}>{moment().year() - 1}</option>
                 <option value={moment().year() - 2}>{moment().year() - 2}</option>
-            </select>
-        </div>
-    }
-    topMargin="mt-2"
-    TopSideButtons1={
-      <>
-       <button className="btn btn-primary mb-4 btn-sm" onClick={downloadPDF}>
-          Download PDF
-        </button>
-        <input
-        type="text"
-        className="input input-bordered input-sm h-7 max-w-xs"
-        placeholder="Search..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-         />
-         <select className="select select-bordered select-sm h-7 max-w-xs" onChange={(e) => setSelectTerm(e.target.value)} value={selectTerm}>
+            </select></li>
+            <li>
+            <select className="select mx-auto my-2 select-xs" onChange={(e) => setSelectTerm(e.target.value)} value={selectTerm}>
             <option value="">Select Salesperson</option>
             {salespersonNames.map((salesperson) => (
               <option key={salesperson.name} value={salesperson.name}> {salesperson.name} </option>
             ))}
           </select>
-      </>
+            </li>
+            </ul>
+        </div>
+    }
+    topMargin="mt-2"
+    TopSideButtons1={
+      
+       
+        <input
+        type="text"
+        className="input input-sm input-bordered"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={handleSearchChange}
+         />
+        
+      
     }
     >
          <div className="overflow-x-auto w-full">

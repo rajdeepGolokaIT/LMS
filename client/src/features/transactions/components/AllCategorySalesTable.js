@@ -7,6 +7,7 @@ import "jspdf-autotable";
 import TitleCard from "../../../components/Cards/TitleCard";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
+import MenuIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 import { BASE_URL } from "../../../Endpoint";
 
 
@@ -137,25 +138,35 @@ const AllCategorySalesTable = () => {
         TopSideButtons1={
           <input
             type="text"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-sm input-bordered"
             placeholder="Search..."
             value={searchTerm}
             onChange={handleSearchChange}
           />
         }
         TopSideButtons2={
-          <select
+          <div className="dropdown dropdown-bottom dropdown-end">
+          <div tabIndex={0} role="button" className="">
+          <MenuIcon className="btn btn-sm btn-circle"/>
+          </div>
+          <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+          <li>
+          <button className="btn btn-primary btn-sm mx-auto my-2 w-full" onClick={downloadPDF}>
+        Download PDF
+      </button>
+          </li>
+         <li><select
             onChange={(e) => setValueType(e.target.value)}
             value={valueType}
-            className="select select-bordered w-full max-w-xs"
+            className="select select-sm mx-auto my-2 max-w-xs"
           >
             <option value="true">Active Categoriess</option>
             <option value="false">Inactive Categories</option>
-          </select>
+          </select></li>
+          </ul>
+          </div>
         }
-        TopSideButtons3={<button className="btn btn-primary mb-4" onClick={downloadPDF}>
-        Download PDF
-      </button>}
+       
       >
         
         <div className="overflow-x-auto w-full">

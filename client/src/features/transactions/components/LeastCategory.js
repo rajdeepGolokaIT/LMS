@@ -76,7 +76,7 @@ const LeastCategory = () => {
         } else if (selectedInterval === "Monthly") {
             const monthYearArray = (selectedMonth.split(" "));
             const apiMonth = monthYearArray[0].toLowerCase();
-            const apiYear = monthYearArray[1].toString();
+            const apiYear = monthYearArray[1];
           apiUrl = `${BASE_URL}/api/v1/invoices/least-selling-products-by-category?${locationType}=${locationValue}&year=${apiYear}&month=${apiMonth}&interval=monthly`;
           console.log(apiUrl);
           //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&month=${monthParam}&interval=monthly
@@ -153,19 +153,24 @@ const LeastCategory = () => {
   //     // setMonthlyOptions(monthlyOptions);
   //   };
   
-    const generateMonths = () => {
-      const months = [];
-      const fiscalStartMonth = moment().month("April").startOf("month");
-      const currentYear = moment().year();
-      for (let i = 0; months.length < 36; i++) { // 3 years * 12 months
-        const monthYear = fiscalStartMonth.clone().subtract(i, "months");
-        const monthName = monthYear.format("MMMM");
-        const year = monthYear.year(); // Extract the year for the current month
-        const monthYearString = `${monthName} ${year}`; // Combine month and year
-        months.unshift(monthYearString); // Unshift to prepend the month-year string to the beginning of the array
-      }
-      return months;
-    };
+  const generateMonths = () => {
+    const months = [];
+    const currentMonth = moment().startOf("month");
+    const currentYear = currentMonth.year();
+    const fiscalStartMonth = moment().month("April").startOf("month");
+    
+    // Determine the start month for the first fiscal year
+    let startMonth = fiscalStartMonth.clone().year(currentYear - 2);
+  
+    // Loop through each month for the past three fiscal years
+    for (let i = 0; i < 36; i++) { // 3 years * 12 months
+      const monthYearString = startMonth.format("MMMM YYYY");
+      months.push(monthYearString);
+      startMonth.add(1, "month"); // Move to the next month
+    }
+    
+    return months;
+  };
     const months = generateMonths().reverse(); 
   
     useEffect(() => {
@@ -233,82 +238,101 @@ const LeastCategory = () => {
     <TitleCard
        title="Least Sold Categories"
        topMargin="mt-2"
-       TopSideButtons1={
-         <>
-           <select
-             className="px-2 border border-gray-300 rounded-md h-7 ml-2"
-             onChange={handleIntervalChange}
-             value={selectedInterval}
-           >
-             <option value="Yearly">Yearly</option>
-             <option value="Monthly">Monthly</option>
-             <option value="Weekly">Weekly</option>
-             <option value="Daily">Daily</option>
-           </select>
-           {(selectedInterval === "Yearly" ||
-             selectedInterval === "Monthly") && (
-             <>
-               {selectedInterval === "Yearly" && (
-                 <select
-                   className="px-2 border border-gray-300 rounded-md h-7 ml-2"
-                   onChange={handleYearChange}
-                   value={selectedYear}
-                 >
-                   {financialYears.map((year) => (
-                   <option key={year} value={parseInt(year.split("-")[0])}>
-                     {year}
-                   </option>
-                 ))}
-                 </select>
-               )}
-               {selectedInterval === "Monthly" && (
-                 <select
-                   className="px-2 border border-gray-300 rounded-md h-7 ml-2"
-                   onChange={handleMonthChange}
-                   value={selectedMonth}
-                 >
-                    {months.map((month) => (
-                   <option key={month} value={month}>
-                     {month}
-                   </option>
-                 ))}
-                 </select>
-               )}
-             </>
-           )}
-           {(selectedInterval === "Weekly" ||
-             selectedInterval === "Daily") && (
-             <DatePicker
-               className="border border-gray-300 rounded-md px-2 h-7"
-               range
-               onChange={handleDateRangeChange}
-               value={selectedDateRange}
-               inputClassName="input input-bordered w-72 h-7"
-             />
-           )}
-           <select
-             className="px-2 border border-gray-300 rounded-md h-7 ml-2"
-             onChange={handleCategoryChange}
-             value={selectedCategory}
-           >
-             {/* <option value="">Select Category</option> */}
-             <option value="Zone">Zone</option>
-             <option value="Region">Region</option>
-             <option value="City">City</option>
-           </select>
-           <Autocomplete
-       items={locations}
-       value={selectedLocation}
-       onChange={handleLocationChange}
-     />
-           <button
-             className="btn btn-ghost btn-xs h-7"
-             onClick={resetFilters}
-           >
-             Reset
-           </button>
-         </>
-       }
+       TopSideButtons2={
+        <div className="dropdown dropdown-bottom dropdown-end">
+        <div tabIndex={0} role="button" className="btn btn-xs">Filters</div>
+        <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+          <li><select
+            className="select mx-auto my-2 select-xs"
+            onChange={handleIntervalChange}
+            value={selectedInterval}
+          >
+            <option value="Yearly">Yearly</option>
+            <option value="Monthly">Monthly</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Daily">Daily</option>
+          </select></li>
+          <li>
+          {(selectedInterval === "Yearly" ||
+            selectedInterval === "Monthly") && (
+            <>
+              {selectedInterval === "Yearly" && (
+                <select
+                  className="select mx-auto my-2 select-xs"
+                  onChange={handleYearChange}
+                  value={selectedYear}
+                >
+                  {financialYears.map((year) => (
+                  <option key={year} value={parseInt(year.split("-")[0])}>
+                    {year}
+                  </option>
+                ))}
+                </select>
+              )}
+              {selectedInterval === "Monthly" && (
+                <select
+                  className="select mx-auto my-2 select-xs"
+                  onChange={handleMonthChange}
+                  value={selectedMonth}
+                >
+                   {months.map((month) => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
+                </select>
+              )}
+            </>
+          )}
+          
+          </li>
+          
+          <li>
+          <select
+            className="select mx-auto my-2 select-xs"
+            onChange={handleCategoryChange}
+            value={selectedCategory}
+          >
+            {/* <option value="">Select Category</option> */}
+            <option value="Zone">Zone</option>
+            <option value="Region">Region</option>
+            <option value="City">City</option>
+          </select>
+          </li>
+          <li>
+          <Autocomplete
+      items={locations}
+      value={selectedLocation}
+      onChange={handleLocationChange}
+    /></li>
+          <li>
+          <button
+            className="btn btn-ghost btn-xs h-7"
+            onClick={resetFilters}
+          >
+            Reset
+          </button>
+          </li>
+
+        </ul>
+      </div>
+      }
+      TopSideButtons1={
+        <>
+         {(selectedInterval === "Weekly" ||
+            selectedInterval === "Daily") && (
+            <DatePicker
+            className="input input-bordered"
+            range
+            // containerClassName="w-72 h-7 "
+            onChange={handleDateRangeChange}
+            value={selectedDateRange}
+            inputClassName="input input-bordered w-56 h-7"
+            toggleClassName="invisible"
+          />
+          )}
+        </>
+      }
      >
        <div className="overflow-x-auto w-full">
          <table className="table w-full">

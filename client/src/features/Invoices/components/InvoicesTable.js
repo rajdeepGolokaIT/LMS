@@ -5,6 +5,7 @@ import TitleCard from "../../../components/Cards/TitleCard";
 import DatePicker from "react-tailwindcss-datepicker";
 import InvoiceUpdateProducts from "./InvoiceUpdateProducts";
 import Pagination from "../../../components/Input/PaginationInvoice";
+import MenuIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 import { BASE_URL } from "../../../Endpoint";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -409,45 +410,61 @@ const downloadPDF = () => {
           <>
             <input
               type="text"
-              className="input input-bordered w-full max-w-xs"
+              className="input input-sm input-bordered"
               // oninput={() => setPattern(this)}
               placeholder="Search..."
               value={searchTerm}
               onChange={handleSearchChange}
             />
-            <button
-              className={`btn  ${
-                selectedInvoices.length === 0 ? "btn-disabled" : "btn-error "
-              } mr-2`}
-              onClick={handleDelete}
-            >
-              Delete
-            </button>
+            
           </>
         }
         TopSideButtons2={
-          <button
-            className={`btn ${
+          <div className="dropdown dropdown-bottom dropdown-end">
+          <div tabIndex={0} role="button" className="">
+            <MenuIcon className="btn btn-sm btn-circle"/>
+          </div>
+          <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+            <li>
+            <button className="btn btn-primary btn-sm mx-auto my-2 min-w-max" onClick={downloadPDF}>
+          Download PDF
+        </button>
+            </li>
+            <li>
+              <button
+            className={`btn btn-sm  mx-auto my-2 w-full ${
               selectedInvoices.length === 0 ? "btn-disabled" : "btn-primary "
             } mr-2`}
             onClick={handleUpdate}
           >
             Update
           </button>
-        }
-        TopSideButtons3={
-          <>
-          <button className={`btn ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-success"}`} onClick={handleProduct}>
+            </li>
+            <li>
+              <button
+              className={`btn btn-sm mx-auto my-2 w-full ${
+                selectedInvoices.length === 0 ? "btn-disabled" : "btn-error "
+              } mr-2`}
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+            </li>
+            <li>
+              <button className={`btn btn-sm w-full mx-auto my-2 ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-success"}`} onClick={handleProduct}>
             View Products
           </button>
-          <button className={`btn ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-success"}`} onClick={handleEway}>
+            </li>
+            <li>
+              <button className={`btn btn-sm w-full mx-auto my-2 ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-success"}`} onClick={handleEway}>
             View Eway Bill
           </button>
-          <button className="btn btn-primary mb-4" onClick={downloadPDF}>
-          Download PDF
-        </button>
-          </>
+            </li>
+            </ul>
+            </div>
+          
         }
+        
       >
         <div
           className="overflow-x-auto w-full"

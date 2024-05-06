@@ -102,18 +102,20 @@ const SalesPersonGraph = () => {
   return (
     <TitleCard title={"Total Sales Graph vs. Total Expenses (Sales Person)"} 
             TopSideButtons1={
-                <div>
-                    <select 
-                    className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+                <div className="dropdown dropdown-bottom dropdown-end">
+                <div tabIndex={0} role="button" className="btn btn-xs">Filters</div>
+                <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+                    <li><select 
+                    className="select mx-auto my-2 select-xs "
                     value={interval} onChange={(e) => setInterval(e.target.value)}>
                         <option value="monthly">Monthly</option>
                         <option value="annually">Annually</option>
-                    </select>
-
+                    </select></li>
+                    <li>
                     {interval === 'monthly' && (
                         
                             <select 
-                            className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+                            className="select mx-auto my-2 select-xs w-full"
                             value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
                                 <option value="january">January</option>
                                 <option value="february">February</option>
@@ -129,22 +131,19 @@ const SalesPersonGraph = () => {
                                 <option value="december">December</option>
                             </select>
                         
-                    )}
-
+                    )}</li>
+                    <li>
                     <select 
-                    className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+                    className="select mx-auto my-2 select-xs w-full"
                     value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
                         {/* Options for current year and previous two financial years */}
                         <option value={moment().year()}>{moment().year()}</option>
                         <option value={moment().year() - 1}>{moment().year() - 1}</option>
                         <option value={moment().year() - 2}>{moment().year() - 2}</option>
-                    </select>
-                </div>
-            }
-            TopSideButtons2={
-                
-                <select 
-                className="px-2 border border-gray-300 rounded-md h-7 ml-2"
+                    </select></li>
+                    <li>
+                    <select 
+                className="select mx-auto my-2 select-xs w-full"
                 value={selectedSalesperson} onChange={(e) => setSelectedSalesperson(e.target.value)}>
                 {/* <option value={null}>All Salespersons</option> */}
                 {salespersons.map((salesperson) => (
@@ -153,7 +152,11 @@ const SalesPersonGraph = () => {
                     </option>
                 ))}
             </select>
+                    </li>
+                </ul>
+                </div>
             }
+           
             >
             {/* Render the chart if chartData is available */}
             {chartData && (

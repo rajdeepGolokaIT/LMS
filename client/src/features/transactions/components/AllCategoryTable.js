@@ -7,6 +7,7 @@ import TitleCard from "../../../components/Cards/TitleCard";
 import SortIcon1 from "@heroicons/react/24/outline/BarsArrowDownIcon";
 import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 import { BASE_URL } from "../../../Endpoint";
+import MenuIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -266,15 +267,25 @@ const AllCategoryTable = () => {
         TopSideButtons1={
           <input
             type="text"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-sm input-bordered"
             placeholder="Search..."
             value={searchTerm}
             onChange={handleSearchChange}
           />
         }
         TopSideButtons2={
-          <button
-            className={`btn ${
+          <div className="dropdown dropdown-bottom dropdown-end">
+          <div tabIndex={0} role="button" className="">
+            <MenuIcon className="btn btn-sm btn-circle"/>
+          </div>
+          <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+            <li>
+            <button className="btn btn-primary btn-sm w-full mx-auto my-2" onClick={downloadPDF}>
+            Download PDF
+          </button>
+            </li>
+         <li><button
+            className={`btn btn-sm mx-auto my-2 w-full ${
               selectedId === null
                 ? "btn-disabled"
                 : selectedList === "active_categories"
@@ -284,33 +295,31 @@ const AllCategoryTable = () => {
             onClick={handleDeleteModal}
           >
             {selectedList === "active_categories" ? "Deactivate" : "Activate"}
-          </button>
-        }
-        TopSideButtons3={
-          <>
-            <button
-              className={`btn ${
+          </button></li>
+          <li>
+          <button
+              className={`btn btn-sm mx-auto my-2 w-full ${
                 selectedId === null ? "btn-disabled" : "btn-primary"
               }`}
               onClick={handleUpdate}
             >
               Update
             </button>
-            <select
-              className="px-2 border border-gray-300 rounded-md mr-2"
+          </li>
+          <li>
+          <select
+              className="select select-sm mx-auto my-2 max-w-xs"
               onChange={(e) => setSelectedList(e.target.value)}
               value={selectedList}
             >
               <option value="active_categories">Active Categories</option>
               <option value="inactive_categories">Inactive Categories</option>
             </select>
-          </>
+          </li>
+          </ul>
+          </div>
         }
-        TopSideButtons4={
-          <button className="btn btn-primary " onClick={downloadPDF}>
-            Download PDF
-          </button>
-        }
+       
       >
         <div className="overflow-x-auto w-full">
           <table className="table table-lg w-full">

@@ -51,7 +51,7 @@ const Top5sold = () => {
             } else if (selectedInterval === "Monthly") {
                 const monthYearArray = (selectedMonth.split(" "));
                 const apiMonth = monthYearArray[0];
-                const apiYear = monthYearArray[1].toString();
+                const apiYear = monthYearArray[1];
                 apiUrl = `${BASE_URL}/api/v1/invoices/top-selling-products-by-category?interval=monthly&year=${apiYear}&month=${apiMonth.toLowerCase()}`;
                 console.log(apiUrl); // Log the API URL before making the request
                 const response = await fetch(apiUrl);
@@ -132,10 +132,12 @@ const Top5sold = () => {
     <TitleCard
       title="Top 5 Sold Categories"
       topMargin="mt-2"
-      TopSideButtons1={
-        <>
-          <select
-            className="px-2 border border-gray-300 rounded-md h-7 mr-2"
+      TopSideButtons2={
+        <div className="dropdown dropdown-bottom dropdown-end">
+        <div tabIndex={0} role="button" className="btn btn-xs">Filters</div>
+        <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
+          <li><select
+            className="select mx-auto my-2 select-xs"
             onChange={handleIntervalChange}
             value={selectedInterval}
           >
@@ -143,12 +145,12 @@ const Top5sold = () => {
             <option value="Monthly">Monthly</option>
             <option value="Weekly">Weekly</option>
             <option value="Daily">Daily</option>
-          </select>
-          {(selectedInterval === "Yearly" || selectedInterval === "Monthly") && (
+          </select></li>
+          <li><a>{(selectedInterval === "Yearly" || selectedInterval === "Monthly") && (
             <>
               {selectedInterval === "Yearly" && (
                 <select
-                  className="px-2 border border-gray-300 rounded-md h-7"
+                  className="select my-2 mx-auto select-xs"
                   onChange={handleYearChange}
                   value={selectedYear}
                 >
@@ -161,7 +163,7 @@ const Top5sold = () => {
               )}
               {selectedInterval === "Monthly" && (
                 <select
-                  className="px-2 border border-gray-300 rounded-md h-7"
+                  className="select my-2 mx-auto select-xs"
                   onChange={handleMonthChange}
                   value={selectedMonth}
                 >
@@ -174,23 +176,27 @@ const Top5sold = () => {
               )}
             </>
           )}
-          {(selectedInterval === "Weekly" || selectedInterval === "Daily") && (
-            <DatePicker
-              className="border border-gray-300 rounded-md px-2 h-7"
-              range
-              // containerClassName="w-72 h-7 "
-              onChange={handleDateRangeChange}
-              value={selectedDateRange}
-              inputClassName="input input-bordered w-72 h-7"
-              // toggleClassName="invisible"
-            />
-          )}
-        </>
-      }
-      TopSideButtons3={
-          <button onClick={handleReset} className="btn btn-ghost btn-xs h-7">
+          </a></li>
+          <li><a><button onClick={handleReset} className="btn btn-ghost btn-xs mx-auto my-2">
             Reset
-          </button>
+          </button></a></li>
+        </ul>
+      </div>
+      }
+      TopSideButtons1={
+        <>
+        {(selectedInterval === "Weekly" || selectedInterval === "Daily") && (
+          <DatePicker
+            className="input input-bordered"
+            range
+            // containerClassName="w-72 h-7 "
+            onChange={handleDateRangeChange}
+            value={selectedDateRange}
+            inputClassName="input input-bordered w-56 h-7"
+            toggleClassName="invisible"
+          />
+        )}
+        </>
         }
     >
       <div className="overflow-x-auto w-full">

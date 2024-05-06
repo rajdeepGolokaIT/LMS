@@ -150,21 +150,21 @@ function LineChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: false,
-        tooltip: {
-          callbacks: {
-            title: (context) => {
-              console.log(context[0].label);
-              return context[0].label.replaceAll(","," ");
-            },
-          },
-        },
+        // tooltip: {
+        //   callbacks: {
+        //     title: (context) => {
+        //       console.log(context[0].label);
+        //       return context[0].label.replaceAll(","," ");
+        //     },
+        //   },
+        // },
       },
       scales: {
         x: {
             ticks: {
                 autoSkip: false,
-                maxRotation: 45,
-                minRotation: 0
+                maxRotation: 90,
+                minRotation: 90
             }
         }
     }
@@ -190,16 +190,16 @@ function LineChart() {
       }
     });
 
-    const newLabels = labels.map(label => {
-      return [`${label.split('-')[0]}`, `${label.split('-')[1]}`];
-    })
+    // const newLabels = labels.map(label => {
+    //   return [`${label.split('-')[0]}`, `${label.split('-')[1]}`];
+    // })
 
-    console.log(newLabels)
+    // console.log(newLabels)
     
 
 
     const data = {
-      labels: newLabels,
+      labels,
       datasets: [
         {
           fill: true,
