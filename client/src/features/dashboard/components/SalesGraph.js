@@ -10,13 +10,11 @@ import {
     Legend,
   } from 'chart.js';
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import { Line } from 'react-chartjs-2';
-import TitleCard from '../../../components/Cards/TitleCard';
+import Subtitle from '../../../components/Typography/Subtitle';
 import { BASE_URL } from "../../../Endpoint";
-import MobileIcon from '@heroicons/react/24/solid/DevicePhoneMobileIcon';
 
 ChartJS.register(
     CategoryScale,
@@ -35,7 +33,7 @@ function LineChart() {
     const [selectedStartMonth, setSelectedStartMonth] = useState('04-01');
     const [selectedEndMonth, setSelectedEndMonth] = useState('03-31');
     
-    
+
 
     function getFinancialYear(yearsBefore = 0) {
         // Get current date
@@ -152,21 +150,22 @@ function LineChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: false,
-        // tooltip: {
-        //   callbacks: {
-        //     title: (context) => {
-        //       console.log(context[0].label);
-        //       return context[0].label.replaceAll(","," ");
-        //     },
-        //   },
-        // },
+        tooltip: {
+          callbacks: {
+            title: (context) => {
+              console.log(context[0].label);
+              return context[0].label.replaceAll(","," ");
+            },
+          },
+        },
       },
       scales: {
         x: {
+            
             ticks: {
-              font: {
-                size: 10  
-              },
+                font: {
+                  size: 10  
+                },
                 autoSkip: false,
                 maxRotation: 90,
                 minRotation: 0
@@ -202,16 +201,16 @@ function LineChart() {
       }
     });
 
-    // const newLabels = labels.map(label => {
-    //   return [`${label.split('-')[0]}`, `${label.split('-')[1]}`];
-    // })
+    const newLabels = labels.map(label => {
+      return [`${label.split('-')[0]}`, `${label.split('-')[1]}`];
+    })
 
-    // console.log(newLabels)
+    console.log(newLabels)
     
 
 
     const data = {
-      labels,
+      labels: newLabels,
       datasets: [
         {
           fill: true,
@@ -229,11 +228,11 @@ function LineChart() {
 
   
     return (
-      <TitleCard title={"Total Sales Graph"} 
-      TopSideButtons3={
-        <Link to={"Total-Sales-Graph"} className="btn btn-circle btn-sm"><MobileIcon className="w-5 h-5"/></Link>
-      }
-      TopSideButtons2={
+        <div className='card w-[950px] h-[90%] p-6 bg-base-100 shadow-xl'>
+
+            <Subtitle styleClass="text-lg">Total Sales Analysis Graph</Subtitle>
+            <Subtitle styleClass="text-sm">{"(Keep the screen to landscape to view the graph properly for mobile devices.)"}</Subtitle>
+        <div className='grid grid-flow-row gap-4 md:float-right float-right '>
         <div>
         <select value={selectedRange} onChange={handleRangeChange} className="select select-bordered select-sm float-right">
           <option value="month">Monthly</option>
@@ -241,9 +240,8 @@ function LineChart() {
           <option value="custom">Custom</option>
         </select>
         </div>
-      }
-      TopSideButtons1={
-        <>
+      
+        
         {selectedRange === 'custom' && (
             <div className="grid grid-cols-1 gap-2">
             <div className="grid grid-cols-3 gap-4">
@@ -299,14 +297,12 @@ function LineChart() {
             </div>
             </div>
         )}
-        </>
-      }
-      
->
+        </div>
+        
        <div className='relative w-[100%] h-[50vh]'>
         <Line data={data} options={options} />
         </div>
-      </TitleCard>
+        </div>
     );
   }
   

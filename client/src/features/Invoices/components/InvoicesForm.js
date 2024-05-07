@@ -35,6 +35,7 @@ function InvoicesForm() {
     termsOfDelivery: "",
     salespersonId: 0,
     invoiceDate: "",
+    isReceived: "",
   });
 
   const [submitInvoiceData, setSubmitInvoiceData] = useState({});
@@ -109,9 +110,10 @@ function InvoicesForm() {
       setInvoiceId(response.data.id);
       setPercentage(response.data.discountPercentage);
       setPrice(response.data.discountPrice);
+      document.getElementById("a2").checked = true;
       dispatch(
         showNotification({
-          message: "Invoice added successfully 😁",
+          message: "Step 1 : Add Invoice Completed. 😁",
           status: 1,
         })
       );
@@ -139,6 +141,7 @@ function InvoicesForm() {
         termsOfDelivery: "",
         salespersonId: 0,
         invoiceDate: "",
+        isReceived: "",
       });
     } catch (error) {
       console.error("Error adding invoice:", error);
@@ -208,18 +211,21 @@ function InvoicesForm() {
     document.getElementById('confirm_modal').showModal();
   };
 
+  console.log(formData)
+
 // console.log(submitInvoiceData.distributor.distributorProfile.id)
   return (
     <>
 <div className="grid grid-cols-1 gap-4">
 <div className="collapse collapse-arrow bg-base-100">
-  <input type="radio" name="my-accordion-2" defaultChecked /> 
+  <input type="radio" name="my-accordion-2" id="a1" defaultChecked /> 
   <div className="collapse-title text-xl font-medium">
     Step 1 : Add An Invoice
   </div>
   <div className="collapse-content"> 
-  {Object.keys(submitInvoiceData).length === 0 ? (
+  {Object.keys(submitInvoiceData).length === 0 && invoiceId === null ? (
     <>
+   
   <TitleCard title="Add An Invoice" topMargin="mt-2">
         <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg ">
           <form onSubmit={handleConfirm} className="space-y-4">
@@ -570,6 +576,30 @@ function InvoicesForm() {
                   required
                 />
               </div>
+              <div>
+              <label
+                  htmlFor="isReceived"
+                  className="label label-text text-base"
+                >
+                  Payment Received:
+                </label>
+                <select
+                  id="isReceived"
+                  className="w-full input input-bordered input-primary"
+                  value={formData.isReceived}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      isReceived: e.target.value,
+                    })
+                  }
+                  required
+                >
+                  <option value="">Select</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4"></div>
             <button type="submit" className="btn btn-primary">
@@ -578,6 +608,7 @@ function InvoicesForm() {
           </form>
         </div>
       </TitleCard>
+   
       
       <dialog id="confirm_modal" className="modal">
         <div className="modal-box">
@@ -585,6 +616,7 @@ function InvoicesForm() {
           <p className="py-4 text-center">Are you sure you want to add invoice?</p>
           <div>
           <table>
+            <thead>
             <tr><th>Invoice No:</th><td>{formData.invoiceNumber}</td></tr>
             <tr><th>IRN:</th><td>{formData.irn}</td></tr>
             <tr><th>Sales Person Name:</th><td>{salesPersons.find((sp) => sp.id === formData.salespersonId)?.name}</td></tr>
@@ -600,6 +632,8 @@ function InvoicesForm() {
             <tr><th>Ack No:</th><td>{formData.ackNo}</td></tr>
             <tr><th>Dispatched Through:</th><td>{formData.dispatchedThrough}</td></tr>
             <tr><th>Destination:</th><td>{formData.destination}</td></tr>
+            <tr><th>Payment Received:</th><td>{formData.isReceived === false ? "No" : "Yes"}</td></tr>
+            </thead>
           </table>
           </div>
           <div className="modal-action">
@@ -611,6 +645,7 @@ function InvoicesForm() {
     </>
   ) : (
     <>
+    {invoiceId !== null && (
     <div className="overflow-auto grid grid-cols-1 gap-6">
     <table className="table table-zebra bg-base-100">
             <tr><th>Invoice No:</th><td>{submitInvoiceData.invoiceNumber}</td></tr>
@@ -628,37 +663,43 @@ function InvoicesForm() {
             <tr><th>Ack No:</th><td>{submitInvoiceData.ackNo}</td></tr>
             <tr><th>Dispatched Through:</th><td>{submitInvoiceData.dispatchedThrough}</td></tr>
             <tr><th>Destination:</th><td>{submitInvoiceData.destination}</td></tr>
+            <tr><th>Payment Received:</th><td>{submitInvoiceData.isReceived === false ? "No" : "Yes"}</td></tr>
           </table>
           </div>
+    )}
     </>
   )}
   </div>
 </div>
 <div className="collapse collapse-arrow bg-base-100">
-  <input type="radio" name="my-accordion-2" /> 
+  <input type="radio" name="my-accordion-2" id="a2" /> 
   <div className="collapse-title text-xl font-medium">
     Step 2: Add Products to Invoice
   </div>
   <div className="collapse-content"> 
-  {invoiceId != null && (
+  {invoiceId != null ? (
           <>
           <AddProductsForm
             invoiceId={invoiceId}
             discountPercentage={percentage}
             discountAmount={price}
-            onSubmitSuccess={() => setProductsAdded(true)}
+            onSubmitSuccess={() => {setProductsAdded(true); document.getElementById("a3").checked = true;}}
           />
+          </>
+        ) : (
+          <>
+          <h1 className="text-center font-bold text-2xl text-gray-600">Please Create Invoice First</h1>
           </>
         )}
   </div>
 </div>
 <div className="collapse collapse-arrow bg-base-100">
-  <input type="radio" name="my-accordion-2" /> 
+  <input type="radio" name="my-accordion-2" id="a3" /> 
   <div className="collapse-title text-xl font-medium">
     {`Step 3: Add Eway Bill Details (Optional)`}
   </div>
   <div className="collapse-content"> 
-  {invoiceId != null && (
+  {invoiceId != null ? (
           <>
           {/* Checkbox to allow editing */}
           <div className="flex justify-between items-center w-full mt-5">
@@ -692,7 +733,17 @@ function InvoicesForm() {
               <div className="flex justify-between w-1/2 m-auto mt-10">
                 <label
                   className="btn btn-error px-8"
-                  onClick={() => setInvoiceId(null) && setDiscountValue(0) && setSelectedDiscountType("")}
+                  onClick={() => {
+                    setInvoiceId(null); 
+                    setDiscountValue(0);
+                    setSelectedDiscountType("");
+                    setSubmitInvoiceData({});
+                    document.getElementById("done_modal").close();
+                    setFormData({});
+                    setProductsAdded(false);
+                    document.getElementById("a1").checked = true;
+                    dispatch(showNotification({message : "Invoice Created Successfully! 👍", status : 1}))
+                  } }
                 >
                   Yes
                 </label>
@@ -710,6 +761,8 @@ function InvoicesForm() {
         </dialog>
 
         </>
+      ) : (
+        <h1 className="text-center font-bold text-2xl text-gray-600">Please Create Invoice First</h1>
       )}
   </div>
 </div>

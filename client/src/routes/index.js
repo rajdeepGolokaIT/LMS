@@ -27,6 +27,7 @@ const AllProductsTable = lazy(() => import('../features/leads/components/AllProd
 const AllCategoriesTable = lazy(() => import('../features/transactions/components/AllCategoryTable'))
 const AllExpensesTable = lazy(() => import('../features/Expenses/components/ExpanseTable'))
 const AllDistributorsTable = lazy(() => import('../features/Distributor Dashboard/components/AllDistributorsTable'))
+const SalesGraph = lazy(() => import('../features/dashboard/components/SalesGraph'))
 
 
 
@@ -35,10 +36,10 @@ const routes = [
     path: '/dashboard', // the url
     component: Dashboard, // view rendered
   },
-  // {
-  //   path: '/welcome', // the url
-  //   component: Welcome, // view rendered
-  // },
+  {
+    path: '/dashboard/Total-Sales-Graph', // the url
+    component: SalesGraph, // view rendered
+  },
   {
     path: '/Products-Dashboard',
     component: Leads,

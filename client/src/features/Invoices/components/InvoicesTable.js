@@ -156,17 +156,10 @@ const TableComponent = () => {
           },
         }
       );
-      // Close the modal after updating
+      console.log("Invoice updated successfully");
       document.getElementById("update_modal").close();
-
-      // open the product update modal after updating the invoice
       document.getElementById("update_modal_2").showModal();
 
-      // Reload data after updating
-      // const response = await axios.get(
-      //   `${BASE_URL}/api/v1/invoices/all`
-      // );
-      // setData(response.data.reverse());
 
       fetchData();
 
@@ -248,18 +241,19 @@ const TableComponent = () => {
   //   );
   // });
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
+  
   // const indexOfLastRecord = currentPage * recordsPerPage;
   // const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   // const currentRecords = filteredRecords.slice(
-  //   indexOfFirstRecord,
-  //   indexOfLastRecord
-  // );
-  // const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
-
+    //   indexOfFirstRecord,
+    //   indexOfLastRecord
+    // );
+    // const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
+    
+    const handleSearchChange = (event) => {
+      setSearchTerm(event.target.value);
+    };
+    
   const fetchInvoiceNumber = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/api/v1/invoices/invoiceNumbers`);
@@ -401,6 +395,21 @@ const downloadPDF = () => {
   pdf.save("Invoices_report.pdf");
 };
 
+const getIndicatorColor = (invoiceDate) => {
+  const daysDifference = moment().diff(moment(invoiceDate), 'days');
+  if (daysDifference < 30) {
+    return 'bg-green-500';
+  } else if (daysDifference < 45) {
+    return 'bg-yellow-500';
+  } else if (daysDifference < 60) {
+    return 'bg-orange-500';
+  } else if (daysDifference < 90) {
+    return 'bg-red-600';
+  } else {
+    return 'bg-red-900';
+  }
+};
+
   return (
     <>
       <TitleCard
@@ -474,11 +483,13 @@ const downloadPDF = () => {
             <thead>
               <tr className="table-row text-center">
                 <th className="table-cell">Select</th>
+                <th className="table-cell">Indicator</th>
                 <th className="table-cell">ID</th>
                 <th className="table-cell">Invoice No.</th>
                 <th className="table-cell">Invoice Date</th>
                 <th className="table-cell">Distributor Name</th>
                 <th className="table-cell">Distributor GSTIN</th>
+                <th className="table-cell">Payment Received</th>
                 {/* <th className="table-cell">{`Discount(%)`}</th> */}
                 <th className="table-cell">Discount Amount</th>
                 <th className="table-cell">Total Net Amount</th>
@@ -511,6 +522,13 @@ const downloadPDF = () => {
                       />
                     </label>
                   </td>
+                   <td className="table-cell">
+                     <div
+                     className={`w-3 h-3 rounded-full m-3  border-gray-300 grid border ${
+                     getIndicatorColor(invoice.invoiceDate)
+                      }`}
+                     ></div>
+                    </td>
                   <td className="table-cell">{invoice.id}</td>
                   <td className="table-cell">{invoice.invoiceNumber}</td>
                   <td className="table-cell">
@@ -521,6 +539,9 @@ const downloadPDF = () => {
                   </td>
                   <td className="table-cell">
                     {invoice.distributor.distributorProfile.gstNo}
+                  </td>
+                  <td className="table-cell">
+                    {invoice.isReceived === true ? "Yes" : "No"}
                   </td>
                   {/* <td className="table-cell">{invoice.discountPercentage}%</td> */}
                   <td className="table-cell">
@@ -893,6 +914,29 @@ const downloadPDF = () => {
                       {distributor.distributorProfile.agencyName}
                     </option>
                   ))}
+                </select>
+              </div>
+              <div>
+              <label
+                  htmlFor="isReceived"
+                  className="label label-text text-base"
+                >
+                  Payment Received:
+                </label>
+                <select
+                  id="isReceived"
+                  className="w-full input input-bordered input-primary"
+                  value={selectedInvoice.isReceived}
+                  onChange={(e) => {
+                    setSelectedInvoice({
+                      ...selectedInvoice,
+                      isReceived: e.target.value === "true" ? true : false,
+                    });
+                  }}
+                >
+                  <option value="">Select</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
                 </select>
               </div>
               {/* Add other input fields for editing */}

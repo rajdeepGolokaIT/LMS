@@ -228,7 +228,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
       console.log("Products added to invoice:", response.data);
       dispatch(
         showNotification({
-          message: "Products added to invoice successfully 😁",
+          message: "Step 2 : Products added to invoice completed 😁",
           status: 1,
         })
       );
@@ -768,6 +768,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
       </>
     ) : (
       <> 
+      {invoiceId !== null && (
       <div className={`grid ${Object.keys(submitProductData).length > 1 ? "grid-cols-2" : "grid-cols-1"}  gap-4`}>
       {submitProductData.map((form, index) => (
         <div key={index} className=" relative w-full bg-base-200 rounded-lg shadow-lg">
@@ -805,6 +806,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
         </div>
       ))}
       </div>
+      )}
       </>
     )}
 

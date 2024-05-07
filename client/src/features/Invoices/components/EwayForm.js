@@ -50,7 +50,7 @@ function EwayForm({ invoiceID, onSubmitSuccess }) {
       console.log("Eway added:", response.data);
       dispatch(
         showNotification({
-          message: "Eway Bill added to invoice successfully 😁",
+          message: "Step 3 : Eway Bill added to invoice completed 😁",
           status: 1,
         })
       );
