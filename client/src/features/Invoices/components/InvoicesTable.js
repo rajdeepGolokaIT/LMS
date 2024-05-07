@@ -524,7 +524,7 @@ const getIndicatorColor = (invoiceDate) => {
                   </td>
                    <td className="table-cell">
                      <div
-                     className={`w-3 h-3 rounded-full m-3  border-gray-300 grid border ${
+                     className={`w-3 h-3 rounded-full m-3 animate-pulse border-gray-300 grid border ${
                      getIndicatorColor(invoice.invoiceDate)
                       }`}
                      ></div>
