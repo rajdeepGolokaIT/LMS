@@ -130,11 +130,12 @@ const Top5sold = () => {
       title="Top 5 Sold Products"
       topMargin="mt-2"
       TopSideButtons2={
-        <div className="dropdown dropdown-bottom dropdown-end">
-        <div tabIndex={0} role="button" className="btn btn-xs">Filters</div>
+        <div className="dropdown dropdown-end">
+        <div tabIndex={0} role="button" className="btn btn-sm">Filters</div>
         <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
-          <li><select
-            className="select mx-auto my-2 select-xs"
+          <li className="flex gap-1">
+            <select
+            className="select select-bordered mx-auto my-2 select-sm"
             onChange={handleIntervalChange}
             value={selectedInterval}
           >
@@ -142,12 +143,12 @@ const Top5sold = () => {
             <option value="Monthly">Monthly</option>
             <option value="Weekly">Weekly</option>
             <option value="Daily">Daily</option>
-          </select></li>
-          <li><a>{(selectedInterval === "Yearly" || selectedInterval === "Monthly") && (
+          </select>
+          {(selectedInterval === "Yearly" || selectedInterval === "Monthly") && (
             <>
               {selectedInterval === "Yearly" && (
                 <select
-                  className="select my-2 mx-auto select-xs"
+                  className="select select-bordered my-2 mx-auto select-sm"
                   onChange={handleYearChange}
                   value={selectedYear}
                 >
@@ -160,7 +161,7 @@ const Top5sold = () => {
               )}
               {selectedInterval === "Monthly" && (
                 <select
-                  className="select my-2 mx-auto select-xs"
+                  className="select select-bordered my-2 mx-auto select-sm"
                   onChange={handleMonthChange}
                   value={selectedMonth}
                 >
@@ -173,10 +174,10 @@ const Top5sold = () => {
               )}
             </>
           )}
-          </a></li>
-          <li><a><button onClick={handleReset} className="btn btn-ghost btn-xs mx-auto my-2">
+          </li>
+          <li><button onClick={handleReset} className="btn btn-bordered btn-sm mx-auto my-2 w-full">
             Reset
-          </button></a></li>
+          </button></li>
         </ul>
       </div>
       }

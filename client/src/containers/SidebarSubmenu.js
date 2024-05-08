@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import ChevronDownIcon from '@heroicons/react/24/outline/ChevronDownIcon';
 import { useEffect, useState } from 'react';
 
@@ -24,8 +24,8 @@ function SidebarSubmenu({ submenu, name, icon, expandedSubmenu, setExpandedSubme
     };
 
     return (
-        <div className="flex flex-col">
-            <div className="w-full block" onClick={handleToggleExpand}>
+        <div className="flex flex-col ">
+            <div className="w-full text-xs block" onClick={handleToggleExpand}>
                 {icon} {name}
                 <ChevronDownIcon
                     className={`w-5 h-5 mt-1 float-right delay-400 duration-500 transition-all ${
@@ -33,11 +33,13 @@ function SidebarSubmenu({ submenu, name, icon, expandedSubmenu, setExpandedSubme
                     }`}
                 />
             </div>
-            <div className={`w-full ${isExpanded ? '' : 'hidden'}`}>
-                <ul className="menu menu-compact">
+            <div className={`w-full duration-300 transition-all ${isExpanded ? '' : 'hidden'}`}>
+                <ul className="menu menu-compact text-xs">
                     {submenu.map((m, k) => (
                         <li key={k}>
-                            <Link to={m.path} onClick={stopPropagation}>
+                            <NavLink
+                            className={({ isActive }) => isActive ? 'font-semibold bg-base-200' : 'font-normal'}
+                            to={m.path} onClick={stopPropagation}>
                                 {m.icon} {m.name}
                                 {location.pathname === m.path && (
                                     <span
@@ -45,7 +47,7 @@ function SidebarSubmenu({ submenu, name, icon, expandedSubmenu, setExpandedSubme
                                         aria-hidden="true"
                                     ></span>
                                 )}
-                            </Link>
+                            </NavLink>
                         </li>
                     ))}
                 </ul>

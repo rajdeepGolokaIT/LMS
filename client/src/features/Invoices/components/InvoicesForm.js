@@ -218,7 +218,7 @@ function InvoicesForm() {
     <>
 <div className="grid grid-cols-1 gap-4">
 <div className="collapse collapse-arrow bg-base-100">
-  <input type="radio" name="my-accordion-2" id="a1" defaultChecked /> 
+  <input type="checkbox" name="my-accordion-2" id="a1" defaultChecked /> 
   <div className="collapse-title text-xl font-medium">
     Step 1 : Add An Invoice
   </div>
@@ -672,7 +672,7 @@ function InvoicesForm() {
   </div>
 </div>
 <div className="collapse collapse-arrow bg-base-100">
-  <input type="radio" name="my-accordion-2" id="a2" /> 
+  <input type="checkbox" name="my-accordion-2" id="a2" /> 
   <div className="collapse-title text-xl font-medium">
     Step 2: Add Products to Invoice
   </div>
@@ -694,7 +694,7 @@ function InvoicesForm() {
   </div>
 </div>
 <div className="collapse collapse-arrow bg-base-100">
-  <input type="radio" name="my-accordion-2" id="a3" /> 
+  <input type="checkbox" name="my-accordion-2" id="a3" /> 
   <div className="collapse-title text-xl font-medium">
     {`Step 3: Add Eway Bill Details (Optional)`}
   </div>

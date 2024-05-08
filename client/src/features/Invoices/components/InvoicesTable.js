@@ -28,17 +28,18 @@ const TableComponent = () => {
   const [invoiceExists, setInvoiceExists] = useState(false);
   const [irnExists, setIrnExists] = useState(false);
   const [Pages, setPages] = useState(null);
+  const [isReceived, setIsReceived] = useState("");
 
 
 
   useEffect(() => {
     
     fetchData();
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, isReceived]);
   
   const fetchData = async () => {
     try {
-      const url = `${BASE_URL}/api/v1/invoices/all-pages?page=${currentPage.toString()}&selectQuery=${searchTerm}`
+      const url = `${BASE_URL}/api/v1/invoices/all-pages?page=${currentPage.toString()}&selectQuery=${searchTerm}&isReceived=${isReceived.toString()}`
       console.log(url)
       const response = await axios.get(url);
       console.log(response.data)
@@ -49,6 +50,8 @@ const TableComponent = () => {
       console.error("Error fetching data:", error);
     }
   };
+
+  console.log(isReceived)
 
   useEffect(() => {
     // Fetch distributors and products when component mounts
@@ -110,7 +113,6 @@ const TableComponent = () => {
   console.log(selectedInvoices);
   const handleUpdate = (invoice) => {
     setSelectedInvoice(invoice);
-    // setIsActive(invoice.isActive); // Set checkbox state based on invoice's isActive property
     document.getElementById("update_modal").showModal();
   };
 
@@ -141,7 +143,6 @@ const TableComponent = () => {
 
   const handleUpdateInvoice = async () => {
     try {
-      // Make the PUT request to update the invoice
       const params = new URLSearchParams();
       for (const key in selectedInvoice) {
         params.append(key, selectedInvoice[key]);
@@ -186,9 +187,9 @@ const TableComponent = () => {
     invoiceProduct();
   }, [selectedInvoices]);
 
-  console.log(invoiceProducts);
-  console.log(selectedInvoice);
-  console.log(selectedInvoices[0]);
+  // console.log(invoiceProducts);
+  // console.log(selectedInvoice);
+  // console.log(selectedInvoices[0]);
 
   useEffect(() => {
     const fetchEwayBills = async () => {
@@ -211,47 +212,25 @@ const TableComponent = () => {
     fetchEwayBills();
   }, [selectedInvoices]);
 
-  console.log(ewayTableData);
+  const handleIsReceivedToggle = async () => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/api/v1/invoices/invoice-received-status?id=${selectedInvoices[0]}`
+      );
+      console.log(response);
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  // const filteredRecords = data.filter((invoice) => {
-  //   return (
-  //     String(invoice.invoiceNumber)
-  //       .toLowerCase()
-  //       .includes(searchTerm.toLowerCase()) ||
-  //     String(invoice.distributor.distributorProfile.agencyName)
-  //       .toLowerCase()
-  //       .includes(searchTerm.toLowerCase()) ||
-  //     String(
-  //       salesPersons.find(
-  //         (salesPerson) => salesPerson.id === invoice.salespersonId
-  //       )?.name
-  //     )
-  //       .toLowerCase()
-  //       .includes(searchTerm.toLowerCase()) ||
-  //     String(invoice.distributor.distributorProfile.city)
-  //       .toLowerCase()
-  //       .includes(searchTerm.toLowerCase()) ||
-  //     // String(invoice.distributor.distributorProfile.state).toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     String(invoice.distributor.distributorProfile.region)
-  //       .toLowerCase()
-  //       .includes(searchTerm.toLowerCase()) ||
-  //     String(invoice.distributor.distributorProfile.zone)
-  //       .toLowerCase()
-  //       .includes(searchTerm.toLowerCase())
-  //   );
-  // });
-
-  
-  // const indexOfLastRecord = currentPage * recordsPerPage;
-  // const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  // const currentRecords = filteredRecords.slice(
-    //   indexOfFirstRecord,
-    //   indexOfLastRecord
-    // );
-    // const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
-    
+ 
     const handleSearchChange = (event) => {
       setSearchTerm(event.target.value);
+    };
+
+    const handleIsReceivedChange = (event) => {
+      setIsReceived(event.target.value);
     };
     
   const fetchInvoiceNumber = async () => {
@@ -469,6 +448,23 @@ const getIndicatorColor = (invoiceDate) => {
             View Eway Bill
           </button>
             </li>
+            <li>
+              <button className={`btn btn-sm w-full mx-auto my-2 ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-info"}`} onClick={handleIsReceivedToggle}>
+                Paid / Unpaid
+                </button>
+            </li>
+            <li>
+            <select
+              className="select select-sm mx-auto my-2 max-w-xs"
+              onChange={handleIsReceivedChange}
+              value={isReceived}
+            >
+              <option value="">All Invoices</option>
+              <option value="true">Paid Invoices</option>
+              <option value="false">Unpaid Invoices</option>
+            </select>
+            </li>
+
             </ul>
             </div>
           
@@ -479,7 +475,7 @@ const getIndicatorColor = (invoiceDate) => {
           className="overflow-x-auto w-full"
           style={{ overflowY: "auto", maxHeight: "450px" }}
         >
-          <table className="table table-lg table-zebra">
+          <table className="table table-sm table-zebra-zebra">
             <thead>
               <tr className="table-row text-center">
                 <th className="table-cell">Select</th>

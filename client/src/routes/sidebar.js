@@ -91,9 +91,9 @@ const routes = [
         name: 'Distributors Entry Operations',
       },
       {
-        path: '/app/All-Distributors-Table',
+        path: '/app/All-Distributors-Details',
         icon: <TableIcon className={submenuIconClasses}/>,
-        name: 'All Distributors Table',
+        name: 'All Distributors Details',
       }
     ]
   },

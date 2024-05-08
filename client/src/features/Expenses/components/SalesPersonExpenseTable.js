@@ -231,7 +231,7 @@ const SalesPersonExpenseTable = () => {
         </button>
           </li>
             <li><select 
-            className="select mx-auto my-2 select-xs w-full"
+            className="select mx-auto my-2 select-sm w-full"
             value={interval} onChange={(e) => setInterval(e.target.value)}>
                 <option value="monthly">Monthly</option>
                 <option value="annually">Annually</option>
@@ -240,7 +240,7 @@ const SalesPersonExpenseTable = () => {
             <li>{interval === 'monthly' && (
                 
                     <select 
-                    className="select mx-auto my-2 select-xs w-full"
+                    className="select mx-auto my-2 select-sm w-full"
                     value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
                         <option value="january">January</option>
                         <option value="february">February</option>
@@ -259,7 +259,7 @@ const SalesPersonExpenseTable = () => {
             )}</li>
 
             <li><select 
-            className="select mx-auto my-2 select-xs w-full"
+            className="select mx-auto my-2 select-sm w-full"
             value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
                 {/* Options for current year and previous two financial years */}
                 <option value={moment().year()}>{moment().year()}</option>
@@ -267,7 +267,7 @@ const SalesPersonExpenseTable = () => {
                 <option value={moment().year() - 2}>{moment().year() - 2}</option>
             </select></li>
             <li>
-            <select className="select mx-auto my-2 select-xs" onChange={(e) => setSelectTerm(e.target.value)} value={selectTerm}>
+            <select className="select mx-auto my-2 select-sm" onChange={(e) => setSelectTerm(e.target.value)} value={selectTerm}>
             <option value="">Select Salesperson</option>
             {salespersonNames.map((salesperson) => (
               <option key={salesperson.name} value={salesperson.name}> {salesperson.name} </option>
@@ -293,7 +293,7 @@ const SalesPersonExpenseTable = () => {
     }
     >
          <div className="overflow-x-auto w-full">
-          <table className="table table-lg w-full">
+          <table className="table table-zebra-zebra table-sm">
             <thead>
               <tr className="table-row">
                 <th className="table-cell">Serial No.</th>

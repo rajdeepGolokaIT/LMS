@@ -40,9 +40,9 @@ const AllDistributorsTable = () => {
     panNo: "",
   });
 
-  useEffect(() => {
-    dispatch(setPageTitle({ title: "All Distributors List" }));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setPageTitle({ title: "All Distributors List" }));
+  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -367,9 +367,9 @@ const AllDistributorsTable = () => {
       >
         <div
           className="overflow-x-auto w-full"
-          style={{ overflowY: "auto", maxHeight: "450px" }}
+          // style={{ overflowY: "auto", maxHeight: "450px" }}
         >
-          <table className="table table-zebra table-lg w-full">
+          <table className="table table-zebra-zebra table-xs">
             <thead>
               <tr>
                 <th>Select</th>

@@ -301,7 +301,7 @@ const TopSalesProducts = () => {
       onChange={handleLocationChange}
     />
           <button
-            className="btn btn-ghost btn-xs h-7"
+            className="btn btn-ghost btn-sm h-7"
             onClick={resetFilters}
           >
             Reset

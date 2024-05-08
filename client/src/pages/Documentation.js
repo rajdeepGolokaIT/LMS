@@ -15,7 +15,7 @@ function Documentation(){
                 <div className="py-12 p-10 h-screen flex overflow-hidden  bg-base-100 rounded-xl" >
                         <div className="flex-none p-4 overflow-y-scroll gap-6 ">
                             <h1 className='text-3xl font-bold mb-2'>Dashwind</h1>
-                            <Link to="/login"><button type="submit" className={"btn normal-case btn-xs btn-primary"}>Live Preview</button></Link>
+                            <Link to="/login"><button type="submit" className={"btn normal-case btn-sm btn-primary"}>Live Preview</button></Link>
                             
                             <GettingStartedNav />
                             <FeaturesNav />

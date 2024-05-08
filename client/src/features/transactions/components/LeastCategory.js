@@ -240,10 +240,10 @@ const LeastCategory = () => {
        topMargin="mt-2"
        TopSideButtons2={
         <div className="dropdown dropdown-bottom dropdown-end">
-        <div tabIndex={0} role="button" className="btn btn-xs">Filters</div>
+        <div tabIndex={0} role="button" className="btn btn-sm">Filters</div>
         <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
-          <li><select
-            className="select mx-auto my-2 select-xs"
+          <li className="flex gap-1"><select
+            className="select select-bordered mx-auto my-2 select-sm w-full"
             onChange={handleIntervalChange}
             value={selectedInterval}
           >
@@ -251,14 +251,13 @@ const LeastCategory = () => {
             <option value="Monthly">Monthly</option>
             <option value="Weekly">Weekly</option>
             <option value="Daily">Daily</option>
-          </select></li>
-          <li>
+          </select>
           {(selectedInterval === "Yearly" ||
             selectedInterval === "Monthly") && (
             <>
               {selectedInterval === "Yearly" && (
                 <select
-                  className="select mx-auto my-2 select-xs"
+                  className="select select-bordered mx-auto my-2 select-sm"
                   onChange={handleYearChange}
                   value={selectedYear}
                 >
@@ -271,7 +270,7 @@ const LeastCategory = () => {
               )}
               {selectedInterval === "Monthly" && (
                 <select
-                  className="select mx-auto my-2 select-xs"
+                  className="select select-bordered mx-auto my-2 select-sm"
                   onChange={handleMonthChange}
                   value={selectedMonth}
                 >
@@ -287,9 +286,9 @@ const LeastCategory = () => {
           
           </li>
           
-          <li>
+          <li className="flex gap-1">
           <select
-            className="select mx-auto my-2 select-xs"
+            className="select select-bordered mx-auto my-2 select-sm"
             onChange={handleCategoryChange}
             value={selectedCategory}
           >
@@ -298,8 +297,7 @@ const LeastCategory = () => {
             <option value="Region">Region</option>
             <option value="City">City</option>
           </select>
-          </li>
-          <li>
+         
           <Autocomplete
       items={locations}
       value={selectedLocation}
@@ -307,7 +305,7 @@ const LeastCategory = () => {
     /></li>
           <li>
           <button
-            className="btn btn-ghost btn-xs h-7"
+            className="btn btn-bordered btn-sm w-full"
             onClick={resetFilters}
           >
             Reset

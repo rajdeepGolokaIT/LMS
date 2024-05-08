@@ -103,10 +103,10 @@ const SalesPersonGraph = () => {
     <TitleCard title={"Total Sales Graph vs. Total Expenses (Sales Person)"} 
             TopSideButtons1={
                 <div className="dropdown dropdown-bottom dropdown-end">
-                <div tabIndex={0} role="button" className="btn btn-xs">Filters</div>
+                <div tabIndex={0} role="button" className="btn btn-sm">Filters</div>
                 <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
                     <li><select 
-                    className="select mx-auto my-2 select-xs "
+                    className="select mx-auto my-2 select-sm "
                     value={interval} onChange={(e) => setInterval(e.target.value)}>
                         <option value="monthly">Monthly</option>
                         <option value="annually">Annually</option>
@@ -115,7 +115,7 @@ const SalesPersonGraph = () => {
                     {interval === 'monthly' && (
                         
                             <select 
-                            className="select mx-auto my-2 select-xs w-full"
+                            className="select mx-auto my-2 select-sm w-full"
                             value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
                                 <option value="january">January</option>
                                 <option value="february">February</option>
@@ -134,7 +134,7 @@ const SalesPersonGraph = () => {
                     )}</li>
                     <li>
                     <select 
-                    className="select mx-auto my-2 select-xs w-full"
+                    className="select mx-auto my-2 select-sm w-full"
                     value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
                         {/* Options for current year and previous two financial years */}
                         <option value={moment().year()}>{moment().year()}</option>
@@ -143,7 +143,7 @@ const SalesPersonGraph = () => {
                     </select></li>
                     <li>
                     <select 
-                className="select mx-auto my-2 select-xs w-full"
+                className="select mx-auto my-2 select-sm w-full"
                 value={selectedSalesperson} onChange={(e) => setSelectedSalesperson(e.target.value)}>
                 {/* <option value={null}>All Salespersons</option> */}
                 {salespersons.map((salesperson) => (

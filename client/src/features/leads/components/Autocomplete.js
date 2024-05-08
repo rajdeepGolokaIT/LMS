@@ -20,7 +20,7 @@ const Autocomplete = ({ items, value, onChange }) => {
     >
       <input
         type="text"
-        className="input mx-auto my-2 input-xs"
+        className="input input-bordered mx-auto my-2 input-sm w-full min-w-[160px]"
         value={value}
         onChange={handleInputChange}
         placeholder="Select or Search..."
@@ -39,7 +39,7 @@ const Autocomplete = ({ items, value, onChange }) => {
               onChange(item);
               setOpen(false);
             }}
-            className="border-b border-b-base-content/10 w-full"
+            className="border-b border-b-base-content/10 w-full text-sm text-left"
           >
             <button>{item}</button>
           </li>

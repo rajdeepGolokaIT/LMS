@@ -16,14 +16,14 @@ function TitleCard({
       }
     >
       {/* Title for Card */}
-      <Subtitle styleClass={TopSideButtons1 ? "inline-block" : ""}>
-        <div className="text-xl text-gray-700/90 dark:text-gray-400 font-bold text-center md:text-left mb-5">
+      <Subtitle styleClass={TopSideButtons1 ? "inline-block text-xl text-gray-700/90 dark:text-gray-400 font-bold" : ""}>
+        {/* <div className=" font-bold"> */}
         {title}
-        </div>
+        {/* </div> */}
 
         {/* Top side button, show only if present */}
         {TopSideButtons1 && (
-          <div className=" grid md:grid-flow-col grid-flow-col gap-4 md:float-right float-right">
+          <div className=" grid md:grid-flow-col grid-flow-col gap-4 md:float-right float-right mt-2 md:mt-0">
             {TopSideButtons1} {TopSideButtons2} {TopSideButtons3}
             {TopSideButtons4}
           </div>

@@ -300,7 +300,7 @@ const SalesPersonsTable = () => {
         
       >
         <div className="overflow-x-auto w-full">
-          <table className="table table-lg w-full">
+          <table className="table table-zebra-zebra table-sm">
             <thead>
               <tr className="table-row">
                 <th className="table-cell"> Select </th>

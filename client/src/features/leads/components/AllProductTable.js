@@ -317,7 +317,7 @@ const AllProductTable = () => {
         }
       >
         <div className="overflow-x-auto w-full">
-          <table className="table table-lg w-full">
+          <table className="table table-sm table-zebra-zebra">
             <thead>
               <tr className="">
                 <th className="table-cell">Select</th>

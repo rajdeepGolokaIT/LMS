@@ -15,6 +15,7 @@ import moment from 'moment';
 import { Line } from 'react-chartjs-2';
 import Subtitle from '../../../components/Typography/Subtitle';
 import { BASE_URL } from "../../../Endpoint";
+import BackIcon from '@heroicons/react/24/solid/ArrowLeftIcon';
 
 ChartJS.register(
     CategoryScale,
@@ -232,6 +233,7 @@ function LineChart() {
 
             <Subtitle styleClass="text-lg">Total Sales Analysis Graph</Subtitle>
             <Subtitle styleClass="text-sm">{"(Keep the screen to landscape to view the graph properly for mobile devices.)"}</Subtitle>
+            <button className="btn btn-circle btn-sm absolute top-4 right-4" onClick={() => window.history.back()}><BackIcon className="w-5 h-5"/></button>
         <div className='grid grid-flow-row gap-4 md:float-right float-right '>
         <div>
         <select value={selectedRange} onChange={handleRangeChange} className="select select-bordered select-sm float-right">

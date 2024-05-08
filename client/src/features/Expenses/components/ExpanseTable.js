@@ -342,7 +342,7 @@ const ExpanseTable = () => {
       }
     >
    <div className="overflow-x-auto w-full">
-        <table className="table table-lg w-full">
+        <table className="table table-zebra-zebra table-sm">
         <thead>
             <tr>
                 <th>Select</th>

@@ -7,6 +7,7 @@ import routes from '../routes/sidebar';
 function LeftSidebar() {
     const location = useLocation();
     const [expandedSubmenu, setExpandedSubmenu] = useState(null);
+    const [isActive, setIsActive] = useState(false);
 
     const handleToggleExpand = (submenuName) => {
         setExpandedSubmenu(submenuName === expandedSubmenu ? null : submenuName);
@@ -19,7 +20,7 @@ function LeftSidebar() {
     return (
         <div className="drawer-side z-30">
             <label htmlFor="left-sidebar-drawer" className="drawer-overlay"></label>
-            <ul className="menu pt-2 w-80 bg-base-100 min-h-full text-base-content">
+            <ul className="menu pt-2 w-64 bg-base-100 min-h-full text-base-content">
                 <button className="btn btn-ghost bg-base-300 btn-circle z-50 top-0 right-0 mt-4 mr-2 absolute lg:hidden" onClick={close}>
                     <XMarkIcon className="h-5 inline-block w-5" />
                 </button>
@@ -29,7 +30,7 @@ function LeftSidebar() {
                     </Link>
                 </li>
                 {routes.map((route, index) => (
-                    <li className="" key={index} onClick={() => handleToggleExpand(route.name)}>
+                    <li className="text-xs" key={index} onClick={() => handleToggleExpand(route.name)}>
                         {route.submenu ? (
                             <SidebarSubmenu
                                 {...route}
@@ -40,8 +41,9 @@ function LeftSidebar() {
                             <NavLink
                                 end
                                 to={route.path}
+                                onClick={() => setIsActive(true)}
                                 className={({ isActive }) =>
-                                    `${isActive ? 'font-semibold bg-base-200' : 'font-normal'}`
+                                    `${isActive === true ? `font-semibold bg-base-200` : 'font-normal'}`
                                 }
                             >
                                 {route.icon} {route.name}

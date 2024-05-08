@@ -341,7 +341,7 @@ console.log(dateValue)
         showShortcuts={false} 
         primaryColor={"white"} 
     /> }
-    TopSideButtons3={<button onClick={handleReset} className="btn btn-ghost btn-xs h-7">Reset</button>}
+    TopSideButtons3={<button onClick={handleReset} className="btn btn-ghost btn-sm h-7">Reset</button>}
     >
       {loading ? (
         <p>Loading...</p>
