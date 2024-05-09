@@ -1,20 +1,30 @@
 import classNames from "classnames";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const Autocomplete = ({ items, value, onChange }) => {
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
+  const [filteredItems, setFilteredItems] = useState(items);
+
+  useEffect(() => {
+    // Filter items based on input value whenever value changes
+    const filtered = items.filter(item =>
+      item.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredItems(filtered);
+  }, [value, items]);
 
   const handleInputChange = (e) => {
-    onChange(e.target.value);
-    setOpen(true); // Always open the dropdown when input changes
+    const inputValue = e.target.value;
+    onChange(inputValue);
+    setOpen(true);
   };
 
   return (
     <div
       className={classNames({
         "dropdown w-full": true,
-        "dropdown-open": open, // Use 'dropdown-open' when open
+        "dropdown-open": open,
       })}
       ref={ref}
     >
@@ -23,15 +33,18 @@ const Autocomplete = ({ items, value, onChange }) => {
         className="input input-bordered mx-auto my-2 input-sm w-full min-w-[160px]"
         value={value}
         onChange={handleInputChange}
-        placeholder="Select or Search..."
+        placeholder="Search..."
         tabIndex={0}
-        onFocus={() => setOpen(true)} // Open dropdown when input is focused
+        onFocus={() => setOpen(true)}
       />
-      <div className={classNames({
-        "dropdown-content z-[1] p-2 shadow bg-base-100 grid grid-cols-1 rounded-box h-52 overflow-auto": true,
-        "hidden": !open, // Use 'hidden' class when dropdown is closed
-      })} style={{ width: ref.current ? ref.current.clientWidth : "auto" }}>
-        {items.map((item, index) => (
+      <div
+        className={classNames({
+          "dropdown-content z-[1] p-2 shadow bg-base-100 grid grid-cols-1 rounded-box h-52 overflow-auto": true,
+          "hidden": !open,
+        })}
+        style={{ width: ref.current ? ref.current.clientWidth : "auto" }}
+      >
+        {filteredItems.map((item, index) => (
           <li
             key={index}
             tabIndex={index + 1}

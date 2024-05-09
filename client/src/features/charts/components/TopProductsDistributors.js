@@ -4,6 +4,8 @@ import TitleCard from "../../../components/Cards/TitleCard";
 import Autocomplete from "../../leads/components/Autocomplete"; // Import Autocomplete component
 import DatePicker from "react-tailwindcss-datepicker";
 import { BASE_URL } from "../../../Endpoint";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const TopProductsDistributors = () => {
 
@@ -11,7 +13,7 @@ const TopProductsDistributors = () => {
     const [locations, setLocations] = useState([]);
     const [selectedYear, setSelectedYear] = useState(moment().year());
     const [selectedMonth, setSelectedMonth] = useState(moment().format("MMMM"));
-    const [selectedLocation, setSelectedLocation] = useState("East");
+    const [selectedLocation, setSelectedLocation] = useState("");
     const [selectedInterval, setSelectedInterval] = useState("Yearly");
     const [selectedCategory, setSelectedCategory] = useState("zone");
   //   const [yearlyOptions, setYearlyOptions] = useState([]);
@@ -236,6 +238,80 @@ const TopProductsDistributors = () => {
       setSelectedDateRange({ startDate: null, endDate: null });
     };
 
+    const downloadPDF = () => {
+      const pdf = new jsPDF('p', 'mm', 'a4');
+    
+      const logoImg = new Image();
+      logoImg.src = "/c.png";
+      const imageWidth = 10;
+      const imageHeight = 10;
+      const imageX = (pdf.internal.pageSize.width - imageWidth) / 2;
+      const imageY = 10;
+      pdf.addImage(logoImg, "PNG", imageX, imageY, imageWidth, imageHeight);
+    
+      const title = "Top Product Sold to Distributors";
+      const fontSize = 14;
+      const textWidth =
+        (pdf.getStringUnitWidth(title) * fontSize) / pdf.internal.scaleFactor;
+      const textX = (pdf.internal.pageSize.width - textWidth) / 2;
+      const textY = imageY + imageHeight + 10;
+      pdf.setFontSize(fontSize);
+      pdf.text(title, textX, textY);
+      pdf.setFontSize(fontSize);
+    
+      // const newData = selectedInvoice !== null ? [selectedInvoice] : data;
+    
+      // console.log(newData);
+    
+      const rows = [topProducts[0]].map((data, index) => [
+        index + 1,
+        data[0],
+        data[1],
+        data[2],
+        data[3],
+        
+      ]);
+    
+      const textHeight = fontSize / pdf.internal.scaleFactor;
+    
+      const tableStartY = textY + textHeight + 10;
+    
+      pdf.autoTable({
+        styles: {
+          cellPadding: 0.5,
+          fontSize: 12,
+        },
+        headStyles: {
+          fillColor: '#3f51b5',
+          textColor: '#fff',
+          halign: 'center'
+        },
+        bodyStyles: {
+          halign: 'center',
+          valign: 'middle',
+    
+        },
+        margin: {
+          left: 5,
+          right: 5
+        },
+        tableLineWidth: 1,
+        head: [
+          [
+            "S.No",
+            "Product Name",
+            "Quantity Sold",
+            "Distributor Name",
+            "Contact Person Name",
+          ],
+        ],
+        body: rows,
+        startY: tableStartY,
+      });
+    
+      pdf.save("Top Product Sold to Distributors.pdf");
+    };
+
   return (
     <>
     <TitleCard
@@ -306,6 +382,14 @@ const TopProductsDistributors = () => {
       value={selectedLocation}
       onChange={handleLocationChange}
     /></li>
+    <li>
+      <button
+        className="btn btn-primary my-2 btn-sm w-full"
+        onClick={downloadPDF}
+      >
+        Download PDF
+      </button>
+      </li>
           <li>
           <button
             className="btn btn-ghost btn-sm w-full"

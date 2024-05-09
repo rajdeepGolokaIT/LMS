@@ -29,6 +29,8 @@ const TableComponent = () => {
   const [irnExists, setIrnExists] = useState(false);
   const [Pages, setPages] = useState(null);
   const [isReceived, setIsReceived] = useState("");
+  const [size, setSize] = useState(null);
+  const [pdfData, setPdfData] = useState([]);
 
 
 
@@ -40,18 +42,19 @@ const TableComponent = () => {
   const fetchData = async () => {
     try {
       const url = `${BASE_URL}/api/v1/invoices/all-pages?page=${currentPage.toString()}&selectQuery=${searchTerm}&isReceived=${isReceived.toString()}`
-      console.log(url)
+      console.log(searchTerm)
       const response = await axios.get(url);
-      console.log(response.data)
+      // console.log(response.data)
       setData(response.data.invoices);
       // setCurrentPage(response.data.currentPage);
       setPages(response.data.totalPages);
+      setSize(response.data.totalItems)
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  console.log(isReceived)
+  // console.log(isReceived)
 
   useEffect(() => {
     // Fetch distributors and products when component mounts
@@ -109,8 +112,8 @@ const TableComponent = () => {
     }
   };
 
-  console.log(selectedInvoice);
-  console.log(selectedInvoices);
+  // console.log(selectedInvoice);
+  // console.log(selectedInvoices);
   const handleUpdate = (invoice) => {
     setSelectedInvoice(invoice);
     document.getElementById("update_modal").showModal();
@@ -147,7 +150,7 @@ const TableComponent = () => {
       for (const key in selectedInvoice) {
         params.append(key, selectedInvoice[key]);
       }
-      console.log(params.toString());
+      // console.log(params.toString());
       await axios.put(
         `${BASE_URL}/api/v1/invoices/update-invoice/${selectedInvoices[0]}`,
         params.toString(),
@@ -169,7 +172,7 @@ const TableComponent = () => {
     }
   };
 
-  console.log(selectedInvoice);
+  // console.log(selectedInvoice);
 
   const invoiceProduct = async () => {
     try {
@@ -217,7 +220,7 @@ const TableComponent = () => {
       const response = await axios.put(
         `${BASE_URL}/api/v1/invoices/invoice-received-status?id=${selectedInvoices[0]}`
       );
-      console.log(response);
+      // console.log(response);
       fetchData();
     } catch (error) {
       console.error(error);
@@ -271,9 +274,18 @@ const TableComponent = () => {
     setIrnExists(check)
   };
 
+  const fullData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/v1/invoices/all-pages?size=${size}`);
+      setPdfData(response.data.invoices);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
 const downloadPDF = () => {
   const pdf = new jsPDF('l', 'mm', 'a4');
-
+  fullData();
   const logoImg = new Image();
   logoImg.src = "/c.png";
   const imageWidth = 10;
@@ -292,7 +304,14 @@ const downloadPDF = () => {
   pdf.text(title, textX, textY);
   pdf.setFontSize(fontSize);
 
-  const rows = data.map((data, index) => [
+  
+
+
+  const newData = selectedInvoice !== null ? [selectedInvoice] : [pdfData];
+
+  // console.log(newData);
+
+  const rows = newData.map((data, index) => [
     index + 1,
     // data.id,
     data.invoiceNumber,
@@ -389,6 +408,9 @@ const getIndicatorColor = (invoiceDate) => {
   }
 };
 
+// console.log(pdfData)
+// console.log(data)
+
   return (
     <>
       <TitleCard
@@ -414,7 +436,7 @@ const getIndicatorColor = (invoiceDate) => {
           </div>
           <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
             <li>
-            <button className="btn btn-primary btn-sm mx-auto my-2 min-w-max" onClick={downloadPDF}>
+            <button className="btn btn-primary btn-sm mx-auto my-2 w-full" onClick={downloadPDF}>
           Download PDF
         </button>
             </li>

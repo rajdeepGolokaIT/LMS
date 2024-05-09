@@ -3,6 +3,8 @@ import moment from "moment";
 import TitleCard from "../../../components/Cards/TitleCard";
 import DatePicker from "react-tailwindcss-datepicker";
 import { BASE_URL } from "../../../Endpoint";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const Top5sold = () => {
 
@@ -127,6 +129,77 @@ const Top5sold = () => {
       setSelectedDateRange(null);
     };
 
+    const downloadPDF = () => {
+      const pdf = new jsPDF('p', 'mm', 'a4');
+    
+      const logoImg = new Image();
+      logoImg.src = "/c.png";
+      const imageWidth = 10;
+      const imageHeight = 10;
+      const imageX = (pdf.internal.pageSize.width - imageWidth) / 2;
+      const imageY = 10;
+      pdf.addImage(logoImg, "PNG", imageX, imageY, imageWidth, imageHeight);
+    
+      const title = "Top 5 Sold Categories";
+      const fontSize = 14;
+      const textWidth =
+        (pdf.getStringUnitWidth(title) * fontSize) / pdf.internal.scaleFactor;
+      const textX = (pdf.internal.pageSize.width - textWidth) / 2;
+      const textY = imageY + imageHeight + 10;
+      pdf.setFontSize(fontSize);
+      pdf.text(title, textX, textY);
+      pdf.setFontSize(fontSize);
+    
+      // const newData = selectedInvoice !== null ? [selectedInvoice] : data;
+    
+      // console.log(newData);
+    
+      const rows = topProducts.map((data, index) => [
+        index + 1,
+        data[0],
+        data[1]
+        
+      ]);
+    
+      const textHeight = fontSize / pdf.internal.scaleFactor;
+    
+      const tableStartY = textY + textHeight + 10;
+    
+      pdf.autoTable({
+        styles: {
+          cellPadding: 0.5,
+          fontSize: 12,
+        },
+        headStyles: {
+          fillColor: '#3f51b5',
+          textColor: '#fff',
+          halign: 'center'
+        },
+        bodyStyles: {
+          halign: 'center',
+          valign: 'middle',
+    
+        },
+        margin: {
+          left: 5,
+          right: 5
+        },
+        tableLineWidth: 1,
+        head: [
+          [
+            "S.No",
+            "Category Name",
+            "Quantity Sold",
+          ],
+        ],
+        body: rows,
+        startY: tableStartY,
+      });
+    
+      pdf.save("Top 5 Sold Categories.pdf");
+    };
+
+
   return (
     <>
     <TitleCard
@@ -177,6 +250,14 @@ const Top5sold = () => {
             </>
           )}
           </li>
+          <li>
+      <button
+        className="btn btn-primary my-2 btn-sm w-full"
+        onClick={downloadPDF}
+      >
+        Download PDF
+      </button>
+      </li>
           <li><a><button onClick={handleReset} className="btn btn-bordered btn-sm w-full">
             Reset
           </button></a></li>
