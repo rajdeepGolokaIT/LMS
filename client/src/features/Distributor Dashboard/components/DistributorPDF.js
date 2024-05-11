@@ -15,7 +15,7 @@ const DistributorPDF = (data) => {
     <div className="bg-base-100 p-4 my-6 rounded-xl shadow-xl">
     <div className='flex flex-col md:flex-row justify-between gap-6 container mt-5'>
         <img src={"/logo-3.png"} alt="Logo" className="w-52 my-auto rounded-3xl" />
-        <div className="w-2/3">
+        <div className="md:w-2/3 w-full">
         <TitleCard title="Distributor Details">
         <div
           className="overflow-x-auto w-full"

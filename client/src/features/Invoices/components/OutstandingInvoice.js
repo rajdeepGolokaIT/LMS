@@ -215,7 +215,7 @@ const OutstandingInvoice = () => {
                 <option value="45">Above 30 and below 45 Days</option>
                 <option value="60">Above 45 and below 60 Days</option>
                 <option value="90">Above 60 and below 90 Days</option>
-                <option value="90">More Than 90 Days</option>
+                <option value="91">More Than 90 Days</option>
                 </select>
             </li>
             <li>
@@ -280,7 +280,7 @@ const OutstandingInvoice = () => {
                    <td className="table-cell">
                      <div
                      className={`w-3 h-3 rounded-full m-3 animate-pulse border-gray-300 grid border ${
-                     getIndicatorColor(invoice.invoiceDate)
+                     getIndicatorColor(invoice.timestamp)
                       }`}
                      ></div>
                     </td>
