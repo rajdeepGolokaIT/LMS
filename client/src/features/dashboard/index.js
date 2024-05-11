@@ -1,19 +1,13 @@
 import DashboardStats from './components/DashboardStats'
-// import AmountStats from './components/AmountStats'
-// import PageStats from './components/PageStats'
 
 import UserGroupIcon  from '@heroicons/react/24/outline/UserGroupIcon'
 import UsersIcon  from '@heroicons/react/24/outline/UsersIcon'
 import CircleStackIcon  from '@heroicons/react/24/outline/CircleStackIcon'
 import CreditCardIcon  from '@heroicons/react/24/outline/CreditCardIcon'
-// import UserChannels from './components/UserChannels'
-import LineChart from './components/LineChart'
-// import BarChart from './components/BarChart'
-import DashboardTopBar from './components/DashboardTopBar'
+// import LineChart from './components/LineChart'
 import { useDispatch } from 'react-redux'
 import { BASE_URL } from "../../Endpoint";
-import {showNotification} from '../common/headerSlice'
-// import DoughnutChart from './components/DoughnutChart'
+// import {showNotification} from '../common/headerSlice'
 import { useState, useEffect } from 'react'
 // import axios from 'axios'
 
@@ -94,19 +88,7 @@ function Dashboard(){
         fetchData();
       }, []);
 
-    //   useEffect(() => {
-    //     // Fetch data from API
-    //     const fetchData = async () => {
-    //       try {
-    //         const response = await axios.get('https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/all');
-    //         setInvoices(response.data);
-    //       } catch (error) {
-    //         console.error('Error fetching data:', error);
-    //       }
-    //     };
     
-    //     fetchData();
-    //   }, []);
   
 
 
@@ -118,17 +100,10 @@ const statsData = [
 ]
  
 
-    // const updateDashboardPeriod = (newRange) => {
-    //     // Dashboard range changed, write code to refresh your values
-    //     dispatch(showNotification({message : `Period updated to ${newRange.startDate} to ${newRange.endDate}`, status : 1}))
-    // }
+   
 
     return(
         <>
-        {/** ---------------------- Select Period Content ------------------------- */}
-            {/* <DashboardTopBar updateDashboardPeriod={updateDashboardPeriod}/> */}
-        
-        {/** ---------------------- Different stats content 1 ------------------------- */}
             <div className="grid lg:grid-cols-2 mt-2 md:grid-cols-2 grid-cols-1 gap-6">
                 {
                     statsData.map((d, k) => {

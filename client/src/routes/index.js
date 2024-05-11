@@ -28,6 +28,7 @@ const AllCategoriesTable = lazy(() => import('../features/transactions/component
 const AllExpensesTable = lazy(() => import('../features/Expenses/components/ExpanseTable'))
 const AllDistributors = lazy(() => import('../pages/protected/AllDistributors'))
 const SalesGraph = lazy(() => import('../features/dashboard/components/SalesGraph'))
+const Outstanding = lazy(() => import('../pages/protected/Outstanding'))
 
 
 
@@ -107,6 +108,10 @@ const routes = [
   {
     path: '/Invoices-Form',
     component: InvoicesForm,
+  },
+  {
+    path: '/Invoice-Outstanding',
+    component: Outstanding,
   },
   {
     path: '/Sales-Persons',

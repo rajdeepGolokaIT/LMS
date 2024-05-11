@@ -138,6 +138,11 @@ const routes = [
         path: '/app/Invoices-Form',
         icon: <WalletIcon className={submenuIconClasses}/>,
         name: 'Invoices Entry Operations',
+      },
+      {
+        path: '/app/Invoice-Outstanding',
+        icon: <TableIcon className={submenuIconClasses}/>,
+        name: 'Invoice Outstanding',
       }
     ]
   },

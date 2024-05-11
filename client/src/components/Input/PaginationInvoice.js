@@ -5,8 +5,8 @@ import React, { useState, useEffect } from "react";
 const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
   
     const pageNumbers = [...Array(nPages + 1).keys()].slice(1);
-    console.log(nPages, currentPage)
-    console.log(pageNumbers)
+    // console.log(nPages, currentPage)
+    // console.log(pageNumbers)
   
     const goToNextPage = () => {
       if ((currentPage + 1) !== nPages) setCurrentPage(currentPage + 1);
@@ -30,7 +30,7 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
             </button>
           </li>
           {pageNumbers.map((pgNumber, index) => {
-            console.log(index, currentPage, pgNumber)
+            // console.log(index, currentPage, pgNumber)
             if (
               index <= 2 ||
               index >= nPages - 2 ||

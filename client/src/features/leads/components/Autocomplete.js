@@ -6,6 +6,8 @@ const Autocomplete = ({ items, value, onChange }) => {
   const [open, setOpen] = useState(false);
   const [filteredItems, setFilteredItems] = useState(items);
 
+  console.log(items)
+
   useEffect(() => {
     // Filter items based on input value whenever value changes
     const filtered = items.filter(item =>
@@ -37,7 +39,7 @@ const Autocomplete = ({ items, value, onChange }) => {
         tabIndex={0}
         onFocus={() => setOpen(true)}
       />
-      <div
+      <ul
         className={classNames({
           "dropdown-content z-[1] p-2 shadow bg-base-100 grid grid-cols-1 rounded-box h-52 overflow-auto": true,
           "hidden": !open,
@@ -57,7 +59,7 @@ const Autocomplete = ({ items, value, onChange }) => {
             <button>{item}</button>
           </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 };

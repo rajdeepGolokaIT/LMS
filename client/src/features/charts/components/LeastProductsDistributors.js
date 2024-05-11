@@ -25,38 +25,17 @@ const LeastProductsDistributors = () => {
   
     useEffect(() => {
       fetchLocations();
-      // generateYearlyOptions();
-      // generateMonthlyOptions();
-    }, [selectedCategory, selectedYear, selectedMonth]);
+    }, [selectedCategory]);
   
     const fetchLocations = async () => {
       try {
-          const response = await fetch(
-              `${BASE_URL}/api/v1/distributors/all`
-          );
-          const data = await response.json();
-          console.log(data);
-          const category = selectedCategory.toLowerCase();
-          console.log(category);
-  
-          // Extract all locations based on the selected category
-          const allLocations = data.map(item => item.distributorProfile[category]);
-          console.log(allLocations);
-  
-          // Filter out unique locations
-          const uniqueLocations = new Set();
-          allLocations.forEach(location => {
-            if (location !== null) {
-              // Trim the location before adding it to the set
-              uniqueLocations.add(location.trim());
-            }
-          });
-  
-          // Convert the set back to an array
-          const uniqueLocationsArray = Array.from(uniqueLocations);
-  
-          setLocations(uniqueLocationsArray);
-          console.log(uniqueLocationsArray);
+        const category = selectedCategory.toLowerCase();
+        console.log(category);
+        const response = await fetch(
+            `${BASE_URL}/api/v1/distributorProfiles/locations?locationType=${category}`
+        );
+        const data = await response.json();
+        setLocations(data);
       } catch (error) {
           console.error("Error fetching locations:", error);
       }
@@ -71,19 +50,19 @@ const LeastProductsDistributors = () => {
   
         const locationType = selectedCategory.toLowerCase(); // Get selected location type
         const locationValue = encodeURIComponent(selectedLocation);
-        console.log(locationType, locationValue);
+        
   
         if (selectedInterval === "Yearly") {
           apiUrl = `${BASE_URL}/api/v1/invoice/least-distributors-by-region?${locationType}=${locationValue}&year=${selectedYear}&interval=annually`;
-          console.log(apiUrl);
-          //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&interval=annually
+          
+          
         } else if (selectedInterval === "Monthly") {
             const monthYearArray = (selectedMonth.split(" "));
             const apiMonth = monthYearArray[0].toLowerCase();
             const apiYear = monthYearArray[1].toString();
           apiUrl = `${BASE_URL}/api/v1/invoice/least-distributors-by-region?${locationType}=${locationValue}&year=${apiYear}&month=${apiMonth}&interval=monthly`;
-          console.log(apiUrl);
-          //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&year=${selectedYear}&month=${monthParam}&interval=monthly
+         
+          
         } else if (
           selectedInterval === "Weekly" ||
           selectedInterval === "Daily"
@@ -92,8 +71,6 @@ const LeastProductsDistributors = () => {
           if (selectedDateRange) {
             fromDate = selectedDateRange.startDate;
             toDate = selectedDateRange.endDate;
-            //   console.log(fromDate, toDate);
-            //   console.log(selectedDateRange);
           } else {
             if (selectedInterval === "Weekly") {
               fromDate = moment().startOf("week").format("YYYY-MM-DD");
@@ -106,30 +83,16 @@ const LeastProductsDistributors = () => {
             }
           }
           apiUrl = `${BASE_URL}/api/v1/invoice/least-distributors-by-region?${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&interval=${intervalParam}`;
-          console.log(apiUrl);
-          //````````https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoices/most-selling-products-by-category?${locationType}=${locationValue}&customFromDate=${fromDate}&customToDate=${toDate}&interval=${intervalParam}
-          // https://www.celltone.iskconbmv.org:8444/SalesAnalysisSystem-0.0.1-SNAPSHOT/api/v1/invoice/top-distributors-by-region?city=Mumbai&year=2024&month=april&interval=monthly
+          
         }
   
         const response = await fetch(apiUrl);
         const data = await response.json();
         setTopProducts(data);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching top selling products:", error);
       }
     };
-  
-  //   const generateYearlyOptions = () => {
-  //     const currentYear = moment().year();
-  //     const yearlyOptions = [currentYear, currentYear - 1, currentYear - 2].map(
-  //       (year) => ({
-  //         label: `${year - 1}-${year}`,
-  //         value: year,
-  //       })
-  //     );
-  //     // setYearlyOptions(yearlyOptions);
-  //   };
   
     const generateFinancialYears = () => {
       const currentYear = moment().year();
@@ -143,20 +106,6 @@ const LeastProductsDistributors = () => {
   
     const financialYears = generateFinancialYears();
   
-  //   const generateMonthlyOptions = () => {
-  //     const currentYear = moment().year();
-  //     const months = moment.months();
-  //     const monthlyOptions = [];
-  //     for (let i = 0; i < 3; i++) {
-  //       for (let j = 0; j < months.length; j++) {
-  //         monthlyOptions.push({
-  //           label: `${months[j]} ${currentYear - i}`,
-  //           value: `${months[j]} ${currentYear - i}`,
-  //         });
-  //       }
-  //     }
-  //     // setMonthlyOptions(monthlyOptions);
-  //   };
   
   const generateMonths = () => {
     const months = [];
@@ -200,8 +149,8 @@ const LeastProductsDistributors = () => {
     const handleMonthChange = (event) => {
       const selectedMonthValue = event.target.value;
       const selectedYear = selectedMonthValue.split(" ")[1];
-      const selectedMonth = selectedMonthValue.split(" ")[0]; // Extract month name
-      setSelectedMonth(`${selectedMonth} ${selectedYear}`); // Set selectedMonth as month-year
+      const selectedMonth = selectedMonthValue.split(" ")[0];
+      setSelectedMonth(`${selectedMonth} ${selectedYear}`);
     };
     const handleDateRangeChange = (dateRange) => {
       setSelectedDateRange(dateRange);
@@ -215,19 +164,6 @@ const LeastProductsDistributors = () => {
     const handleLocationChange = (value) => {
       setSelectedLocation(value);
     };
-  
-    //   const handleCategoryChange = (event) => {
-    //     setSelectedCategory(event.target.value);
-    //     fetchLocations(); // Call fetchLocations when category changes
-    //     console.log(selectedCategory);
-    //     console.log(locations);
-    //   };
-  //   const handleCategoryChange = (event) => {
-  //     const newCategory = event.target.value;
-  //     setSelectedCategory(newCategory);
-  //     // Fetch locations when the category changes
-  //     fetchLocations();
-  //   };
   
     const resetFilters = () => {
       setSelectedYear(moment().year());

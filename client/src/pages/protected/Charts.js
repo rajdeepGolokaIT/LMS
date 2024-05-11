@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import Charts from '../../features/charts'
+import ProductsToDistributors from '../../features/charts'
 import { setPageTitle } from '../../features/common/headerSlice'
 
 function InternalPage(){
@@ -11,7 +11,7 @@ function InternalPage(){
       }, [])
 
 
-    return  <Charts />
+    return  <ProductsToDistributors />
     
 }
 

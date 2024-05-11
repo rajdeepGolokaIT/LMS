@@ -1,11 +1,11 @@
 import {Link} from 'react-router-dom'
-import FeaturesNav from '../features/documentation/components/FeaturesNav'
-import GettingStartedContent from '../features/documentation/components/GettingStartedContent'
-import GettingStartedNav from '../features/documentation/components/GettingStartedNav'
+// import FeaturesNav from '../features/documentation/components/FeaturesNav'
+// import GettingStartedContent from '../features/documentation/components/GettingStartedContent'
+// import GettingStartedNav from '../features/documentation/components/GettingStartedNav'
 import Title from '../components/Typography/Title'
-import DocComponentsNav from '../features/documentation/components/DocComponentsNav'
-import FeaturesContent from '../features/documentation/components/FeaturesContent'
-import DocComponentsContent from '../features/documentation/components/DocComponentsContent'
+// import DocComponentsNav from '../features/documentation/components/DocComponentsNav'
+// import FeaturesContent from '../features/documentation/components/FeaturesContent'
+// import DocComponentsContent from '../features/documentation/components/DocComponentsContent'
 
 function Documentation(){
     return(
@@ -17,15 +17,15 @@ function Documentation(){
                             <h1 className='text-3xl font-bold mb-2'>Dashwind</h1>
                             <Link to="/login"><button type="submit" className={"btn normal-case btn-sm btn-primary"}>Live Preview</button></Link>
                             
-                            <GettingStartedNav />
+                            {/* <GettingStartedNav />
                             <FeaturesNav />
-                            <DocComponentsNav />
+                            <DocComponentsNav /> */}
                         </div>
 
                         <div className="grow pt-16  overflow-y-scroll">
-                            <GettingStartedContent />
+                            {/* <GettingStartedContent />
                             <FeaturesContent />
-                            <DocComponentsContent />
+                            <DocComponentsContent /> */}
                         </div>
                 </div>
                 </div>

@@ -25,38 +25,17 @@ const Least5Distributors = () => {
   
     useEffect(() => {
       fetchLocations();
-      // generateYearlyOptions();
-      // generateMonthlyOptions();
-    }, [selectedCategory, selectedYear, selectedMonth]);
+    }, [selectedCategory]);
   
     const fetchLocations = async () => {
       try {
-          const response = await fetch(
-              `${BASE_URL}/api/v1/distributors/all`
-          );
-          const data = await response.json();
-          console.log(data);
-          const category = selectedCategory.toLowerCase();
-          console.log(category);
-  
-          // Extract all locations based on the selected category
-          const allLocations = data.map(item => item.distributorProfile[category]);
-          console.log(allLocations);
-  
-          // Filter out unique locations
-          const uniqueLocations = new Set();
-          allLocations.forEach(location => {
-            if (location !== null) {
-              // Trim the location before adding it to the set
-              uniqueLocations.add(location.trim());
-            }
-          });
-  
-          // Convert the set back to an array
-          const uniqueLocationsArray = Array.from(uniqueLocations);
-  
-          setLocations(uniqueLocationsArray);
-          console.log(uniqueLocationsArray);
+        const category = selectedCategory.toLowerCase();
+        console.log(category);
+        const response = await fetch(
+            `${BASE_URL}/api/v1/distributorProfiles/locations?locationType=${category}`
+        );
+        const data = await response.json();
+        setLocations(data);
       } catch (error) {
           console.error("Error fetching locations:", error);
       }

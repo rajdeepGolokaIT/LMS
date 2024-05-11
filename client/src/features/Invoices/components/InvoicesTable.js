@@ -37,11 +37,11 @@ const TableComponent = () => {
   useEffect(() => {
     
     fetchData();
-  }, [currentPage, searchTerm, isReceived]);
+  }, [currentPage, searchTerm]);
   
   const fetchData = async () => {
     try {
-      const url = `${BASE_URL}/api/v1/invoices/all-pages?page=${currentPage.toString()}&selectQuery=${searchTerm}&isReceived=${isReceived.toString()}`
+      const url = `${BASE_URL}/api/v1/invoices/all-pages?page=${currentPage.toString()}&selectQuery=${searchTerm}`
       console.log(searchTerm)
       const response = await axios.get(url);
       // console.log(response.data)
@@ -215,17 +215,17 @@ const TableComponent = () => {
     fetchEwayBills();
   }, [selectedInvoices]);
 
-  const handleIsReceivedToggle = async () => {
-    try {
-      const response = await axios.put(
-        `${BASE_URL}/api/v1/invoices/invoice-received-status?id=${selectedInvoices[0]}`
-      );
-      // console.log(response);
-      fetchData();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const handleIsReceivedToggle = async () => {
+  //   try {
+  //     const response = await axios.put(
+  //       `${BASE_URL}/api/v1/invoices/invoice-received-status?id=${selectedInvoices[0]}`
+  //     );
+  //     // console.log(response);
+  //     fetchData();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
  
     const handleSearchChange = (event) => {
@@ -436,7 +436,7 @@ const getIndicatorColor = (invoiceDate) => {
           </div>
           <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
             <li>
-            <button className="btn btn-primary btn-sm mx-auto my-2 w-full" onClick={downloadPDF}>
+            <button className="btn btn-primary btn-sm mx-auto my-2 " onClick={downloadPDF}>
           Download PDF
         </button>
             </li>
@@ -461,21 +461,21 @@ const getIndicatorColor = (invoiceDate) => {
             </button>
             </li>
             <li>
-              <button className={`btn btn-sm w-full mx-auto my-2 ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-success"}`} onClick={handleProduct}>
+              <button className={`btn btn-sm  mx-auto my-2 ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-success"}`} onClick={handleProduct}>
             View Products
           </button>
             </li>
             <li>
-              <button className={`btn btn-sm w-full mx-auto my-2 ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-success"}`} onClick={handleEway}>
+              <button className={`btn btn-sm  mx-auto my-2 ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-success"}`} onClick={handleEway}>
             View Eway Bill
           </button>
             </li>
-            <li>
+            {/* <li>
               <button className={`btn btn-sm w-full mx-auto my-2 ${selectedInvoices.length === 0 ? "btn-disabled" : "btn-info"}`} onClick={handleIsReceivedToggle}>
                 Paid / Unpaid
                 </button>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
             <select
               className="select select-sm mx-auto my-2 max-w-xs"
               onChange={handleIsReceivedChange}
@@ -485,7 +485,7 @@ const getIndicatorColor = (invoiceDate) => {
               <option value="true">Paid Invoices</option>
               <option value="false">Unpaid Invoices</option>
             </select>
-            </li>
+            </li> */}
 
             </ul>
             </div>
@@ -501,7 +501,7 @@ const getIndicatorColor = (invoiceDate) => {
             <thead>
               <tr className="table-row text-center">
                 <th className="table-cell">Select</th>
-                <th className="table-cell">Indicator</th>
+                {/* <th className="table-cell">Indicator</th> */}
                 <th className="table-cell">ID</th>
                 <th className="table-cell">Invoice No.</th>
                 <th className="table-cell">Invoice Date</th>
@@ -540,13 +540,13 @@ const getIndicatorColor = (invoiceDate) => {
                       />
                     </label>
                   </td>
-                   <td className="table-cell">
+                   {/* <td className="table-cell">
                      <div
                      className={`w-3 h-3 rounded-full m-3 animate-pulse border-gray-300 grid border ${
                      getIndicatorColor(invoice.invoiceDate)
                       }`}
                      ></div>
-                    </td>
+                    </td> */}
                   <td className="table-cell">{invoice.id}</td>
                   <td className="table-cell">{invoice.invoiceNumber}</td>
                   <td className="table-cell">
@@ -559,7 +559,7 @@ const getIndicatorColor = (invoiceDate) => {
                     {invoice.distributor.distributorProfile.gstNo}
                   </td>
                   <td className="table-cell">
-                    {invoice.isReceived === true ? "Yes" : "No"}
+                    {invoice.isReceived === true ? "Yes" : invoice.isReceived === false ? "No" : "N/A"}
                   </td>
                   {/* <td className="table-cell">{invoice.discountPercentage}%</td> */}
                   <td className="table-cell">
