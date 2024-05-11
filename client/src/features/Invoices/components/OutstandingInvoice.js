@@ -66,10 +66,10 @@ const OutstandingInvoice = () => {
         const isChecked = e.target.checked;
         if (isChecked) {
           setSelectedInvoice(id);
-          setInvoiceData(data.filter((item) => item.someInteger === id));
+          setInvoiceData([...invoiceData, data.find(invoice => invoice.someInteger === id)]);
         } else {
           setSelectedInvoice(null);
-          setInvoiceData([]);
+          setInvoiceData(invoiceData.filter(invoice => invoice.someInteger !== id));
         }
       };
 
@@ -273,7 +273,7 @@ const OutstandingInvoice = () => {
                         type="checkbox"
                         className="checkbox checkbox-primary"
                         onChange={(e) => handleCheckboxChange(e, invoice.someInteger)}
-                        checked={invoice.someInteger === selectedInvoice}
+                        checked={invoiceData.some(item => item.someInteger === invoice.someInteger)}
                       />
                     </label>
                   </td>

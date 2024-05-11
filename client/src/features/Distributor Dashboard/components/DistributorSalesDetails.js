@@ -104,7 +104,7 @@ const DistributorSalesDetails = () => {
                   setSelectedDateRange({startDate: fromDate, endDate: toDate});
               }
           }
-          apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details?page=${currentPage.toString()}&query=${searchTerm}&productId=${productId}&categoryId=${categoryId}&invoiceNumber=${invoiceSearch}&interval=${intervalParam}&fromDate=${fromDate}&toDate=${toDate}}`
+          apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details?page=${currentPage.toString()}&query=${searchTerm}&productId=${productId}&categoryId=${categoryId}&invoiceNumber=${invoiceSearch}&interval=${intervalParam}&customFromDate=${fromDate}&customToDate=${toDate}`
         }
 
         const response = await axios.get(apiUrl);
@@ -262,9 +262,9 @@ const DistributorSalesDetails = () => {
               const monthYearArray = (month.split(" "));
           const apiMonth = monthYearArray[0];
           const apiYear = monthYearArray[1];
-              apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details/${id}?interval=monthly&month=${apiMonth.toLowerCase()}&year=${apiYear}`;
+              apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details/${id}?interval=monthly&monthName=${apiMonth.toLowerCase()}&year=${apiYear}`;
             } else if(interval === "daily" || interval === "weekly"){
-              apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details/${id}?interval=${interval}&customFromDate=${date.startDate}&customToDate=${date.endDate}`;
+              apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details/${id}?interval=customdate&customFromDate=${date.startDate}&customToDate=${date.endDate}`;
             }
 
             console.log(apiUrl)
@@ -432,11 +432,11 @@ const downloadPdf = () => generatePDF(getTargetElement, options);
           <button className="btn btn-sm w-full" onClick={downloadPdf}>Generate PDF</button>
       </li>
       )}
-      {selectedDistributor && (
+      {/* {selectedDistributor && ( */}
         <li>
             <button className="btn btn-sm w-full" onClick={handleReset}>Reset</button>
           </li>
-      )}
+      {/* )} */}
           
         </ul>
       </div>

@@ -13,10 +13,13 @@ const DistributorPDF = (data) => {
     console.log(info)
   return (
     <div className="bg-base-100 p-4 my-6 rounded-xl shadow-xl">
-    <div className='flex justify-between gap-6 container mt-5'>
+    <div className='flex flex-col md:flex-row justify-between gap-6 container mt-5'>
         <img src={"/logo-3.png"} alt="Logo" className="w-52 my-auto rounded-3xl" />
         <div className="w-2/3">
         <TitleCard title="Distributor Details">
+        <div
+          className="overflow-x-auto w-full"
+        >
         <table className="table table-sm border">
             <thead>
             <tr><th>Distributor Name : </th><td>{info.agencyname}</td></tr>
@@ -29,6 +32,7 @@ const DistributorPDF = (data) => {
             <tr><th>Zone : </th><td>{info.zone}</td></tr> */}
             </thead>
         </table>
+        </div>
         </TitleCard>
         </div>
         </div>
@@ -39,12 +43,12 @@ const DistributorPDF = (data) => {
         )}
         {info.interval === "monthly" && (
              <div role="alert" className="alert my-6 shadow-lg">
-                {/* <h1 className="font-bold text-lg text-center mx-auto">Monthly Distributor's Details Report of {info.month}</h1> */}
+                <h1 className="font-bold text-lg text-center mx-auto">Monthly Distributor's Details Report of {info.month}</h1>
         </div>
         )}
         {info.interval === "daily" || info.interval === "weekly" && (
              <div role="alert" className="alert my-6 shadow-lg">
-
+                <h1 className="font-bold text-lg text-center mx-auto">Distributor's Details Report from {moment(info.date.startDate).format("DD/MM/YYYY")} to {moment(info.date.endDate).format("DD/MM/YYYY")}</h1>
         </div>
         )}
        
