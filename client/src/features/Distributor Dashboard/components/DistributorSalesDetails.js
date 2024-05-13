@@ -1,5 +1,9 @@
-import React, { useState, useEffect } from "react";
-import generatePDF, { Resolution, Margin, Options } from 'react-to-pdf';
+import React, { useState, useEffect, useRef } from "react";
+import { createRoot } from 'react-dom/client';
+import { flushSync } from 'react-dom';
+import html2canvas from 'html2canvas';
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import PDF from "./DistributorPDF"
 import Pagination from "../../../components/Input/PaginationInvoice";
 import TitleCard from "../../../components/Cards/TitleCard";
@@ -9,6 +13,7 @@ import Autocomplete from "../../leads/components/Autocomplete";
 import Datepicker from "react-tailwindcss-datepicker";
 import moment from "moment";
 import axios from "axios";
+import { render } from "react-dom";
 
 
 const DistributorSalesDetails = () => {
@@ -41,6 +46,8 @@ const DistributorSalesDetails = () => {
     startDate: "",
     endDate: "",
   });
+
+  const ref = useRef();
 
   const generateFinancialYears = () => {
     const currentYear = moment().year();
@@ -307,33 +314,43 @@ const DistributorSalesDetails = () => {
       // const handleDateRangeChange = (dateRange) => {
       //   setSelectedDateRange(dateRange);
       // };
-  
+      
+      // const html = renderToString(<PDF data={data} />);
+      // console.log(html);
 
-      const options = {
-        filename: "distributor-sales-details.pdf",
-        method: "save",
-        resolution: Resolution.EXTREME,
-        page: {
-          margin: Margin.SMALL,
-          // format: "A4",
-          // orientation: "landscape"
-        },
-        canvas: {
-          mimeType: "image/jpeg",
-          qualityRatio: 1
-        },
-        overrides: {
-          pdf: {
-            compress: true
-          },
-          canvas: {
-            useCORS: true
-          }
-        }
-      };
-const getTargetElement = () => document.getElementById('print');
+      // Define your React component
 
-const downloadPdf = () => generatePDF(getTargetElement, options);
+      const div = document.createElement('div');
+const root = createRoot(div);
+flushSync(() => {
+  root.render(<PDF data={distributorDetails} />);
+});
+console.log(div);
+      
+
+// const downloadPDF = () => {
+//   const container = document.createElement('div');
+//   document.body.appendChild(container);
+
+//   const root = createRoot(container);
+//   flushSync(() => {
+//     root.render(<PDF data={distributorDetails} />);
+//   });
+
+//   // Wait for a short delay to ensure the component is fully rendered
+//   setTimeout(() => {
+//     html2canvas(container).then((canvas) => {
+//       const pdf = new jsPDF();
+//       const imgData = canvas.toDataURL('image/png');
+//       pdf.addImage(imgData, 'PNG', 0, 0);
+//       pdf.save('filename.pdf');
+      
+//       // Clean up
+//       document.body.removeChild(container);
+//     });
+//   }, 100); // Adjust the delay as needed
+// };
+
 
   return (
     <>
@@ -429,7 +446,7 @@ const downloadPdf = () => generatePDF(getTargetElement, options);
           </li>
           {selectedDistributor && (
         <li>
-          <button className="btn btn-sm w-full" onClick={downloadPdf}>Generate PDF</button>
+          {/* <button className="btn btn-sm w-full" onClick={downloadPDF}>Generate PDF</button> */}
       </li>
       )}
       {/* {selectedDistributor && ( */}
@@ -510,7 +527,7 @@ const downloadPdf = () => generatePDF(getTargetElement, options);
         </div>
       </TitleCard>
       {selectedDistributor > 0 && (
-        <div id="print" className="">
+        <div id="pdf-content" ref={ref}>
       <PDF data={distributorDetails}/>
       </div>
       )}

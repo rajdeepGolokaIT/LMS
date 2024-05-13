@@ -25,9 +25,9 @@ const OutstandingInvoice = () => {
 
     const fetchData = async () => {
         try {
-          const url = `${BASE_URL}/api/v1/invoices/days-wise-invoices?page=${currentPage.toString()}&days=${days.toString()}&status=${isReceived.toString()}&search=${searchTerm}`
+          const url = `${BASE_URL}/api/v1/invoices/days-wise-invoices?page=${currentPage}&days=${days}&status=${isReceived}&search=${searchTerm}`
           const response = await axios.get(url);
-          // console.log(response.data)
+          console.log(url)
           setData(response.data.invoices);
           setPages(response.data.totalPages);
         } catch (error) {
@@ -38,6 +38,7 @@ const OutstandingInvoice = () => {
     
       useEffect(() => {
         fetchData();
+        allData();
       }, [currentPage, days, isReceived, searchTerm]);
 
       const handleIsReceivedToggle = async () => {
@@ -53,23 +54,25 @@ const OutstandingInvoice = () => {
         }
       };
 
-    //   const allData = async () => {
-    //       try {
-    //           const response = await axios.get(`${BASE_URL}/api/v1/invoices/days-wise-invoices?size=100000`);
-    //           setData(response.data.invoices);
-    //       } catch (error) {
-    //           console.error(error);
-    //       }
-    //   }
+      const allData = async () => {
+          try {
+              const response = await axios.get(`${BASE_URL}/api/v1/invoices/days-wise-invoices?size=100000&days=${days}&status=${isReceived}&search=${searchTerm}`);
+              setPdfData(response.data.invoices);
+          } catch (error) {
+              console.error(error);
+          }
+      }
+
+      console.log(pdfData)
 
       const handleCheckboxChange = (e, id) => {
         const isChecked = e.target.checked;
         if (isChecked) {
           setSelectedInvoice(id);
-          setInvoiceData([...invoiceData, data.find(invoice => invoice.someInteger === id)]);
+        //   setInvoiceData([...invoiceData, data.find(invoice => invoice.someInteger === id)]);
         } else {
           setSelectedInvoice(null);
-          setInvoiceData(invoiceData.filter(invoice => invoice.someInteger !== id));
+        //   setInvoiceData(invoiceData.filter(invoice => invoice.someInteger !== id));
         }
       };
 
@@ -92,9 +95,14 @@ const OutstandingInvoice = () => {
         }
       };
 
+      const handleDaysChange = (event) => {
+          setDays(event.target.value);
+        //   fetchData();
+      };
+
       const downloadPDF = () => {
         const pdf = new jsPDF('p', 'mm', 'a4');
-        // allData();
+        allData();
         const logoImg = new Image();
         logoImg.src = "/c.png";
         const imageWidth = 10;
@@ -116,7 +124,7 @@ const OutstandingInvoice = () => {
         
       
       
-        const newData = invoiceData // !== null ? invoiceData : pdfData;
+        const newData = pdfData;
       
         console.log(newData);
       
@@ -196,7 +204,7 @@ const OutstandingInvoice = () => {
           </div>
           <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
           <li>
-            <button className={`btn ${selectedInvoice === null ? "btn-disabled" : "btn-primary"} btn-sm mx-auto my-2 w-full`} onClick={downloadPDF}>
+            <button className={`btn btn-primary btn-sm mx-auto my-2 w-full`} onClick={downloadPDF}>
           Download PDF
         </button>
             </li>
@@ -208,14 +216,14 @@ const OutstandingInvoice = () => {
             <li>
                 <select
                 className="select select-sm mx-auto my-2"
-                onChange={(e) => setDays(e.target.value)}
+                onChange={handleDaysChange}
                 value={days}
                 >
                 <option value="30">Below 30 Days</option>
                 <option value="45">Above 30 and below 45 Days</option>
                 <option value="60">Above 45 and below 60 Days</option>
                 <option value="90">Above 60 and below 90 Days</option>
-                <option value="91">More Than 90 Days</option>
+                <option value="100">More Than 90 Days</option>
                 </select>
             </li>
             <li>
@@ -266,14 +274,15 @@ const OutstandingInvoice = () => {
             </thead>
             <tbody>
             {data.map((invoice) => (
-                <tr key={invoice.id} className="table-row">
+                <tr key={invoice.someInteger} className="table-row">
                   <td className="table-cell">
                     <label>
                       <input
                         type="checkbox"
                         className="checkbox checkbox-primary"
                         onChange={(e) => handleCheckboxChange(e, invoice.someInteger)}
-                        checked={invoiceData.some(item => item.someInteger === invoice.someInteger)}
+                        // checked={invoiceData.some(item => item.someInteger === invoice.someInteger)}
+                        checked={selectedInvoice === invoice.someInteger}
                       />
                     </label>
                   </td>

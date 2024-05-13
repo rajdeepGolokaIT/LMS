@@ -26,15 +26,20 @@ const Top5sold = () => {
 
   const generateMonths = () => {
     const months = [];
+    const currentMonth = moment().startOf("month");
+    const currentYear = currentMonth.year();
     const fiscalStartMonth = moment().month("April").startOf("month");
-    const currentYear = moment().year();
-    for (let i = 0; months.length < 36; i++) { // 3 years * 12 months
-      const monthYear = fiscalStartMonth.clone().subtract(i, "months");
-      const monthName = monthYear.format("MMMM");
-      const year = monthYear.year(); // Extract the year for the current month
-      const monthYearString = `${monthName} ${year}`; // Combine month and year
-      months.unshift(monthYearString); // Unshift to prepend the month-year string to the beginning of the array
+    
+    // Determine the start month for the first fiscal year
+    let startMonth = fiscalStartMonth.clone().year(currentYear - 2);
+  
+    // Loop through each month for the past three fiscal years
+    for (let i = 0; i < 36; i++) { // 3 years * 12 months
+      const monthYearString = startMonth.format("MMMM YYYY");
+      months.push(monthYearString);
+      startMonth.add(1, "month"); // Move to the next month
     }
+    
     return months;
   };
   

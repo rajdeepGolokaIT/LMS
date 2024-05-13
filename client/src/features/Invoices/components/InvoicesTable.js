@@ -39,6 +39,22 @@ const TableComponent = () => {
     fetchData();
   }, [currentPage, searchTerm]);
   
+  useEffect(() => {
+    fullData();
+  }, [size]);
+  
+  const fullData = async () => {
+    // e.preventDefault();
+    try {
+      const response = await axios.get(`${BASE_URL}/api/v1/invoices/all-pages?size=${size}`);
+      setPdfData(response.data.invoices);
+      // downloadPDF();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  
   const fetchData = async () => {
     try {
       const url = `${BASE_URL}/api/v1/invoices/all-pages?page=${currentPage.toString()}&selectQuery=${searchTerm}`
@@ -100,6 +116,7 @@ const TableComponent = () => {
       }
       // Clear selectedInvoices array after successful deletion
       setSelectedInvoices([]);
+      document.getElementById("delete_modal").close();
       // Reload data after deletion
       // const response = await axios.get(
       //   `${BASE_URL}/api/v1/invoices/all`
@@ -117,6 +134,11 @@ const TableComponent = () => {
   const handleUpdate = (invoice) => {
     setSelectedInvoice(invoice);
     document.getElementById("update_modal").showModal();
+  };
+
+  const handleDeleteModal = (invoice) => {
+    setSelectedInvoice(invoice);
+    document.getElementById("delete_modal").showModal();
   };
 
   const handleProduct = (invoice) => {
@@ -141,6 +163,7 @@ const TableComponent = () => {
         selectedInvoices.filter((invoiceId) => invoiceId !== id)
       );
       setEwayTableData([]);
+      setSelectedInvoice(null);
     }
   };
 
@@ -274,18 +297,13 @@ const TableComponent = () => {
     setIrnExists(check)
   };
 
-  const fullData = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/v1/invoices/all-pages?size=${size}`);
-      setPdfData(response.data.invoices);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+ 
 
-const downloadPDF = () => {
+
+
+const downloadPDF = (data) => {
+  
   const pdf = new jsPDF('l', 'mm', 'a4');
-  fullData();
   const logoImg = new Image();
   logoImg.src = "/c.png";
   const imageWidth = 10;
@@ -295,7 +313,7 @@ const downloadPDF = () => {
   pdf.addImage(logoImg, "PNG", imageX, imageY, imageWidth, imageHeight);
 
   const title = "Invoice Report";
-  const fontSize = 14;
+  const fontSize = 10;
   const textWidth =
     (pdf.getStringUnitWidth(title) * fontSize) / pdf.internal.scaleFactor;
   const textX = (pdf.internal.pageSize.width - textWidth) / 2;
@@ -307,11 +325,7 @@ const downloadPDF = () => {
   
 
 
-  const newData = selectedInvoice !== null ? [selectedInvoice] : [pdfData];
-
-  // console.log(newData);
-
-  const rows = newData.map((data, index) => [
+  const rows = pdfData.map((data, index) => [
     index + 1,
     // data.id,
     data.invoiceNumber,
@@ -343,7 +357,7 @@ const downloadPDF = () => {
   pdf.autoTable({
     styles: {
       cellPadding: 0.5,
-      fontSize: 10,
+      fontSize: 9,
     },
     headStyles: {
       fillColor: '#3f51b5',
@@ -375,7 +389,7 @@ const downloadPDF = () => {
         "SGST",
         "Total Amount",
         "Sales Person Name",
-        "City,Region/State,Zone",
+        "City/Region/Zone",
         // "",
         // "",
         "Ewaybill No.",
@@ -393,22 +407,22 @@ const downloadPDF = () => {
   pdf.save("Invoices_report.pdf");
 };
 
-const getIndicatorColor = (invoiceDate) => {
-  const daysDifference = moment().diff(moment(invoiceDate), 'days');
-  if (daysDifference < 30) {
-    return 'bg-green-500';
-  } else if (daysDifference < 45) {
-    return 'bg-yellow-500';
-  } else if (daysDifference < 60) {
-    return 'bg-orange-500';
-  } else if (daysDifference < 90) {
-    return 'bg-red-600';
-  } else {
-    return 'bg-red-900';
-  }
-};
+// const getIndicatorColor = (invoiceDate) => {
+//   const daysDifference = moment().diff(moment(invoiceDate), 'days');
+//   if (daysDifference < 30) {
+//     return 'bg-green-500';
+//   } else if (daysDifference < 45) {
+//     return 'bg-yellow-500';
+//   } else if (daysDifference < 60) {
+//     return 'bg-orange-500';
+//   } else if (daysDifference < 90) {
+//     return 'bg-red-600';
+//   } else {
+//     return 'bg-red-900';
+//   }
+// };
 
-// console.log(pdfData)
+console.log(pdfData)
 // console.log(data)
 
   return (
@@ -455,7 +469,7 @@ const getIndicatorColor = (invoiceDate) => {
               className={`btn btn-sm mx-auto my-2 w-full ${
                 selectedInvoices.length === 0 ? "btn-disabled" : "btn-error "
               } mr-2`}
-              onClick={handleDelete}
+              onClick={handleDeleteModal}
             >
               Delete
             </button>
@@ -626,6 +640,37 @@ const getIndicatorColor = (invoiceDate) => {
         />
         </div>
       </TitleCard>
+
+      {selectedInvoice !== null && (
+        <dialog id="delete_modal" className="modal">
+          <div className="modal-box ">
+            <TitleCard title="CAUSION !!!">
+              <p className="py-4 text-center text-xl">
+                Are you sure you want to delete this Invoice?
+              </p>
+              
+              <div className="flex justify-between w-1/2 m-auto mt-10">
+                <label
+                  htmlFor="delete_modal"
+                  className="btn btn-error px-8"
+                  onClick={handleDelete}
+                >
+                  Yes
+                </label>
+                <label
+                  htmlFor="delete_modal"
+                  className="btn btn-ghost px-8"
+                  onClick={() =>
+                    document.getElementById("delete_modal").close()
+                  }
+                >
+                  No
+                </label>
+              </div>
+            </TitleCard>
+          </div>
+        </dialog>
+      )}
 
       {/* Modal for update */}
       {selectedInvoice && (

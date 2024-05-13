@@ -27,9 +27,7 @@ const DistributorPDF = (data) => {
             <tr><th>City/Region/Zone : </th><td>{info.city}/{info.region}/{info.zone}</td></tr>
             <tr><th>GSTIN : </th><td>{info.gstNo}</td></tr>
             <tr><th>PAN No : </th><td>{info.panNo}</td></tr>
-            {/* <tr><th>Contact Person Name : </th><td>{info.contactperson}</td></tr> */}
-            {/* <tr><th>Region : </th><td>{info.region}</td></tr>
-            <tr><th>Zone : </th><td>{info.zone}</td></tr> */}
+            
             </thead>
         </table>
         </div>
