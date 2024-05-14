@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createRoot } from 'react-dom/client';
 import { flushSync } from 'react-dom';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import PDF from "./DistributorPDF"
@@ -320,35 +320,44 @@ const DistributorSalesDetails = () => {
 
       // Define your React component
 
-      const div = document.createElement('div');
-const root = createRoot(div);
-flushSync(() => {
-  root.render(<PDF data={distributorDetails} />);
-});
-console.log(div);
+//       const div = document.createElement('div');
+// const root = createRoot(div);
+// flushSync(() => {
+//   root.render(<PDF data={distributorDetails} />);
+// });
+// console.log(div);
+
+// html2canvas(div)
+//     .then((canvas) => {
+//         const imgData = canvas.toDataURL('image/png');
+//     })
       
 
 // const downloadPDF = () => {
-//   const container = document.createElement('div');
-//   document.body.appendChild(container);
-
-//   const root = createRoot(container);
+//   const div = document.createElement('div');
+//   document.body.appendChild(div);
+//   const root = createRoot(div);
 //   flushSync(() => {
 //     root.render(<PDF data={distributorDetails} />);
 //   });
 
-//   // Wait for a short delay to ensure the component is fully rendered
-//   setTimeout(() => {
-//     html2canvas(container).then((canvas) => {
-//       const pdf = new jsPDF();
-//       const imgData = canvas.toDataURL('image/png');
-//       pdf.addImage(imgData, 'PNG', 0, 0);
-//       pdf.save('filename.pdf');
-      
-//       // Clean up
-//       document.body.removeChild(container);
-//     });
-//   }, 100); // Adjust the delay as needed
+//   // Dynamically calculate canvas size based on content dimensions
+//   const contentWidth = div.offsetWidth;
+//   const contentHeight = div.offsetHeight;
+//   const scaleFactor = 1; // Increase scale factor if necessary
+//   const canvasWidth = contentWidth * scaleFactor;
+//   const canvasHeight = contentHeight * scaleFactor;
+
+//   html2canvas(div, {
+//     width: canvasWidth,
+//     height: canvasHeight,
+//     scale: scaleFactor
+//   }).then(function(canvas) {
+//     const imgData = canvas.toDataURL('image/jpeg', 1.0);
+//     const pdf = new jsPDF('p', 'px', [canvasWidth, canvasHeight]); // Set PDF orientation and dimensions
+//     pdf.addImage(imgData, 'JPEG', 0, 0, canvasWidth, canvasHeight);
+//     pdf.save("download.pdf");
+//   });
 // };
 
 

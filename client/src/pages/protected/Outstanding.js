@@ -28,7 +28,7 @@ const Outstanding = () => {
           ></path>
         </svg>
         <span className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          <span className="flex justify-center items-center text-xs"><span className="w-3 h-3 animate-pulse rounded-full m-3  border-gray-300 border bg-green-500"></span>For less than 30 days old invoices</span>
+          <span className="flex justify-center items-center text-xs"><span className="w-3 h-3 animate-pulse rounded-full m-3  border-gray-300 grid border bg-green-500"></span>For less than 30 days old invoices</span>
           <span className="flex justify-center items-center text-xs"><span className="w-3 h-3 animate-pulse rounded-full m-3  border-gray-300 grid border bg-yellow-500"></span> For less than 45 days old invoices</span>
           <span className="flex justify-center items-center text-xs"><span className="w-3 h-3 animate-pulse rounded-full m-3  border-gray-300 grid border bg-orange-500"></span> For less than 60 days old invoices</span>
           <span className="flex justify-center items-center text-xs"><span className="w-3 h-3 animate-pulse rounded-full m-3  border-gray-300 grid border bg-red-600"></span> For less than 90 days old invoices</span>

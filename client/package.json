@@ -20,6 +20,7 @@
     "chart.js": "^4.0.1",
     "dayjs": "^1.11.7",
     "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^1.4.3",
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
