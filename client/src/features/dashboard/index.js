@@ -1,8 +1,8 @@
 import DashboardStats from './components/DashboardStats'
 
 import UserGroupIcon  from '@heroicons/react/24/outline/UserGroupIcon'
-import UsersIcon  from '@heroicons/react/24/outline/UsersIcon'
-import CircleStackIcon  from '@heroicons/react/24/outline/CircleStackIcon'
+import UsersIcon  from '@heroicons/react/24/outline/RectangleGroupIcon'
+import CircleStackIcon  from '@heroicons/react/24/outline/InboxStackIcon'
 import CreditCardIcon  from '@heroicons/react/24/outline/CreditCardIcon'
 // import LineChart from './components/LineChart'
 import { useDispatch } from 'react-redux'
