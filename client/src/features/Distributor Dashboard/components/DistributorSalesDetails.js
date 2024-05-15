@@ -1,9 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { createRoot } from 'react-dom/client';
-import { flushSync } from 'react-dom';
-import html2canvas from 'html2canvas-pro';
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import PDF from "./DistributorPDF"
 import Pagination from "../../../components/Input/PaginationInvoice";
 import TitleCard from "../../../components/Cards/TitleCard";
@@ -13,7 +8,7 @@ import Autocomplete from "../../leads/components/Autocomplete";
 import Datepicker from "react-tailwindcss-datepicker";
 import moment from "moment";
 import axios from "axios";
-import { render } from "react-dom";
+
 
 
 const DistributorSalesDetails = () => {
