@@ -361,6 +361,38 @@ const DistributorSalesDetails = () => {
 // };
 
 
+const downloadPDF = async (id, interval, month, year, date) => {
+  try {
+    let apiUrl;
+    if(interval === "annually"){
+      apiUrl = `${BASE_URL}/api/v1/invoices/invoices/distributor/${id}/pdf?interval=annually&year=${year}`;
+    } else if(interval === "monthly"){
+      const monthYearArray = (month.split(" "));
+  const apiMonth = monthYearArray[0];
+  const apiYear = monthYearArray[1];
+      apiUrl = `${BASE_URL}/api/v1/invoices/invoices/distributor/${id}/pdf?interval=monthly&monthName=${apiMonth.toLowerCase()}&year=${apiYear}`;
+    } else if(interval === "daily" || interval === "weekly"){
+      apiUrl = `${BASE_URL}/api/v1/invoices/invoices/distributor/${id}/pdf?interval=customdate&customFromDate=${date.startDate}&customToDate=${date.endDate}`;
+    }
+
+    console.log(apiUrl)
+    const response = await axios.get(apiUrl, {
+      responseType: 'blob',
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'Distributor_Sales_Details.pdf'); // Replace with the desired file name
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+  } catch(error){
+    console.error("Error fetching data:", error);
+  }
+}
+
+
   return (
     <>
     <TitleCard
@@ -455,12 +487,12 @@ const DistributorSalesDetails = () => {
           </li>
           {selectedDistributor && (
         <li>
-          {/* <button className="btn btn-sm w-full" onClick={downloadPDF}>Generate PDF</button> */}
+          <button className="btn btn-primary btn-sm w-full mx-auto my-2" onClick={() => downloadPDF(selectedDistributor, selectedTimeInterval, selectedMonth, selectedYear, selectedDateRange)}>Generate PDF</button>
       </li>
       )}
       {/* {selectedDistributor && ( */}
         <li>
-            <button className="btn btn-sm w-full" onClick={handleReset}>Reset</button>
+            <button className="btn btn-sm w-full mx-auto my-2" onClick={handleReset}>Reset</button>
           </li>
       {/* )} */}
           
@@ -535,7 +567,7 @@ const DistributorSalesDetails = () => {
         />
         </div>
       </TitleCard>
-      {selectedDistributor > 0 && (
+      {distributorDetails.length > 0 && (
         <div id="pdf-content" ref={ref}>
       <PDF data={distributorDetails}/>
       </div>

@@ -8,7 +8,7 @@ const DistributorPDF = (data) => {
 
   useEffect(() => {
     setInfo(data.data[0]);
-  }, []);
+  }, [data.data[0]]);
 
   console.log(info);
   return (
