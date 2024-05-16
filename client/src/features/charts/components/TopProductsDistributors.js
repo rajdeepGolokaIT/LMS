@@ -357,6 +357,7 @@ const TopProductsDistributors = () => {
           </select>
           
           <Autocomplete
+          className="input input-bordered mx-auto my-2 input-sm w-full min-w-[160px]"
       items={locations}
       value={selectedLocation}
       onChange={handleLocationChange}

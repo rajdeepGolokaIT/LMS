@@ -22,13 +22,15 @@ const DistributorSalesDetails = () => {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [productList, setProductList] = useState([]);
   const [productApiData, setProductApiData] = useState([]);
-  const [productId, setProductId] = useState("");
+  const [productName, setProductName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categoryList, setCategoryList] = useState([]);
   const [categoryApiData, setCategoryApiData] = useState([]);
-  const [categoryId, setCategoryId] = useState("");
+  const [categoryName, setCategoryName] = useState("");
   const [invoiceSearch, setInvoiceSearch] = useState("");
   const [invoiceList, setInvoiceList] = useState([]);
+  const [agencyList, setAgencyList] = useState([]);
+  const [valueDistributor, setValueDistributor] = useState("");
   const [selectedInterval, setSelectedInterval] = useState("search");
   const [selectedTimeInterval, setSelectedTimeInterval] = useState("annually");
   const [searchTerm, setSearchTerm] = useState("");
@@ -41,6 +43,10 @@ const DistributorSalesDetails = () => {
     startDate: "",
     endDate: "",
   });
+
+  const [searchDistributor, setSearchDistributor] = useState("");
+  const [searchPerson, setSearchPerson] = useState("");
+  const [agency, setAgency] = useState("");
 
   const ref = useRef();
 
@@ -82,12 +88,12 @@ const DistributorSalesDetails = () => {
       let fromDate, toDate, intervalParam;
 
       if (selectedTimeInterval === "annually") {
-          apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details?page=${currentPage.toString()}&query=${searchTerm}&productId=${productId}&categoryId=${categoryId}&invoiceNumber=${invoiceSearch}&interval=annually&year=${selectedYear}`
+          apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details/by-filters?page=${currentPage.toString()}&query=${searchTerm}&productName=${productName}&categoryName=${categoryName}&invoiceNumber=${invoiceSearch}&distributor=${searchDistributor}&salespersonName=${searchPerson}&interval=annually&year=${selectedYear}`
         } else if (selectedTimeInterval === "monthly") {
           const monthYearArray = (selectedMonth.split(" "));
           const apiMonth = monthYearArray[0];
           const apiYear = monthYearArray[1];
-          apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details?page=${currentPage.toString()}&query=${searchTerm}&productId=${productId}&categoryId=${categoryId}&invoiceNumber=${invoiceSearch}&interval=monthly&year=${apiYear}&month=${apiMonth.toLowerCase()}`
+          apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details/by-filters?page=${currentPage.toString()}&query=${searchTerm}&productName=${productName}&categoryName=${categoryName}&invoiceNumber=${invoiceSearch}&distributor=${searchDistributor}&salespersonName=${searchPerson}&interval=monthly&year=${apiYear}&month=${apiMonth.toLowerCase()}`
         } else if (selectedTimeInterval === "weekly" || selectedTimeInterval === "daily") {
           intervalParam = "customdate"; // Set intervalParam
           
@@ -106,7 +112,7 @@ const DistributorSalesDetails = () => {
                   setSelectedDateRange({startDate: fromDate, endDate: toDate});
               }
           }
-          apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details?page=${currentPage.toString()}&query=${searchTerm}&productId=${productId}&categoryId=${categoryId}&invoiceNumber=${invoiceSearch}&interval=${intervalParam}&customFromDate=${fromDate}&customToDate=${toDate}`
+          apiUrl = `${BASE_URL}/api/v1/invoices/distributors/details/by-filters?page=${currentPage.toString()}&query=${searchTerm}&productName=${productName}&categoryName=${categoryName}&invoiceNumber=${invoiceSearch}&distributor=${searchDistributor}&salespersonName=${searchPerson}&interval=${intervalParam}&customFromDate=${fromDate}&customToDate=${toDate}`
         }
 
         const response = await axios.get(apiUrl);
@@ -135,13 +141,15 @@ const DistributorSalesDetails = () => {
       useEffect(() => {
     
         fetchData();
-      }, [currentPage, searchTerm, productId, categoryId, invoiceSearch, selectedTimeInterval, selectedYear, selectedMonth, selectedDateRange]);
+      }, [currentPage, searchTerm, productName, categoryName, selectedCategory, selectedProduct, invoiceSearch , searchDistributor,searchPerson, selectedTimeInterval, selectedYear, selectedMonth, selectedDateRange]);
       
-
+      console.log(selectedCategory,categoryName)
+      console.log(selectedProduct,productName)
       useEffect(() => {
         fetchProducts();
         fetchCategories();
         fetchInvoiceNo();
+        fetchDistributors();
       }, []);
 
       const fetchProducts = async () => {
@@ -175,7 +183,18 @@ const DistributorSalesDetails = () => {
           console.error("Error fetching data:", error);
         }
       };
-      // console.log(invoiceList)
+      
+      const fetchDistributors = async () => {
+        try {
+          const response = await axios.get(`${BASE_URL}/api/v1/distributorProfiles/distributorslist?size=10000`);
+          const list = response.data.map((item) => item.name);
+          setAgencyList(list);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      // console.log(agencyList);
 
       const handleProductModal = (item) => {
         document.getElementById("product_Modal").showModal();
@@ -198,20 +217,46 @@ const DistributorSalesDetails = () => {
       };
       const handleProductChange = (value) => {
         setSelectedProduct(value);
-        const product = productApiData.find((item) => item.name === value)?.id;
-        setProductId(product);
+        const product = productApiData.find((item) => item.name === value)?.name;
+        setProductName(product ? product : "");
       };
 
       const handleCategoryChange = (value) => {
         setSelectedCategory(value);
-        const category = categoryApiData.find((item) => item.name === value)?.id;
-        setCategoryId(category);
+        const category = categoryApiData.find((item) => item.name === value)?.name;
+        setCategoryName(category ? category : "");
       };
 
       const handleInvoiceChange = (value) => {
         setInvoiceSearch(value);
       };
 
+      const handleSearchDistributor = (value) => {
+        setValueDistributor(value);
+        if (value) {
+          const name = agencyList.find((item) => item === value);
+          console.log(name);
+          setSearchDistributor(name ? name : "");
+        } else if (agency) {
+          setSearchDistributor(agency);
+        }
+      }
+      
+      // Call this function on the input change event
+      const handleInputChange = (value) => {
+        handleSearchDistributor(value);
+      }
+      
+      useEffect(() => {
+        // Update searchDistributor based on agency changes
+        if (agency) {
+          setSearchDistributor(agency);
+        } 
+      }, [agency]);
+      
+      const handleSearchPerson = (event) => {
+        setSearchPerson(event.target.value);
+      }
       const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
       };
@@ -239,9 +284,9 @@ const DistributorSalesDetails = () => {
       const handleReset = () => {
         setSelectedInterval("search");
         setSelectedProduct("");
-        setProductId("");
+        setProductName("");
         setSelectedCategory("");
-        setCategoryId("");
+        setCategoryName("");
         setInvoiceSearch("");
         setSearchTerm("");
         setInvoice([]);
@@ -251,6 +296,9 @@ const DistributorSalesDetails = () => {
         setSelectedYear(moment().year());
         setSelectedMonth(moment().format("MMMM"));
         setSelectedTimeInterval("annually");
+        setSearchDistributor("");
+        setSearchPerson("");
+        setValueDistributor("");
         fetchData();
       };
 
@@ -294,66 +342,34 @@ const DistributorSalesDetails = () => {
             }));
             
             setDistributorDetails(newData);
+            setAgency(newData[0].agencyname);
           } catch(error){
             console.error("Error fetching data:", error);
           }
           setSelectedDistributor(id);
+          // setAgency(agencyName);
         } else {
           setSelectedDistributor(null);
+          setAgency("");
           setDistributorDetails([]);
         }
       }
 
-      console.log(distributorDetails)
+      useEffect(() => {
+        if (selectedDistributor) {
+          // Fetch distributor details when selectedDistributor changes...
+          handleCheckboxChange(
+            { target: { checked: true } },
+            selectedDistributor,
+            selectedTimeInterval,
+            selectedMonth,
+            selectedYear,
+            selectedDateRange
+          );
+        }
+      }, [selectedDistributor, selectedTimeInterval, selectedMonth, selectedYear, selectedDateRange]);
 
-      // const handleDateRangeChange = (dateRange) => {
-      //   setSelectedDateRange(dateRange);
-      // };
-      
-      // const html = renderToString(<PDF data={data} />);
-      // console.log(html);
 
-      // Define your React component
-
-//       const div = document.createElement('div');
-// const root = createRoot(div);
-// flushSync(() => {
-//   root.render(<PDF data={distributorDetails} />);
-// });
-// console.log(div);
-
-// html2canvas(div)
-//     .then((canvas) => {
-//         const imgData = canvas.toDataURL('image/png');
-//     })
-      
-
-// const downloadPDF = () => {
-//   const div = document.createElement('div');
-//   document.body.appendChild(div);
-//   const root = createRoot(div);
-//   flushSync(() => {
-//     root.render(<PDF data={distributorDetails} />);
-//   });
-
-//   // Dynamically calculate canvas size based on content dimensions
-//   const contentWidth = div.offsetWidth;
-//   const contentHeight = div.offsetHeight;
-//   const scaleFactor = 1; // Increase scale factor if necessary
-//   const canvasWidth = contentWidth * scaleFactor;
-//   const canvasHeight = contentHeight * scaleFactor;
-
-//   html2canvas(div, {
-//     width: canvasWidth,
-//     height: canvasHeight,
-//     scale: scaleFactor
-//   }).then(function(canvas) {
-//     const imgData = canvas.toDataURL('image/jpeg', 1.0);
-//     const pdf = new jsPDF('p', 'px', [canvasWidth, canvasHeight]); // Set PDF orientation and dimensions
-//     pdf.addImage(imgData, 'JPEG', 0, 0, canvasWidth, canvasHeight);
-//     pdf.save("download.pdf");
-//   });
-// };
 
 
 const downloadPDF = async (id, interval, month, year, date) => {
@@ -387,6 +403,8 @@ const downloadPDF = async (id, interval, month, year, date) => {
   }
 }
 
+console.log(selectedCategory)
+
 
   return (
     <>
@@ -400,7 +418,7 @@ const downloadPDF = async (id, interval, month, year, date) => {
         <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
         <li className="flex gap-1">
             <select
-            className="select select-bordered mx-auto my-2 select-sm w-full"
+            className={`select select-bordered mx-auto my-2 select-sm ${selectedTimeInterval === "weekly" || selectedTimeInterval === "daily" ? "w-full" : "w-28"}`}
             onChange={handleTimeIntervalChange}
             value={selectedTimeInterval}
           >
@@ -413,7 +431,7 @@ const downloadPDF = async (id, interval, month, year, date) => {
             <>
               {selectedTimeInterval === "annually" && (
                 <select
-                  className="select select-bordered my-2 mx-auto select-sm w-36"
+                  className="select select-bordered my-2 mx-auto select-sm"
                   onChange={handleYearChange}
                   value={selectedYear}
                 >
@@ -441,72 +459,41 @@ const downloadPDF = async (id, interval, month, year, date) => {
           )}
           </li>
           <li className="flex gap-1">
-            <select
-            className="select select-bordered mx-auto my-2 select-sm w-36"
-            onChange={handleIntervalChange}
-            value={selectedInterval}
-          >
-            <option value="search">Search Terms</option>
-            <option value="category">Category Wise</option>
-            <option value="product">Product Wise</option>
-            <option value="invoice">Invoice No. Wise</option>
-          </select>
-          {selectedInterval === "product" && (
-          <Autocomplete
-          items={productList}
-          value={selectedProduct}
-          onChange={handleProductChange}/>
+          {(selectedTimeInterval === "weekly" || selectedTimeInterval === "daily") && (
+           <Datepicker
+           className="input input-bordered"
+           range
+           containerClassName="h-7 mb-2"
+           onChange={handleDateRangeChange}
+           value={selectedDateRange}
+           inputClassName="input input-bordered input-sm w-60"
+           toggleClassName="invisible"
+         />
         )}
-        {selectedInterval === "category" && (
-          <Autocomplete
-          items={categoryList}
-          value={selectedCategory}
-          onChange={handleCategoryChange}/>
-        )}
-        {selectedInterval === "search" && (
-          <input
-          type="text"
-          className="input input-sm input-bordered mx-auto my-2 w-40"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-        )}
-        {selectedInterval === "invoice" && (
-         <Autocomplete
-         items={invoiceList}
-         value={invoiceSearch}
-         onChange={handleInvoiceChange}/>
-       
-        )}
+        
           </li>
           {selectedDistributor && (
         <li>
           <button className="btn btn-primary btn-sm w-full mx-auto my-2" onClick={() => downloadPDF(selectedDistributor, selectedTimeInterval, selectedMonth, selectedYear, selectedDateRange)}>Generate PDF</button>
       </li>
       )}
-      {/* {selectedDistributor && ( */}
         <li>
             <button className="btn btn-sm w-full mx-auto my-2" onClick={handleReset}>Reset</button>
           </li>
-      {/* )} */}
           
         </ul>
       </div>
       }
       TopSideButtons1={
         <>
-         {(selectedTimeInterval === "weekly" || selectedTimeInterval === "daily") && (
-           <Datepicker
-           className="input input-bordered"
-           range
-           // containerClassName="w-72 h-7 "
-           onChange={handleDateRangeChange}
-           value={selectedDateRange}
-           inputClassName="input input-bordered w-56 h-7"
-           toggleClassName="invisible"
-         />
-        )}
+        
+         <input
+          type="text"
+          className="input input-sm input-bordered w-48"
+          placeholder="City/Region/Zone Search"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
         </>
       }
     >
@@ -516,21 +503,69 @@ const downloadPDF = async (id, interval, month, year, date) => {
         >
         <table className="table table-zebra-zebra table-xs">
             <thead>
-            <tr className="table-row text-center">
+            <tr className="table-row">
                 <th className="table-cell">Select</th>
                 <th className="table-cell">Serial Number</th>
-                <th className="table-cell">Distributor Name</th>
-                <th className="table-cell">Contace Person</th>
+                <th className="table-cell">
+                  <Autocomplete
+          type="text"
+          className="input input-xs input-bordered placeholder:text-center w-36"
+          disabled={invoiceSearch || selectedCategory || selectedProduct ? true : null}
+          placeholder={"Distributor Name"}
+          items={agencyList}
+          value={valueDistributor || searchDistributor}
+          onChange={handleInputChange}
+        /></th>
+                <th className="table-cell">
+                <input
+          type="text"
+          className="input input-xs input-bordered placeholder:text-center w-36"
+          placeholder="Sales Person Name"
+          value={searchPerson}
+          onChange={handleSearchPerson}
+        />
+                </th>
                 {/* <th className="table-cell">Number of Products</th> */}
-                <th className="table-cell">Products</th>
-                <th className="table-cell">Categories</th>
-                <th className="table-cell">Invoices</th>
-                <th className="table-cell">City</th>
-                <th className="table-cell">Region</th>
-                <th className="table-cell">Zone</th>
+                <th className="table-cell">
+                <Autocomplete
+                className="input input-bordered input-xs placeholder:text-center w-36"
+                disabled={searchDistributor || selectedCategory || invoiceSearch ? true : null}
+                placeholder={"Products"}
+          items={productList}
+          value={selectedProduct}
+          onChange={handleProductChange}/>
+                </th>
+                <th className="table-cell">
+                <Autocomplete
+                className="input input-bordered input-xs placeholder:text-center w-36"
+                disabled={searchDistributor || invoiceSearch || selectedProduct ? true : null}
+                placeholder={"Categories"}
+          items={categoryList}
+          value={selectedCategory}
+          onChange={handleCategoryChange}/>
+                </th>
+                <th className="table-cell">
+                <Autocomplete
+                className={`input input-bordered input-xs placeholder:text-center w-36`}
+                disabled={searchDistributor || selectedCategory || selectedProduct ? true : null}
+                placeholder={"Invoices"}
+         items={invoiceList}
+         value={invoiceSearch}
+         onChange={handleInvoiceChange}/>
+                </th>
+                <th className="table-cell text-center">
+                City
+                </th>
+                <th className="table-cell text-center">
+                Region
+                </th>
+                <th className="table-cell text-center">
+                Zone
+                </th>
             </tr>
             </thead>
             <tbody>
+              {data.length === 0 && <tr className="table-row"><td className="text-center text-xl font-bold text-gray-300 dark:text-gray-700" colSpan={9}>No data available</td></tr>}
             {data.map((item, index) => (
                 <tr className="table-row text-center" key={index}>
                     <td className="table-cell">
@@ -543,7 +578,7 @@ const downloadPDF = async (id, interval, month, year, date) => {
                     </td>
                     <td className="table-cell">{index + 1}</td>
                     <td className="table-cell">{item.agencyname}</td>
-                    <td className="table-cell">{item.contactperson}</td>
+                    <td className="table-cell">{item.salespersonName}</td>
                     {/* <td className="table-cell">{item.productsLength}</td> */}
                     <td className="table-cell"><button className="btn btn-sm btn-primary" onClick={() => handleProductModal(item)}>View</button></td>
                     <td className="table-cell"><button className="btn btn-sm btn-primary" onClick={() => handleCategoryModal(item)}>View</button></td>

@@ -92,9 +92,9 @@ const DistributorPDF = (data) => {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border mb-4">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th className="px-6 py-3">Date</th>
-              <th className="px-6 py-3">Product Name</th>
-              <th className="px-6 py-3">Quantity</th>
+              <th className="px-6 py-3 w-60 border">Date</th>
+              <th className="px-6 py-3border">Product Name</th>
+              <th className="px-6 py-3 w-60 border">Quantity</th>
             </tr>
           </thead>
           <tbody>
@@ -103,9 +103,9 @@ const DistributorPDF = (data) => {
                 key={index}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
               >
-                <td className="px-6 py-3">{item.date.slice(3, 20)}</td>
-                <td className="px-6 py-3">{item.name}</td>
-                <td className="px-6 py-3">{item.quantity}</td>
+                <td className="px-6 py-3 w-60 border">{item.date.slice(3, 20)}</td>
+                <td className="px-6 py-3 border">{item.name}</td>
+                <td className="px-6 py-3 w-60 border">{item.quantity}</td>
               </tr>
             ))}
           </tbody>
@@ -119,9 +119,9 @@ const DistributorPDF = (data) => {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border mb-4">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th className="px-6 py-3">Date</th>
-              <th className="px-6 py-3">Category Name</th>
-              <th className="px-6 py-3">Quantity</th>
+              <th className="px-6 py-3 w-60 border">Date</th>
+              <th className="px-6 py-3 border">Category Name</th>
+              <th className="px-6 py-3 w-60 border">Quantity</th>
             </tr>
           </thead>
           <tbody>
@@ -130,9 +130,9 @@ const DistributorPDF = (data) => {
                 key={index}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
               >
-                <td className="px-6 py-3">{item.date.slice(3, 20)}</td>
-                <td className="px-6 py-3">{item.name}</td>
-                <td className="px-6 py-3">{item.quantity}</td>
+                <td className="px-6 py-3 w-60 border">{item.date.slice(3, 20)}</td>
+                <td className="px-6 py-3 border">{item.name}</td>
+                <td className="px-6 py-3 w-60 border">{item.quantity}</td>
               </tr>
             ))}
           </tbody>
@@ -146,9 +146,9 @@ const DistributorPDF = (data) => {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th className="px-6 py-3">Date</th>
-              <th className="px-6 py-3">Invoice No</th>
-              <th className="px-6 py-3">Total Amount</th>
+              <th className="px-6 py-3 w-60 border">Date</th>
+              <th className="px-6 py-3 border">Invoice No</th>
+              <th className="px-6 py-3 w-60 border">Total Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -157,9 +157,9 @@ const DistributorPDF = (data) => {
                 key={index}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
               >
-                <td className="px-6 py-3">{item.date.slice(3, 20)}</td>
-                <td className="px-6 py-3">{item.number}</td>
-                <td className="px-6 py-3">{item.amount}</td>
+                <td className="px-6 py-3 border w-60">{item.date.slice(3, 20)}</td>
+                <td className="px-6 py-3 border">{item.number}</td>
+                <td className="px-6 py-3 border w-60">{item.amount}</td>
               </tr>
             ))}
           </tbody>
