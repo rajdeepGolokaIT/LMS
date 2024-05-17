@@ -47,6 +47,7 @@ const DistributorSalesDetails = () => {
   const [searchDistributor, setSearchDistributor] = useState("");
   const [searchPerson, setSearchPerson] = useState("");
   const [agency, setAgency] = useState("");
+  const [salespersonList, setSalespersonList] = useState([]);
 
   const ref = useRef();
 
@@ -143,13 +144,13 @@ const DistributorSalesDetails = () => {
         fetchData();
       }, [currentPage, searchTerm, productName, categoryName, selectedCategory, selectedProduct, invoiceSearch , searchDistributor,searchPerson, selectedTimeInterval, selectedYear, selectedMonth, selectedDateRange]);
       
-      console.log(selectedCategory,categoryName)
-      console.log(selectedProduct,productName)
+      
       useEffect(() => {
         fetchProducts();
         fetchCategories();
         fetchInvoiceNo();
         fetchDistributors();
+        fetchSalespersons();
       }, []);
 
       const fetchProducts = async () => {
@@ -189,6 +190,15 @@ const DistributorSalesDetails = () => {
           const response = await axios.get(`${BASE_URL}/api/v1/distributorProfiles/distributorslist?size=10000`);
           const list = response.data.map((item) => item.name);
           setAgencyList(list);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      const fetchSalespersons = async () => {
+        try {
+          const response = await axios.get(`${BASE_URL}/api/v1/salespersons/salespersonlist`);
+          setSalespersonList(response.data);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -254,8 +264,8 @@ const DistributorSalesDetails = () => {
         } 
       }, [agency]);
       
-      const handleSearchPerson = (event) => {
-        setSearchPerson(event.target.value);
+      const handleSearchPerson = (value) => {
+        setSearchPerson(value);
       }
       const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -517,10 +527,10 @@ console.log(selectedCategory)
           onChange={handleInputChange}
         /></th>
                 <th className="table-cell">
-                <input
-          type="text"
+                <Autocomplete
           className="input input-xs input-bordered placeholder:text-center w-36"
-          placeholder="Sales Person Name"
+          items={salespersonList}
+          placeholder={"Sales Person Name"}
           value={searchPerson}
           onChange={handleSearchPerson}
         />
