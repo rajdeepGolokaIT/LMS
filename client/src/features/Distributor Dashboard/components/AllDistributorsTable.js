@@ -39,10 +39,25 @@ const AllDistributorsTable = () => {
     gstNo: "",
     panNo: "",
   });
+  const [salespersonDistributor, setSalespersonDistributor] = useState([]);
 
   // useEffect(() => {
   //   dispatch(setPageTitle({ title: "All Distributors List" }));
   // }, []);
+
+  useEffect(() => {
+    fetchSalespersons();
+  },[])
+
+  const fetchSalespersons = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/v1/distributors/distributor-salesperson-details`);
+      setSalespersonDistributor(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,12 +66,23 @@ const AllDistributorsTable = () => {
           const response = await axios.get(
             `${BASE_URL}/api/v1/distributors/all`
           );
-          setData(response.data);
+          const newData = response.data.map((distributor) => ({
+            ...distributor,
+            salespersonId:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonId,
+            salespersonName:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonName
+          }));
+          console.log(newData);
+          setData(newData);
         } else if (selectedList === "inactive_distributors") {
           const response = await axios.get(
             `${BASE_URL}/api/v1/distributors/all-inactive`
           );
-          setData(response.data);
+          const newData = response.data.map((distributor) => ({
+            ...distributor,
+            salespersonId:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonId,
+            salespersonName:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonName
+          }));
+          setData(newData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -65,6 +91,8 @@ const AllDistributorsTable = () => {
 
     fetchData();
   }, [selectedList]);
+
+  console.log(data);
 
   const filteredRecords = data.filter((distributors) => {
     return (
@@ -498,6 +526,7 @@ const AllDistributorsTable = () => {
                     <SortIcon2 className="h-5 w-5 inline" />
                   )}
                 </th>
+                <th>Sales Person Name</th>
               </tr>
             </thead>
             <tbody>
@@ -533,6 +562,7 @@ const AllDistributorsTable = () => {
                   <td>{record.distributorProfile.city}</td>
                   <td>{record.distributorProfile.region}</td>
                   <td>{record.distributorProfile.zone}</td>
+                  <td>{record.salespersonName}</td>
                 </tr>
               ))}
             </tbody>

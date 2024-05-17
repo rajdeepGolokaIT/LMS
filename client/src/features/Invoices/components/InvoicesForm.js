@@ -52,10 +52,10 @@ function InvoicesForm() {
   const [fetchIrnNo, setFetchIrnNo] = useState([]);
   const [invoiceExists, setInvoiceExists] = useState(false);
   const [irnExists, setIrnExists] = useState(false);
+  const [formSalesPerson, setFormSalesPerson] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchDistributors();
     fetchSalesPersons();
     fetchInvoiceNumber();
     fetchIrn();
@@ -76,14 +76,17 @@ function InvoicesForm() {
   const fetchDistributors = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/v1/distributors/all`
+        `${BASE_URL}/api/v1/distributors/salesperson/${formSalesPerson}`
       );
       setDistributors(response.data);
     } catch (error) {
       console.error("Error fetching distributors:", error);
-      // Handle error, show error message to the user, etc.
     }
   };
+
+  useEffect(() => {
+    fetchDistributors();
+  }, [formSalesPerson]);
 
   const handleSubmit = async () => {
     // e.preventDefault();
@@ -165,7 +168,7 @@ function InvoicesForm() {
     setFormData({ ...formData, deliveryDate: date.startDate});
   };
   
- console.log.apply(formData.deliveryDate)
+//  console.log.apply(formData.deliveryDate)
   
   const fetchInvoiceNumber = async () => {
     try {
@@ -276,11 +279,13 @@ function InvoicesForm() {
                   className="w-full select select-bordered select-primary"
                   id="salespersonId"
                   value={formData.salespersonId}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setFormData({
                       ...formData,
                       salespersonId: parseInt(e.target.value),
-                    })
+                    });
+                    setFormSalesPerson(parseInt(e.target.value));
+                  }
                   }
                   required
                 >
@@ -475,8 +480,9 @@ function InvoicesForm() {
                 </label>
                 <select
                   id="distributorId"
-                  className="w-full input input-bordered input-primary"
+                  className={`w-full select ${formSalesPerson ? "select-primary" : "select-disabled"} `}
                   value={formData.distributorId}
+                  disabled={formSalesPerson ? null : true}
                   onChange={(e) =>
                     setFormData({
                       ...formData,

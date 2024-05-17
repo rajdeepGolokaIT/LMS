@@ -170,7 +170,7 @@ const DistributorPDF = (data) => {
               </th>
               <td class="px-6 py-3"></td>
               <td class="px-6 py-3">
-                INR {info.invoices.reduce((total, i) => total + i.amount, 0)}{" "}
+                INR {info.invoices.reduce((total, i) => total + parseFloat(i.amount), 0)}
               </td>
             </tr>
           </tfoot>

@@ -18,28 +18,48 @@ function DistributorProfileForm() {
     const [email, setEmail] = useState('');
     const [gstNo, setGstNo] = useState('');
     const [panNo, setPanNo] = useState('');
+    const [salespersonList, setSalespersonList] = useState([]);
+    const [selectedPerson, setSelectedPerson] = useState(null);
 
     const dispatch = useDispatch();
 
+    const fetchDistributors = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/api/v1/salespersons/salespersonlist-names-ids?size=1000`);
+            const persons = response.data.map(([id, name]) => ({ id, name }));
+            console.log(persons);
+            setSalespersonList(persons);
+        } catch (error) {
+            console.error('Error fetching distributors:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchDistributors();
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const formData = {
+            address,
+            zone,
+            city,
+            region,
+            state,
+            agencyName,
+            contactPerson,
+            contactNumber,
+            email,
+            gstNo,
+            panNo
+        }
+
+        console.log(formData);
 
         try {
             const response = await axios.post(
-                `${BASE_URL}/api/v1/distributorProfiles/add-distributorProfile`,
-                {
-                    address,
-                    zone,
-                    city,
-                    region,
-                    state,
-                    agencyName,
-                    contactPerson,
-                    contactNumber,
-                    email,
-                    gstNo,
-                    panNo
-                }
+                `${BASE_URL}/api/v1/distributorProfiles/add-distributorProfile?salespersonId=${selectedPerson}`,
+                formData,
             );
             console.log('Distributor profile created:', response.data);
             // Optionally, you can reset the form fields after successful submission
@@ -55,6 +75,7 @@ function DistributorProfileForm() {
             setEmail('');
             setGstNo('');
             setPanNo('');
+            setSelectedPerson(null);
         } catch (error) {
             console.error('Error creating distributor profile:', error);
             // Handle error, show error message to the user, etc.
@@ -62,11 +83,28 @@ function DistributorProfileForm() {
         }
     };
 
+    console.log(selectedPerson);
+
     return (
         <>
             <TitleCard title="Create Distributor Profile" topMargin="mt-2">
                 <div className="w-full p-6 m-auto bg-base-100 rounded-lg shadow-lg ">
                     <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                        <div>
+                            <label className="label label-text text-base">Salesperson Name:</label>
+                            <select
+                                className="w-full select select-primary"
+                                onClick={(e) => setSelectedPerson(e.target.value)}
+                            >
+                                <option value="">Select Salesperson</option>
+                                {salespersonList.map((salesperson) => (
+                                    <option key={salesperson.id} value={salesperson.id}>
+                                        {salesperson.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         <div>
                             <label htmlFor="address" className="label label-text text-base">Address:</label>
                             <input
@@ -78,8 +116,7 @@ function DistributorProfileForm() {
                                 onChange={(e) => setAddress(e.target.value)}
                                 required
                             />
-                        </div>
-                        <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                        </div>    
                         <div>
                             <label htmlFor="zone" className="label label-text text-base">Zone:</label>
                             <input

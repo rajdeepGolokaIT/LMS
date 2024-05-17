@@ -16,6 +16,7 @@ import { BASE_URL } from "../../../Endpoint";
 const SalesPersonsTable = () => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
+  const [distributors, setDistributors] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
   const [selectedId, setSelectedId] = useState(null);
@@ -31,6 +32,10 @@ const SalesPersonsTable = () => {
     direction: "ascending",
   });
   const [selectedList, setSelectedList] = useState("active_salespersons");
+  const [sortedDistributors, setSortedDistributors] = useState([]);
+  const [selectedDistributors, setSelectedDistributors] = useState([]);
+  const [selectedDistributorId, setSelectedDistributorId] = useState("");
+  const [allDistributors, setAllDistributors] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,18 +111,36 @@ const SalesPersonsTable = () => {
         (salesperson) => parseInt(salesperson.id) === parseInt(id)
       );
       // setSelectedProfile(foundSalespersons);
-      // console.log(foundSalespersons);
+      // console.log(foundSalespersons.distributors.map((d) => d.distributorProfile.id));
 
       if (foundSalespersons) {
         setFormData(foundSalespersons);
+        setSelectedDistributors(foundSalespersons.distributors.map(
+          (distributor) =>  distributor.id)
+        )
       }
     } else {
       setFormData([]);
       setSelectedId(null);
+      setSelectedDistributors([]);
     }
   };
 
-  // console.log(selectedId)
+  // useEffect(() => {
+  //   if (selectedId) {
+  //     handleCheckboxChange(
+  //       { target: { checked: true } },
+  //       //  selectedId,
+  //        selectedDistributors,
+  //       //  formData
+  //       );
+  //   }
+  // }, [selectedDistributors]);
+
+  console.log(selectedDistributors)
+  console.log(formData);
+
+
 
   const handleSubmit = async (e, formData) => {
     try {
@@ -126,6 +149,10 @@ const SalesPersonsTable = () => {
       for (const key in formData) {
         params.append(key, formData[key]);
       }
+      // Convert array of distributor IDs to comma-separated string
+      const distributorIdsString = selectedDistributors.join(',');
+      // Add distributorIds to URLSearchParams
+      params.append('distributorIds', distributorIdsString);
       await axios.put(
         `${BASE_URL}/api/v1/salespersons/update-salesperson/${selectedId}`,
         params.toString(),
@@ -239,6 +266,51 @@ const SalesPersonsTable = () => {
     pdf.save("sales_persons.pdf");
   };
 
+  const handleDistributorsModal = (item) => {
+    document.getElementById("distributors_modal").showModal();
+    setDistributors(item.distributors);
+  };
+
+  console.log(distributors)
+
+  const fetchDistributors = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/v1/distributors/no-salesperson`);
+      setSortedDistributors(response.data);
+    } catch (error) {
+      console.error("Error fetching distributors:", error);
+    }
+  };
+
+  const fetchAllDistributors = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/v1/distributorProfiles/distributorslist?size=10000`);
+      setAllDistributors(response.data);
+    } catch (error) {
+      console.error("Error fetching distributors:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDistributors();
+    fetchAllDistributors();
+  }, []);
+
+  const handleAddDistributor = () => {
+    if (selectedDistributorId) {
+      setSelectedDistributors([...selectedDistributors, selectedDistributorId]);
+      setSelectedDistributorId("");
+    }
+  };
+
+  const handleRemoveDistributor = (id) => {
+    const updatedDistributors = selectedDistributors.filter((distributorId) => distributorId !== id);
+    setSelectedDistributors(updatedDistributors);
+  };
+
+  // console.log(selectedDistributors.map((distributorId) => allDistributors.find((distributor) => parseInt(distributor.id) === parseInt(distributorId)))?.name)
+  console.log(allDistributors.map((distributor) => distributor.id))
+
   return (
     <>
       <TitleCard
@@ -341,6 +413,7 @@ const SalesPersonsTable = () => {
                     <SortIcon2 className="h-5 w-5 inline" />
                   )}
                 </th>
+                <th>Distributors</th>
               </tr>
             </thead>
             <tbody>
@@ -362,6 +435,7 @@ const SalesPersonsTable = () => {
                   <td>{salespersons.name}</td>
                   <td>{salespersons.contactNumber}</td>
                   <td>{salespersons.email}</td>
+                  <td className="table-cell"><button className="btn btn-sm btn-primary" onClick={() => handleDistributorsModal(salespersons)}>View</button></td>
                 </tr>
               ))}
             </tbody>
@@ -486,6 +560,57 @@ const SalesPersonsTable = () => {
                       required
                     />
                   </div>
+                  <div>
+                <label htmlFor="distributorId" className="label label-text text-base">
+                  Select Distributor Name:
+                </label>
+                <select
+                  id="distributorId"
+                  name="distributorId"
+                  value={selectedDistributorId}
+                  onChange={(e) => setSelectedDistributorId(e.target.value)}
+                  className="select select-bordered w-full"
+                  // required
+                >
+                  <option value="">Select Distributor</option>
+                  {sortedDistributors.map((distributor) => (
+                    <option key={distributor.id} value={distributor.id}>
+                      {distributor.name}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={handleAddDistributor}
+                  className="btn btn-primary mt-2"
+                >
+                  Add More
+                </button>
+              </div>
+                  {selectedDistributors.length > 0 && (
+                <div>
+                  <label className="label label-text text-base">
+                    Selected Distributors:
+                  </label>
+                  <ul>
+                    {selectedDistributors.map((id) => (
+                      <li key={id} className="flex gap-2">
+                        {allDistributors.find((distributor) => parseInt(distributor.id) === parseInt(id))?.name}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveDistributor(id)}
+                          className="btn btn-xs btn-error btn-circle ml-2"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+  <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+</svg>
+
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
                 </div>
                 <div className="modal-action">
                   <button type="submit" className="btn btn-primary">
@@ -497,6 +622,42 @@ const SalesPersonsTable = () => {
           </div>
         </dialog>
       )}
+      <dialog id="distributors_modal" className="modal">
+        <div className="modal-box">
+          <TitleCard title="Products">
+            <div className="overflow-x-auto w-full">
+              {distributors.length > 0 ? (
+                <table className="table w-full">
+                  <thead>
+                    <tr>
+                      <th>Serial Number</th>
+                      <th>Distributor Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {distributors.map((distributor, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{distributor.distributorProfile.agencyName}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p className="text-center">No Distributors Found!!!</p>
+              )}
+            </div>
+          </TitleCard>
+          <div className="modal-action">
+            <button
+              className="btn"
+              onClick={() => document.getElementById("distributors_modal").close()}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </dialog>
     </>
   );
 };
