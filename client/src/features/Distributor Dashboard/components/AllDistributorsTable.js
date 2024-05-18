@@ -541,7 +541,7 @@ useEffect(() => {
                     <SortIcon2 className="h-5 w-5 inline" />
                   )}
                 </th>
-                <th>Sales Person Name</th>
+                <th className="table-cell">Sales Person Name</th>
               </tr>
             </thead>
             <tbody>

@@ -12,7 +12,6 @@ import SortIcon2 from "@heroicons/react/24/outline/BarsArrowUpIcon";
 import MenuIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 import { BASE_URL } from "../../../Endpoint";
 
-
 const SalesPersonsTable = () => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
@@ -38,36 +37,36 @@ const SalesPersonsTable = () => {
   const [allDistributors, setAllDistributors] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (selectedList === "active_salespersons") {
-          const response = await axios.get(
-            `${BASE_URL}/api/v1/salespersons/all`
-          );
-          setData(response.data);
-        } else if (selectedList === "inactive_salespersons") {
-          const response = await axios.get(
-            `${BASE_URL}/api/v1/salespersons/all-inactive`
-          );
-          setData(response.data);
-        }
-        // console.log(response.data);
-
-        // const foundSalespersons = data.find((salesperson) => parseInt(salesperson.id) === parseInt(selectedId));
-        // setSelectedProfile(foundSalespersons);
-        // console.log(foundSalespersons);
-
-        // if (foundSalespersons){
-        //     setFormData(foundSalespersons);
-
-        // }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
     fetchData();
   }, [selectedList]);
+  
+  const fetchData = async () => {
+    try {
+      if (selectedList === "active_salespersons") {
+        const response = await axios.get(
+          `${BASE_URL}/api/v1/salespersons/all`
+        );
+        setData(response.data);
+      } else if (selectedList === "inactive_salespersons") {
+        const response = await axios.get(
+          `${BASE_URL}/api/v1/salespersons/all-inactive`
+        );
+        setData(response.data);
+      }
+      // console.log(response.data);
 
+      // const foundSalespersons = data.find((salesperson) => parseInt(salesperson.id) === parseInt(selectedId));
+      // setSelectedProfile(foundSalespersons);
+      // console.log(foundSalespersons);
+
+      // if (foundSalespersons){
+      //     setFormData(foundSalespersons);
+
+      // }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   // console.log(selectedProfile)
   // console.log(formData)
 
@@ -114,10 +113,14 @@ const SalesPersonsTable = () => {
       // console.log(foundSalespersons.distributors.map((d) => d.distributorProfile.id));
 
       if (foundSalespersons) {
-        setFormData(foundSalespersons);
-        setSelectedDistributors(foundSalespersons.distributors.map(
-          (distributor) =>  distributor.id)
-        )
+        setFormData({
+          name: foundSalespersons.name,
+          contactNumber: foundSalespersons.contactNumber,
+          email: foundSalespersons.email,
+        });
+        // setSelectedDistributors(
+        //   foundSalespersons.distributors.map((distributor) => distributor.id)
+        // );
       }
     } else {
       setFormData([]);
@@ -137,25 +140,25 @@ const SalesPersonsTable = () => {
   //   }
   // }, [selectedDistributors]);
 
-  console.log(selectedDistributors)
+  console.log(selectedDistributors);
   console.log(formData);
-
-
 
   const handleSubmit = async (e, formData) => {
     try {
       e.preventDefault();
-      const params = new URLSearchParams();
-      for (const key in formData) {
-        params.append(key, formData[key]);
-      }
+      // const params = new URLSearchParams();
+      // for (const key in formData) {
+      //   params.append(key, formData[key]);
+      // }
       // Convert array of distributor IDs to comma-separated string
-      const distributorIdsString = selectedDistributors.join(',');
+      // const distributorIdsString = selectedDistributors.join(",");
       // Add distributorIds to URLSearchParams
-      params.append('distributorIds', distributorIdsString);
+      // params.append("distributorIds", distributorIdsString);
+      // console.log(`${BASE_URL}/api/v1/salespersons/update-salesperson/${selectedId}?distributorIds=${distributorIdsString}`)
+      // console.log(formData)
       await axios.put(
         `${BASE_URL}/api/v1/salespersons/update-salesperson/${selectedId}`,
-        params.toString(),
+        formData,
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -163,10 +166,7 @@ const SalesPersonsTable = () => {
         }
       );
       console.log("Sales Person updated successfully");
-      const response = await axios.get(
-        `${BASE_URL}/api/v1/salespersons/all`
-      );
-      setData(response.data);
+      fetchData();
       document.getElementById("update_modal").close();
       dispatch(
         showNotification({
@@ -198,9 +198,7 @@ const SalesPersonsTable = () => {
       }
       setSelectedId([]);
       // Reload data after deletion
-      const response = await axios.get(
-        `${BASE_URL}/api/v1/salespersons/all`
-      );
+      const response = await axios.get(`${BASE_URL}/api/v1/salespersons/all`);
       setData(response.data);
       document.getElementById("delete_modal").close();
       setSelectedId(null);
@@ -269,22 +267,33 @@ const SalesPersonsTable = () => {
   const handleDistributorsModal = (item) => {
     document.getElementById("distributors_modal").showModal();
     setDistributors(item.distributors);
+    setSelectedDistributors(
+      item.distributors.map((distributor) => distributor.id)
+    );
+    setSelectedId(item.id);
   };
 
-  console.log(distributors)
+  // console.log(sortedDistributors);
 
   const fetchDistributors = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/v1/distributors/no-salesperson`);
+      const response = await axios.get(
+        `${BASE_URL}/api/v1/distributors/no-salesperson`
+      );
       setSortedDistributors(response.data);
     } catch (error) {
       console.error("Error fetching distributors:", error);
     }
   };
 
+  console.log(sortedDistributors);
+
+
   const fetchAllDistributors = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/v1/distributorProfiles/distributorslist?size=10000`);
+      const response = await axios.get(
+        `${BASE_URL}/api/v1/distributorProfiles/distributorslist?size=10000`
+      );
       setAllDistributors(response.data);
     } catch (error) {
       console.error("Error fetching distributors:", error);
@@ -304,12 +313,43 @@ const SalesPersonsTable = () => {
   };
 
   const handleRemoveDistributor = (id) => {
-    const updatedDistributors = selectedDistributors.filter((distributorId) => distributorId !== id);
+    const updatedDistributors = selectedDistributors.filter(
+      (distributorId) => distributorId !== id
+    );
     setSelectedDistributors(updatedDistributors);
   };
 
   // console.log(selectedDistributors.map((distributorId) => allDistributors.find((distributor) => parseInt(distributor.id) === parseInt(distributorId)))?.name)
-  console.log(allDistributors.map((distributor) => distributor.id))
+  // console.log(allDistributors.map((distributor) => distributor.id));
+
+  const handleDistUpdate = async () => {
+    try {
+      // const distributorIdsString = selectedDistributors.join(",");
+      const response = await axios.put(
+        `${BASE_URL}/api/v1/salespersons/${selectedId}/distributors`, selectedDistributors
+      );
+      fetchData();
+      document.getElementById("distUpdate_modal").close();
+      fetchDistributors();
+      dispatch(
+        showNotification({
+          message: "Distributors updated successfully!",
+          status: 1,
+        })
+      )
+      console.log(response.data)
+    } catch (error) {
+      console.error("Error updating distributors:", error);
+      dispatch(
+        showNotification({
+          message: "Error updating distributors!",
+          status: 0,
+        })
+      )
+    }
+  };
+
+  console.log(selectedDistributors)
 
   return (
     <>
@@ -318,58 +358,65 @@ const SalesPersonsTable = () => {
         topMargin="mt-2"
         TopSideButtons1={
           <div className="dropdown dropdown-bottom dropdown-end">
-          <div tabIndex={0} role="button" className="">
-            <MenuIcon className="btn btn-sm btn-circle"/>
-          </div>
-          <ul tabIndex={0} className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box">
-            <li>
-              <button className="btn btn-primary btn-sm w-full mx-auto my-2" onClick={downloadPDF}>
-            Download PDF
-          </button>
-            </li>
-            <li>
-              <button
-              className={`btn btn-sm w-full mx-auto my-2 ${
-                selectedId === null
-                  ? "btn-disabled"
-                  : selectedList === "active_salespersons"
-                  ? "btn-error"
-                  : "btn-success"
-              }`}
-              onClick={handleDeleteModal}
+            <div tabIndex={0} role="button" className="">
+              <MenuIcon className="btn btn-sm btn-circle" />
+            </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content z-[1]  p-2 shadow bg-base-100 rounded-box"
             >
-              {selectedList === "active_salespersons"
-                ? "Deactivate"
-                : "Activate"}
-            </button>
-            </li>
-           
-            <li>
-             <button
-            className={`btn btn-sm w-full mx-auto my-2 ${
-              selectedId === null ? "btn-disabled" : "btn-primary"
-            }`}
-            onClick={handleUpdate}
-          >
-            Update
-          </button> 
-            </li>
-             <li>
-              <select
-              className="select select-sm mx-auto my-2 max-w-xs"
-              onChange={(e) => setSelectedList(e.target.value)}
-              value={selectedList}
-            >
-              <option value="active_salespersons">Active Sales Persons</option>
-              <option value="inactive_salespersons">
-                Inactive Sales Persons
-              </option>
-            </select>
-            </li>
+              <li>
+                <button
+                  className="btn btn-primary btn-sm w-full mx-auto my-2"
+                  onClick={downloadPDF}
+                >
+                  Download PDF
+                </button>
+              </li>
+              <li>
+                <button
+                  className={`btn btn-sm w-full mx-auto my-2 ${
+                    selectedId === null
+                      ? "btn-disabled"
+                      : selectedList === "active_salespersons"
+                      ? "btn-error"
+                      : "btn-success"
+                  }`}
+                  onClick={handleDeleteModal}
+                >
+                  {selectedList === "active_salespersons"
+                    ? "Deactivate"
+                    : "Activate"}
+                </button>
+              </li>
+
+              <li>
+                <button
+                  className={`btn btn-sm w-full mx-auto my-2 ${
+                    selectedId === null ? "btn-disabled" : "btn-primary"
+                  }`}
+                  onClick={handleUpdate}
+                >
+                  Update
+                </button>
+              </li>
+              <li>
+                <select
+                  className="select select-sm mx-auto my-2 max-w-xs"
+                  onChange={(e) => setSelectedList(e.target.value)}
+                  value={selectedList}
+                >
+                  <option value="active_salespersons">
+                    Active Sales Persons
+                  </option>
+                  <option value="inactive_salespersons">
+                    Inactive Sales Persons
+                  </option>
+                </select>
+              </li>
             </ul>
-        </div>
+          </div>
         }
-        
       >
         <div className="overflow-x-auto w-full">
           <table className="table table-zebra-zebra table-sm">
@@ -435,16 +482,23 @@ const SalesPersonsTable = () => {
                   <td>{salespersons.name}</td>
                   <td>{salespersons.contactNumber}</td>
                   <td>{salespersons.email}</td>
-                  <td className="table-cell"><button className="btn btn-sm btn-primary" onClick={() => handleDistributorsModal(salespersons)}>View</button></td>
+                  <td className="table-cell">
+                    <button
+                      className="btn btn-sm btn-primary"
+                      onClick={() => handleDistributorsModal(salespersons)}
+                    >
+                      View
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        <Pagination
-          nPages={Math.ceil(data.length / recordsPerPage)}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
+          <Pagination
+            nPages={Math.ceil(data.length / recordsPerPage)}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
         </div>
       </TitleCard>
 
@@ -560,57 +614,69 @@ const SalesPersonsTable = () => {
                       required
                     />
                   </div>
-                  <div>
-                <label htmlFor="distributorId" className="label label-text text-base">
-                  Select Distributor Name:
-                </label>
-                <select
-                  id="distributorId"
-                  name="distributorId"
-                  value={selectedDistributorId}
-                  onChange={(e) => setSelectedDistributorId(e.target.value)}
-                  className="select select-bordered w-full"
-                  // required
-                >
-                  <option value="">Select Distributor</option>
-                  {sortedDistributors.map((distributor) => (
-                    <option key={distributor.id} value={distributor.id}>
-                      {distributor.name}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={handleAddDistributor}
-                  className="btn btn-primary mt-2"
-                >
-                  Add More
-                </button>
-              </div>
+                  {/* <div>
+                    <label
+                      htmlFor="distributorId"
+                      className="label label-text text-base"
+                    >
+                      Select Distributor Name:
+                    </label>
+                    <select
+                      id="distributorId"
+                      name="distributorId"
+                      value={selectedDistributorId}
+                      onChange={(e) => setSelectedDistributorId(e.target.value)}
+                      className="select select-bordered w-full"
+                      // required
+                    >
+                      <option value="">Select Distributor</option>
+                      {sortedDistributors.map((distributor) => (
+                        <option key={distributor.id} value={distributor.id}>
+                          {distributor.name}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={handleAddDistributor}
+                      className="btn btn-primary mt-2"
+                    >
+                      Add More
+                    </button>
+                  </div>
                   {selectedDistributors.length > 0 && (
-                <div>
-                  <label className="label label-text text-base">
-                    Selected Distributors:
-                  </label>
-                  <ul>
-                    {selectedDistributors.map((id) => (
-                      <li key={id} className="flex gap-2">
-                        {allDistributors.find((distributor) => parseInt(distributor.id) === parseInt(id))?.name}
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveDistributor(id)}
-                          className="btn btn-xs btn-error btn-circle ml-2"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-  <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-</svg>
-
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                    <div>
+                      <label className="label label-text text-base">
+                        Selected Distributors:
+                      </label>
+                      <ul>
+                        {selectedDistributors.map((id) => (
+                          <li key={id} className="flex gap-2">
+                            {
+                              allDistributors.find(
+                                (distributor) =>
+                                  parseInt(distributor.id) === parseInt(id)
+                              )?.name
+                            }
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveDistributor(id)}
+                              className="btn btn-xs btn-error btn-circle ml-2"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                class="w-5 h-5"
+                              >
+                                <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                              </svg>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )} */}
                 </div>
                 <div className="modal-action">
                   <button type="submit" className="btn btn-primary">
@@ -624,13 +690,14 @@ const SalesPersonsTable = () => {
       )}
       <dialog id="distributors_modal" className="modal">
         <div className="modal-box">
-          <TitleCard title="Products">
+          <TitleCard title="Distributors">
             <div className="overflow-x-auto w-full">
               {distributors.length > 0 ? (
                 <table className="table w-full">
                   <thead>
                     <tr>
                       <th>Serial Number</th>
+                      {/* <th>ID</th> */}
                       <th>Distributor Name</th>
                     </tr>
                   </thead>
@@ -638,6 +705,7 @@ const SalesPersonsTable = () => {
                     {distributors.map((distributor, index) => (
                       <tr key={index}>
                         <td>{index + 1}</td>
+                        {/* <td>{distributor.id}</td> */}
                         <td>{distributor.distributorProfile.agencyName}</td>
                       </tr>
                     ))}
@@ -649,15 +717,118 @@ const SalesPersonsTable = () => {
             </div>
           </TitleCard>
           <div className="modal-action">
+            <label
+              htmlFor="distributors_modal"
+              className="btn btn-primary"
+              onClick={() =>{
+                document.getElementById("distUpdate_modal").showModal();
+                document.getElementById("distributors_modal").close()
+              }
+              }
+            >
+              Update distributors
+            </label>
             <button
               className="btn"
-              onClick={() => document.getElementById("distributors_modal").close()}
+              onClick={() =>
+                document.getElementById("distributors_modal").close()
+              }
             >
               Close
             </button>
           </div>
         </div>
       </dialog>
+
+      <dialog id="distUpdate_modal" className="modal">
+        <div className="modal-box">
+        <TitleCard title="Update Distributors">
+            <div className="overflow-x-auto w-full">
+                  <div>
+                    <label
+                      htmlFor="distributorId"
+                      className="label label-text text-base"
+                    >
+                      Select Distributor Name:
+                    </label>
+                    <select
+                      id="distributorId"
+                      name="distributorId"
+                      value={selectedDistributorId}
+                      onChange={(e) => setSelectedDistributorId(e.target.value)}
+                      className="select select-bordered w-full"
+                      // required
+                    >
+                      <option value="">Select Distributor</option>
+                      {sortedDistributors.map((distributor) => (
+                        <option key={distributor.id} value={distributor.id}>
+                          {distributor.distributorProfile.agencyName}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={handleAddDistributor}
+                      className="btn btn-primary mt-2"
+                    >
+                      Add More
+                    </button>
+                  </div>
+                  {selectedDistributors.length > 0 && (
+                    <div>
+                      <label className="label label-text text-base">
+                        Selected Distributors:
+                      </label>
+                      <ul>
+                        {selectedDistributors.map((id) => (
+                          <li key={id} className="flex gap-2">
+                            {
+                              allDistributors.find(
+                                (distributor) =>
+                                  parseInt(distributor.id) === parseInt(id)
+                              )?.name
+                            }
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveDistributor(id)}
+                              className="btn btn-xs btn-error btn-circle ml-2"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                className="w-5 h-5"
+                              >
+                                <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                              </svg>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </TitleCard>
+             <div className="modal-action">
+            <label
+              htmlFor="distUpdate_modal"
+              className="btn btn-success"
+              onClick={handleDistUpdate}
+            >
+              Update
+            </label>
+            <button
+              className="btn"
+              onClick={() =>
+                document.getElementById("distUpdate_modal").close()
+              }
+            >
+              Close
+            </button>
+             </div>
+              </div>
+      </dialog>
+          
     </>
   );
 };
