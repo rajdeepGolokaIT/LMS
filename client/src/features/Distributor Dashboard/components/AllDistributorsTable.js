@@ -40,14 +40,15 @@ const AllDistributorsTable = () => {
     panNo: "",
   });
   const [salespersonDistributor, setSalespersonDistributor] = useState([]);
+  const [salesPersonList, setSalespersonList] = useState([]);
+  const [updatedSalesPersonId, setUpdatedSalesPersonId] = useState(null);
 
-  // useEffect(() => {
-  //   dispatch(setPageTitle({ title: "All Distributors List" }));
-  // }, []);
 
   useEffect(() => {
     fetchSalespersons();
-  },[])
+    fetchAllSalesperson();
+  }, []);
+  
 
   const fetchSalespersons = async () => {
     try {
@@ -58,39 +59,56 @@ const AllDistributorsTable = () => {
     }
   }
 
+  const fetchAllSalesperson = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/v1/salespersons/salespersonlist-names-ids`);
+      const newData = response.data.map(([id, name]) => ({ id, name }));
+      setSalespersonList(newData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (selectedList === "active_distributors") {
-          const response = await axios.get(
-            `${BASE_URL}/api/v1/distributors/all`
-          );
-          const newData = response.data.map((distributor) => ({
-            ...distributor,
-            salespersonId:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonId,
-            salespersonName:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonName
-          }));
-          console.log(newData);
-          setData(newData);
-        } else if (selectedList === "inactive_distributors") {
-          const response = await axios.get(
-            `${BASE_URL}/api/v1/distributors/all-inactive`
-          );
-          const newData = response.data.map((distributor) => ({
-            ...distributor,
-            salespersonId:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonId,
-            salespersonName:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonName
-          }));
-          setData(newData);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+// console.log(salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(data[0].id))?.salespersonName)
+// console.log(salespersonDistributor)
 
-    fetchData();
-  }, [selectedList]);
+const fetchData = async () => {
+  try {
+    // Wait for fetchSalespersons to complete
+    // await fetchSalespersons();
+
+    if (selectedList === "active_distributors") {
+      const response = await axios.get(
+        `${BASE_URL}/api/v1/distributors/all`
+      );
+      const newData = response.data.map((distributor) => ({
+        ...distributor,
+        salespersonId:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonId,
+        salespersonName:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonName
+      }));
+      console.log(newData);
+      setData(newData);
+    } else if (selectedList === "inactive_distributors") {
+      const response = await axios.get(
+        `${BASE_URL}/api/v1/distributors/all-inactive`
+      );
+      const newData = response.data.map((distributor) => ({
+        ...distributor,
+        salespersonId:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonId,
+        salespersonName:  salespersonDistributor.find((salesperson) => parseInt(salesperson.distributorId) === parseInt(distributor.id))?.salespersonName
+      }));
+      setData(newData);
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+useEffect(() => {
+
+  fetchData();
+}, [selectedList, salespersonDistributor]);
+
 
   console.log(data);
 
@@ -159,17 +177,7 @@ const AllDistributorsTable = () => {
   );
   const nPages = Math.ceil(filteredRecords.length / recordsPerPage);
 
-  console.log(
-    data.slice().sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
-        return sortConfig.direction === "ascending" ? -1 : 1;
-      }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
-        return sortConfig.direction === "ascending" ? 1 : -1;
-      }
-      return 0;
-    })
-  );
+  
 
   const handleDeleteModal = async (e) => {
     document.getElementById("delete_modal").showModal();
@@ -202,23 +210,27 @@ const AllDistributorsTable = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (updatedSalesPersonId === null) {
+    setUpdatedSalesPersonId(formData.salespersonId);
+    }
+
     try {
-      await axios.put(
-        `${BASE_URL}/api/v1/distributorProfiles/update-distributorProfile/${parseInt(
-          selectedId
-        )}`,
-        formData
-        // {
-        //     headers: {
-        //         "Content-Type": "application/x-www-form-urlencoded",
-        //     },
-        // }
-      );
+      await Promise.all([
+        axios.put(
+          `${BASE_URL}/api/v1/distributorProfiles/update-distributorProfile/${parseInt(selectedId)}`,
+          formData
+        ),
+        axios.put(
+          `${BASE_URL}/api/v1/distributors/${thisId}/salesperson/${updatedSalesPersonId}`
+          
+        )
+      ]);
+  
+      console.log("Both API calls executed successfully");
       console.log("Expense updated successfully");
-      const response = await axios.get(
-        `${BASE_URL}/api/v1/distributors/all`
-      );
-      setData(response.data);
+      fetchData();
+      fetchSalespersons();
       dispatch(
         showNotification({
           message: "Expense updated to invoice successfully 😁",
@@ -237,7 +249,7 @@ const AllDistributorsTable = () => {
     }
   };
 
-  console.log(formData);
+  console.log(updatedSalesPersonId, thisId);
 
   const handleCheckboxChange = (e, id, id2) => {
     const isChecked = e.target.checked;
@@ -251,6 +263,7 @@ const AllDistributorsTable = () => {
 
       if (foundDistributorProfile) {
         setFormData(foundDistributorProfile.distributorProfile);
+        setUpdatedSalesPersonId(foundDistributorProfile.salespersonId);
       }
     } else {
       setFormData({});
@@ -326,6 +339,8 @@ const AllDistributorsTable = () => {
 
     pdf.save("all_distributor_report.pdf");
   };
+
+  console.log(formData)
 
   return (
     <>
@@ -804,6 +819,30 @@ const AllDistributorsTable = () => {
                       }
                       //   required
                     />
+                  </div>
+                  <div>
+                    <label
+                      className="label label-text text-base">
+                        Sales Person Name
+                      </label>
+                    <select
+                      className="w-full select select-bordered select-primary"
+                      value={updatedSalesPersonId}
+                      onChange={(e) =>
+                        setUpdatedSalesPersonId(e.target.value)
+                      }
+                    >
+                      {salesPersonList.map((salesPerson) => (
+                        <option
+                          key={salesPerson.id}
+                          value={salesPerson.id}
+                        >
+                          {salesPerson.name}
+                        </option>
+                      ))}
+                    </select>
+                      
+
                   </div>
                 </div>
 
