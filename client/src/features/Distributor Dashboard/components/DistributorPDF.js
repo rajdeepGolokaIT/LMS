@@ -164,12 +164,12 @@ const DistributorPDF = (data) => {
             ))}
           </tbody>
           <tfoot>
-            <tr class="font-semibold text-gray-900 dark:text-white">
+            <tr className="font-semibold text-gray-900 dark:text-white">
               <th scope="row" class="px-6 py-3 text-base">
                 Total
               </th>
-              <td class="px-6 py-3"></td>
-              <td class="px-6 py-3">
+              <td className="px-6 py-3"></td>
+              <td className="px-6 py-3">
                 INR {info.invoices.reduce((total, i) => total + parseFloat(i.amount), 0)}
               </td>
             </tr>

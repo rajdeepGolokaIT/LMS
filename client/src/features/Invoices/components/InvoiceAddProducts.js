@@ -53,6 +53,12 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
     console.log(updatedForms);
   };
 
+  const handleProductPriceChange = (index, value) => {
+    const updatedForms = [...productForms];
+    updatedForms[index].price = value;
+    setProductForms(updatedForms);
+  };
+
   const handleQuantityChange = (index, value) => {
     const updatedForms = [...productForms];
     updatedForms[index].quantity = value;
@@ -196,15 +202,15 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
               form.discountType === "cashback" ? form.discountValue : 0,
             cgstAmount:
               form.taxType === "cgst_sgst"
-                ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2
+                ? calculateTotalAmountWithDiscount(form) / 2
                 : 0,
             sgstAmount:
               form.taxType === "cgst_sgst"
-                ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2
+                ? calculateTotalAmountWithDiscount(form) / 2
                 : 0,
             igstAmount:
               form.taxType === "igst"
-                ? totalAmountWithTax - totalAmountWithoutTaxDiscount
+                ? calculateTotalAmountWithDiscount(form)
                 : 0,
             discountAmount: discountedAmount,
             totalAmountWithoutTax: amountWithoutTaxAndDiscount,
@@ -483,13 +489,24 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                         </option>
                       ))}
                     </select>
-                    <p className="label label-text text-base">
+                      </div>
+                      <div>
+                    <label className="label label-text text-base">
                       Single Unit Price:{" "}
-                      {products.find(
-                        (product) => product.id.toString() === form.productId
-                      )?.price || ""}
-                    </p>
-                  </div>
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="Single Unit Price"
+                      className="w-full input input-bordered input-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      id={`price-${index}`}
+                      value={form.price || ""}
+                      onChange={ (e) =>
+                        handleProductPriceChange(index, e.target.value)}
+                      required
+                    />
+                      
+                      </div>
                   <div>
                     <label
                       htmlFor={`quantity-${index}`}

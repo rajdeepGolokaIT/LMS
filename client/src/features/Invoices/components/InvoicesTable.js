@@ -1041,7 +1041,7 @@ console.log(pdfData)
                       <thead>
                         <tr>
                           <th>Product Name</th>
-                          <th>Price Per Unit</th>
+                          {/* <th>Price Per Unit</th> */}
                           <th>Quantity</th>
                         </tr>
                       </thead>
@@ -1049,7 +1049,7 @@ console.log(pdfData)
                         {invoiceProducts.map((product) => (
                           <tr>
                             <td>{product[0].productName}</td>
-                            <td>{product[0].price}</td>
+                            {/* <td>{product[0].price}</td> */}
                             <td>{product[1]}</td>
                           </tr>
                         ))}
