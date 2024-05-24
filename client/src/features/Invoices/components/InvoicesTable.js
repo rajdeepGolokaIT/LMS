@@ -577,7 +577,7 @@ console.log(pdfData)
                   </td>
                   {/* <td className="table-cell">{invoice.discountPercentage}%</td> */}
                   <td className="table-cell">
-                    INR {parseFloat(invoice.discountPrice).toFixed(2)}{" "}
+                    INR {parseFloat(invoice.discount).toFixed(2)}{" "}
                   </td>
                   <td className="table-cell">
                     INR {parseFloat(invoice.totalAmount).toFixed(2)}{" "}
