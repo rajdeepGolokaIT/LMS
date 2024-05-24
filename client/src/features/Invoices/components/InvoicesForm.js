@@ -12,27 +12,27 @@ import { BASE_URL } from "../../../Endpoint";
 function InvoicesForm() {
   const [formData, setFormData] = useState({
     // id: 0,
-    vehicleNo: "",
+    vehicleNo: "NA",
     cgst: 0,
     sgst: 0,
     igst: 0,
     totalAmount: 0,
-    purchaseNumber: "",
-    deliveryDate: '',
-    supplierName: "",
+    purchaseNumber: "NA",
+    deliveryDate: moment().format("YYYY-MM-DD"),
+    supplierName: "Celltone",
     discountPercentage: 0,
     discountPrice: 0,
     distributorId: 0,
     totalQuantityNos: 0,
     totalQuantityDoz: 0,
-    destination: "",
+    destination: "NA",
     invoiceNumber: "",
-    irn: "",
+    irn: "NA",
     // hsnsac: 0,
     ackNo: 0,
     amount: 0,
-    dispatchedThrough: "",
-    termsOfDelivery: "",
+    dispatchedThrough: "NA",
+    termsOfDelivery: "NA",
     salespersonId: 0,
     invoiceDate: "",
     isReceived: "",
@@ -252,7 +252,7 @@ function InvoicesForm() {
                 />
                 {invoiceExists && <p className="label label-text text-base">This invoice number exists.</p>}
               </div>
-              <div>
+              {/* <div>
                 <label htmlFor="irn" className="label label-text text-base">
                   IRN:
                 </label>
@@ -267,7 +267,7 @@ function InvoicesForm() {
                   required
                 />
                 {irnExists && <p className="label label-text text-base">This IRN exists.</p>}  
-              </div>
+              </div> */}
               <div>
                 <label
                   htmlFor="salespersonId"
@@ -317,7 +317,7 @@ function InvoicesForm() {
             />
               </div>
 
-              <div>
+              {/* <div>
                 <label
                   htmlFor="termsOfDelivery"
                   className="label label-text text-base"
@@ -338,10 +338,10 @@ function InvoicesForm() {
                   }
                   
                 />
-              </div>
+              </div> */}
             
             
-              <div>
+              {/* <div>
                 <label
                   htmlFor="purchaseNumber"
                   className="label label-text text-base"
@@ -360,28 +360,14 @@ function InvoicesForm() {
                   }
                   required
                 />
-              </div>
-              <div>
+              </div> */}
+              {/* <div>
                 <label
                   htmlFor="deliveryDate"
                   className="label label-text text-base"
                 >
                   Delivery Date:
                 </label>
-                {/* <input
-                  type="date"
-                  data-date=''
-                  data-date-format="DD-MM-YYYY"
-                  max='31-12-2030'
-                  placeholder="Delivery Date"
-                  className="w-full input input-bordered input-primary"
-                  id="deliveryDate"
-                  value={formData.deliveryDate}
-                  onChange={(e) =>
-                    setFormData({ ...formData, deliveryDate: e.target.value })
-                  }
-                  required
-                /> */}
                  <DatePicker
               inputClassName="w-full input input-bordered input-primary"
               useRange={false}
@@ -391,9 +377,9 @@ function InvoicesForm() {
               onChange={handleDateChange}
               required
             />
-              </div>
+              </div> */}
             
-              <div>
+              {/* <div>
                 <label
                   htmlFor="supplierName"
                   className="label label-text text-base"
@@ -412,7 +398,7 @@ function InvoicesForm() {
                   }
                   required
                 />
-              </div>
+              </div> */}
               <div>
                 <label
                   htmlFor="discountType"
@@ -499,7 +485,7 @@ function InvoicesForm() {
                   ))}
                 </select>
               </div>
-              <div>
+              {/* <div>
                 <label
                   htmlFor="vehicleNo"
                   className="label label-text text-base"
@@ -519,8 +505,8 @@ function InvoicesForm() {
                   }
                   required
                 />
-              </div>
-              <div>
+              </div> */}
+              {/* <div>
                 <label htmlFor="ackNo" className="label label-text text-base">
                   Ack No:
                 </label>
@@ -539,8 +525,8 @@ function InvoicesForm() {
                   }
                   required
                 />
-              </div>
-              <div>
+              </div> */}
+              {/* <div>
                 <label
                   htmlFor="dispatchedThrough"
                   className="label label-text text-base"
@@ -561,9 +547,9 @@ function InvoicesForm() {
                   }
                   required
                 />
-              </div>
+              </div> */}
             
-              <div>
+              {/* <div>
                 <label
                   htmlFor="destination"
                   className="label label-text text-base"
@@ -581,7 +567,7 @@ function InvoicesForm() {
                   }
                   required
                 />
-              </div>
+              </div> */}
               <div>
               <label
                   htmlFor="isReceived"

@@ -165,7 +165,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
           let discountedAmount = 0;
 
           // Check if discountAmount or discountPercentage is greater than 0
-          if (discountAmount > 0 || discountPercentage > 0) {
+          if (discountAmount  || discountPercentage ) {
             const discount =
               discountPercentage > 0
                 ? (amountWithoutTaxAndDiscount * discountPercentage) / 100
@@ -173,15 +173,27 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
             discountedAmount = discount;
             totalAmountWithoutTaxDiscount =
               amountWithoutTaxAndDiscount - discount;
-          } else if (form.discountValue > 0) {
-            const discount =
-              form.discountType === "percentage"
-                ? (amountWithoutTaxAndDiscount * form.discountValue) / 100
-                : form.discountValue;
-            discountedAmount = discount;
-            totalAmountWithoutTaxDiscount =
-              amountWithoutTaxAndDiscount - discount;
+          } else {
+            totalAmountWithoutTaxDiscount = amountWithoutTaxAndDiscount;
+            discountedAmount = 0;
           }
+
+          // console.log("Amount Without Tax and Discount:", amountWithoutTaxAndDiscount);
+          // console.log("Discounted Amount:", discountedAmount);
+          // console.log("Total Amount Without Tax Discount:", totalAmountWithoutTaxDiscount);
+  
+          // // If needed, also log the values of discountAmount and discountPercentage here
+          // console.log("Discount Amount:", discountAmount);
+          // console.log("Discount Percentage:", discountPercentage);
+          // else if (form.discountValue > 0) {
+          //   const discount =
+          //     form.discountType === "percentage"
+          //       ? (amountWithoutTaxAndDiscount * form.discountValue) / 100
+          //       : form.discountValue;
+          //   discountedAmount = discount;
+          //   totalAmountWithoutTaxDiscount =
+          //     amountWithoutTaxAndDiscount - discount;
+          // }
 
           // Calculate tax based on the totalAmountWithoutTaxDiscount if it's greater than 0,
           // otherwise calculate tax based on amountWithoutTaxAndDiscount
@@ -212,7 +224,7 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
               form.taxType === "igst"
                 ? calculateTotalAmountWithDiscount(form)
                 : 0,
-            discountAmount: discountedAmount,
+            discountAmount: form.price * form.quantity - calculateTotalAmountWithoutTaxWithDiscount(form),
             totalAmountWithoutTax: amountWithoutTaxAndDiscount,
             totalAmountWithoutTaxDiscount: totalAmountWithoutTaxDiscount,
             totalAmountWithTax: totalAmountWithTax,
@@ -220,8 +232,14 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
                 (product) => product.id.toString() === form.productId
               )?.hsnsac) : parseInt(form.hsnSac),
           };
+
         }
+
       });
+
+
+
+      
 
       console.log(productsData);
 
@@ -256,73 +274,87 @@ function AddProductsForm({ invoiceId, discountPercentage, discountAmount, onSubm
     }
   };
 
-  const productsData = {};
-  productForms.forEach((form) => {
-    if (form.productId && form.quantity) {
-      const amountWithoutTaxAndDiscount = form.price * form.quantity;
-      let totalAmountWithoutTaxDiscount = 0;
-      let discountedAmount = 0;
+  // const productsData = {};
+  //     productForms.forEach((form) => {
+  //       if (form.productId && form.quantity) {
+  //         const amountWithoutTaxAndDiscount = form.price * form.quantity;
+  //         let totalAmountWithoutTaxDiscount = 0;
+  //         let discountedAmount = 0;
 
-      // Check if discountAmount or discountPercentage is greater than 0
-      if (discountAmount > 0 || discountPercentage > 0) {
-        const discount =
-          discountPercentage > 0
-            ? (amountWithoutTaxAndDiscount * discountPercentage) / 100
-            : discountAmount;
-        discountedAmount = discount;
-        totalAmountWithoutTaxDiscount =
-          amountWithoutTaxAndDiscount - discount;
-      } else if (form.discountValue > 0) {
-        const discount =
-          form.discountType === "percentage"
-            ? (amountWithoutTaxAndDiscount * form.discountValue) / 100
-            : form.discountValue;
-        discountedAmount = discount;
-        totalAmountWithoutTaxDiscount =
-          amountWithoutTaxAndDiscount - discount;
-      }
+  //         // Check if discountAmount or discountPercentage is greater than 0
+  //         if (discountAmount  || discountPercentage ) {
+  //           const discount =
+  //             discountPercentage > 0
+  //               ? (amountWithoutTaxAndDiscount * discountPercentage) / 100
+  //               : discountAmount;
+  //           discountedAmount = discount;
+  //           totalAmountWithoutTaxDiscount =
+  //             amountWithoutTaxAndDiscount - discount;
+  //         } else {
+  //           totalAmountWithoutTaxDiscount = amountWithoutTaxAndDiscount;
+  //           discountedAmount = 0;
+  //         }
 
-      // Calculate tax based on the totalAmountWithoutTaxDiscount if it's greater than 0,
-      // otherwise calculate tax based on amountWithoutTaxAndDiscount
-      const totalAmountWithTax = calculateTotalAmount(
-        form.price,
-        form.quantity,
-        form.taxValue,
-        discountedAmount > 0 ? discountedAmount : 0
-      );
+  //         // console.log("Amount Without Tax and Discount:", amountWithoutTaxAndDiscount);
+  //         // console.log("Discounted Amount:", discountedAmount);
+  //         // console.log("Total Amount Without Tax Discount:", totalAmountWithoutTaxDiscount);
+  
+  //         // // If needed, also log the values of discountAmount and discountPercentage here
+  //         // console.log("Discount Amount:", discountAmount);
+  //         // console.log("Discount Percentage:", discountPercentage);
+  //         // else if (form.discountValue > 0) {
+  //         //   const discount =
+  //         //     form.discountType === "percentage"
+  //         //       ? (amountWithoutTaxAndDiscount * form.discountValue) / 100
+  //         //       : form.discountValue;
+  //         //   discountedAmount = discount;
+  //         //   totalAmountWithoutTaxDiscount =
+  //         //     amountWithoutTaxAndDiscount - discount;
+  //         // }
 
-      productsData[form.productId] = {
-        quantity: parseInt(form.quantity),
-        cgstSgst: form.taxType === "cgst_sgst" ? form.taxValue : 0,
-        igst: form.taxType === "igst" ? form.taxValue : 0,
-        discountInPercent:
-          form.discountType === "percentage" ? form.discountValue : 0,
-        discountInPrice:
-          form.discountType === "cashback" ? form.discountValue : 0,
-        cgstAmount:
-          form.taxType === "cgst_sgst"
-            ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2
-            : 0,
-        sgstAmount:
-          form.taxType === "cgst_sgst"
-            ? (totalAmountWithTax - totalAmountWithoutTaxDiscount) / 2
-            : 0,
-        igstAmount:
-          form.taxType === "igst"
-            ? totalAmountWithTax - totalAmountWithoutTaxDiscount
-            : 0,
-        discountAmount: discountedAmount,
-        totalAmountWithoutTax: amountWithoutTaxAndDiscount,
-        totalAmountWithoutTaxDiscount: totalAmountWithoutTaxDiscount,
-        totalAmountWithTax: totalAmountWithTax,
-        hsnSac: form.hsnSac === "" ? parseInt(products.find(
-            (product) => product.id.toString() === form.productId
-          )?.hsnsac) : parseInt(form.hsnSac),
-      };
-    }
-  });
+  //         // Calculate tax based on the totalAmountWithoutTaxDiscount if it's greater than 0,
+  //         // otherwise calculate tax based on amountWithoutTaxAndDiscount
+  //         const totalAmountWithTax = calculateTotalAmount(
+  //           form.price,
+  //           form.quantity,
+  //           form.taxValue,
+  //           discountedAmount > 0 ? discountedAmount : 0
+  //         );
 
-  console.log(productsData)
+  //         productsData[form.productId] = {
+  //           quantity: parseInt(form.quantity),
+  //           cgstSgst: form.taxType === "cgst_sgst" ? form.taxValue : 0,
+  //           igst: form.taxType === "igst" ? form.taxValue : 0,
+  //           discountInPercent:
+  //             form.discountType === "percentage" ? form.discountValue : 0,
+  //           discountInPrice:
+  //             form.discountType === "cashback" ? form.discountValue : 0,
+  //           cgstAmount:
+  //             form.taxType === "cgst_sgst"
+  //               ? calculateTotalAmountWithDiscount(form) / 2
+  //               : 0,
+  //           sgstAmount:
+  //             form.taxType === "cgst_sgst"
+  //               ? calculateTotalAmountWithDiscount(form) / 2
+  //               : 0,
+  //           igstAmount:
+  //             form.taxType === "igst"
+  //               ? calculateTotalAmountWithDiscount(form)
+  //               : 0,
+  //           discountAmount: parseFloat(form.price * form.quantity).toFixed(2) - parseFloat(calculateTotalAmountWithoutTaxWithDiscount(form)).toFixed(2),
+  //           totalAmountWithoutTax: amountWithoutTaxAndDiscount,
+  //           totalAmountWithoutTaxDiscount: totalAmountWithoutTaxDiscount,
+  //           totalAmountWithTax: totalAmountWithTax,
+  //           hsnSac: form.hsnSac === "" ? parseInt(products.find(
+  //               (product) => product.id.toString() === form.productId
+  //             )?.hsnsac) : parseInt(form.hsnSac),
+  //         };
+
+  //       }
+
+  //     })
+
+  // console.log(productsData)
 
 
 

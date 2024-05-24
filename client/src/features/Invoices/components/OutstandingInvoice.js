@@ -255,6 +255,7 @@ const OutstandingInvoice = () => {
           className="overflow-x-auto w-full"
           style={{ overflowY: "auto", maxHeight: "450px" }}
         >
+          {isReceived === 'true' ? (
           <table className="table table-xs table-zebra-zebra">
           <thead>
               <tr className="table-row text-center">
@@ -307,6 +308,64 @@ const OutstandingInvoice = () => {
               ))}
             </tbody>
           </table>
+            
+          ) : (
+            <table className="table table-xs table-zebra-zebra">
+            <thead>
+                <tr className="table-row text-center">
+                  <th className="table-cell">Select</th>
+                  <th className="table-cell">Indicator</th>
+                  <th className="table-cell">Invoice ID</th>
+                  <th className="table-cell">Invoice Number</th>
+                  <th className="table-cell">Invoice Date</th>
+                  <th className="table-cell">Payment Received</th>
+                  <th className="table-cell">Distributor Name</th>
+                  <th className="table-cell">Sales Person Name</th>
+                  <th className="table-cell">Amount</th>
+                  <th className="table-cell">City</th>
+                  <th className="table-cell">Region</th>
+                  <th className="table-cell">Zone</th>
+                  <th className="table-cell">No of Days</th>
+                  </tr>
+              </thead>
+              <tbody>
+              {data.map((invoice) => (
+                  <tr key={invoice.someInteger} className="table-row">
+                    <td className="table-cell">
+                      <label>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                          onChange={(e) => handleCheckboxChange(e, invoice.someInteger)}
+                          // checked={invoiceData.some(item => item.someInteger === invoice.someInteger)}
+                          checked={selectedInvoice === invoice.someInteger}
+                        />
+                      </label>
+                    </td>
+                     <td className="table-cell">
+                       <div
+                       className={`w-3 h-3 rounded-full m-3 animate-pulse border-gray-300 grid border ${
+                       getIndicatorColor(invoice.timestamp)
+                        }`}
+                       ></div>
+                      </td>
+                      <td className="table-cell">{invoice.someInteger}</td>
+                      <td className="table-cell">{invoice.id}</td>
+                      <td className="table-cell">{moment(invoice.timestamp).format('DD-MM-YYYY')}</td>
+                      <td className="table-cell">{isReceived === 'true' ? 'Yes' : 'No'}</td>
+                      <td className="table-cell">{invoice.distributorName}</td>
+                      <td className="table-cell">{invoice.salespersonName}</td>
+                      <td className="table-cell">{`INR ${parseFloat(invoice.amount).toFixed(2)}`}</td>
+                      <td className="table-cell">{invoice.city}</td>
+                      <td className="table-cell">{invoice.state}</td>
+                      <td className="table-cell">{invoice.region}</td>
+                      <td className="table-cell">{moment().diff(invoice.timestamp, 'days')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+          )}
           </div>
           <Pagination
           nPages={Pages}

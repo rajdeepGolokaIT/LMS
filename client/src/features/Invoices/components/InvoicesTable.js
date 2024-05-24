@@ -533,12 +533,12 @@ console.log(pdfData)
                 <th className="table-cell">City</th>
                 <th className="table-cell">Region/State</th>
                 <th className="table-cell">Zone</th>
-                <th className="table-cell">Ewaybill No.</th>
+                {/* <th className="table-cell">Ewaybill No.</th>
                 <th className="table-cell">IRN</th>
                 <th className="table-cell">Ack No.</th>
-                <th className="table-cell">Dispatched Through</th>
+                <th className="table-cell">Dispatched Through</th> */}
                 {/* <th className="table-cell">Create Date</th> */}
-                <th className="table-cell">Update Date</th>
+                {/* <th className="table-cell">Update Date</th> */}
               </tr>
             </thead>
             <tbody>
@@ -608,7 +608,7 @@ console.log(pdfData)
                   <td className="table-cell">
                     {invoice.distributor.distributorProfile.zone}
                   </td>
-                  <td className="table-cell">
+                  {/* <td className="table-cell">
                     {invoice.eway === null ? "Pending..." : invoice.eway}
                   </td>
                   <td className="table-cell">
@@ -621,13 +621,13 @@ console.log(pdfData)
                     {invoice.dispatchedThrough === null
                       ? "Pending..."
                       : invoice.dispatchedThrough}
-                  </td>
+                  </td> */}
                   {/* <td className="table-cell">
                     {moment(invoice.createDate).format("DD/MM/YYYY")}
                   </td> */}
-                  <td className="table-cell">
+                  {/* <td className="table-cell">
                     {moment(invoice.updateDate).format("DD/MM/YYYY")}
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>
